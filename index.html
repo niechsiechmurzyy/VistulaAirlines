@@ -4,22 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vistula Airlines - Latanie z pasją!</title>
-    <link rel="stylesheet" href="CSS/Style.css"> 
+    <link rel="stylesheet" href="CSS/Style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
     <header>
         <div class="container">
-            <h1>Vistula Airlines</h1>
-            <nav>
-                <ul>
-                    <li><a href="#">Strona główna</a></li>
-                    <li><a href="#">Rezerwacja</a></li>
-                    <li><a href="#">Moje rezerwacje</a></li>
-                    <li><a href="#">Kontakt</a></li>
-                </ul>
-            </nav>
+            <div class="header-left">
+                <div class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <h1>VIS</h1> </div>
+            <div class="header-right">
+                <div class="icon-group">
+                    <div class="icon-item">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>PLN</span> <div class="dropdown-content currency-dropdown">
+                            <div class="dropdown-item">EUR <i class="fas fa-euro-sign"></i></div>
+                            <div class="dropdown-item">USD <i class="fas fa-dollar-sign"></i></div>
+                            <div class="dropdown-item">GBP <i class="fas fa-pound-sign"></i></div>
+                        </div>
+                    </div>
+                    <div class="icon-item">
+                        <i class="fas fa-globe"></i>
+                        <span>PL</span> <div class="dropdown-content country-dropdown">
+                            <div class="dropdown-item">English <img src="https://flagicons.lipis.dev/flags/4x3/gb.svg" alt="UK Flag" class="flag-icon"></div>
+                            <div class="dropdown-item">Polski <img src="https://flagicons.lipis.dev/flags/4x3/pl.svg" alt="PL Flag" class="flag-icon"></div>
+                        </div>
+                    </div>
+                    <div class="icon-item account-icon">
+                        <i class="fas fa-user-circle"></i>
+                        <div class="dropdown-content account-dropdown">
+                            <div class="dropdown-item">Zaloguj się</div>
+                            <div class="dropdown-item">Zarejestruj</div>
+                            </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        <nav class="mobile-nav" id="mobileNav">
+            <ul>
+                <li><a href="#">Strona główna</a></li>
+                <li><a href="#">Rezerwacja</a></li>
+                <li><a href="#">Moje rezerwacje</a></li>
+                <li><a href="#">Kontakt</a></li>
+            </ul>
+        </nav>
     </header>
 
     <main>
@@ -56,6 +87,7 @@
         </div>
     </footer>
 
+    <script src="JS/script.js"></script>
+
 </body>
 </html>
-
