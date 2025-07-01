@@ -14,10 +14,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Obsługa kliknięcia w hamburger menu
     if (menuToggle && mobileNav) {
-        menuToggle.addEventListener('click', function() {
+        menuToggle.addEventListener('click', function(event) {
             mobileNav.classList.toggle('open');
             // Zamknij wszystkie inne dropdowny, gdy otwiera się menu mobilne
             closeAllDropdowns();
+            event.stopPropagation(); // Zapobiegaj zamykaniu po kliknięciu na dokument
         });
     }
 
@@ -56,7 +57,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Zamykanie dropdownów i menu mobilnego po kliknięciu poza nimi
     document.addEventListener('click', function(event) {
-        if (!event.target.closest('.header-right') && !event.target.closest('.menu-toggle') && !event.target.closest('.mobile-nav')) {
+        // Sprawdź, czy kliknięcie nie nastąpiło wewnątrz żadnego z elementów otwierających dropdowny
+        const isClickInsideDropdownOrToggle = event.target.closest('.icon-item') || event.target.closest('.menu-toggle') || event.target.closest('.mobile-nav');
+        
+        if (!isClickInsideDropdownOrToggle) {
             closeAllDropdowns();
             mobileNav.classList.remove('open');
         }
@@ -65,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Zapobieganie zamykaniu dropdownów po kliknięciu w ich zawartość
     document.querySelectorAll('.dropdown-content').forEach(dropdown => {
         dropdown.addEventListener('click', function(event) {
-            event.stopPropagation();
+            event.stopPropagation(); // Zatrzymuje propagację zdarzenia, aby nie zamykało dropdownu
         });
     });
 });
