@@ -1,18 +1,18 @@
 /* Podstawowe style globalne */
 body {
-    font-family: 'Roboto', sans-serif; /* Zmieniamy czcionkę na bardziej nowoczesną */
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #f0f2f5; /* Jasnoszary */
+    background-color: #FFFFFF; /* Białe tło całej strony */
     color: #333;
 }
 
 .container {
-    width: 95%; /* Zwiększamy szerokość dla lepszego wykorzystania miejsca na mobile */
+    width: 95%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 10px 0; /* Mniejszy padding na mobile */
+    padding: 10px 0;
 }
 
 /* Nagłówek (Header) */
@@ -21,8 +21,8 @@ header {
     color: white;
     padding: 10px 0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    position: relative; /* Ważne dla pozycjonowania mobilnego menu i dropdownów */
-    z-index: 100; /* Upewnij się, że nagłówek jest na wierzchu */
+    position: relative;
+    z-index: 100;
 }
 
 header .container {
@@ -35,14 +35,14 @@ header .container {
 .header-left {
     display: flex;
     align-items: center;
-    gap: 15px; /* Odstęp między hamburgerem a logo */
+    gap: 15px;
 }
 
 .header-left h1 {
     margin: 0;
-    font-size: 2.2em; /* Rozmiar dla "VIS" */
+    font-size: 2.2em;
     font-weight: bold;
-    letter-spacing: 1px; /* Delikatne rozstawienie liter */
+    letter-spacing: 1px;
 }
 
 .header-right {
@@ -53,26 +53,26 @@ header .container {
 .menu-toggle {
     font-size: 1.8em;
     cursor: pointer;
-    display: block; /* Domyślnie widoczny na mobile */
+    display: block;
 }
 
 /* Ikony po prawej stronie */
 .icon-group {
     display: flex;
-    gap: 20px; /* Odstęp między grupami ikon */
+    gap: 20px;
 }
 
 .icon-item {
     display: flex;
-    flex-direction: column; /* Ikona nad tekstem */
+    flex-direction: column;
     align-items: center;
     cursor: pointer;
-    position: relative; /* Dla wysuwanych okienek */
+    position: relative;
     font-size: 0.8em;
 }
 
 .icon-item i {
-    font-size: 1.5em; /* Rozmiar ikony */
+    font-size: 1.5em;
     margin-bottom: 3px;
 }
 
@@ -82,28 +82,28 @@ header .container {
 
 /* Ukrycie domyślnej nawigacji na telefonach */
 header nav {
-    display: none; /* Domyślnie ukryj menu desktopowe */
+    display: none;
 }
 
 /* Stylizacja mobilnego menu (szufladki) */
 .mobile-nav {
-    display: none; /* Ukryj domyślnie, pokażemy za pomocą JS */
+    display: none;
     width: 250px;
     background-color: #004d99;
     position: absolute;
-    top: 100%; /* Poniżej nagłówka */
+    top: 100%;
     left: 0;
-    height: calc(100vh - 60px); /* Wysokość od nagłówka do dołu ekranu */
+    height: calc(100vh - 60px);
     box-shadow: 2px 0 5px rgba(0,0,0,0.3);
     padding-top: 20px;
     transition: transform 0.3s ease-in-out;
-    transform: translateX(-100%); /* Początkowo ukryta poza ekranem */
-    z-index: 99; /* Niżej niż nagłówek, ale wyżej niż treść */
+    transform: translateX(-100%);
+    z-index: 99;
 }
 
 .mobile-nav.open {
-    transform: translateX(0); /* Widoczna, gdy otwarta */
-    display: block; /* Pokaż, gdy otwarta */
+    transform: translateX(0);
+    display: block;
 }
 
 .mobile-nav ul {
@@ -122,7 +122,7 @@ header nav {
 }
 
 .mobile-nav ul li a:hover {
-    background-color: #003366; /* Ciemniejszy niebieski na najechaniu */
+    background-color: #003366;
 }
 
 /* Style dla wysuwanych okienek (waluty, państwa, konto) */
@@ -134,14 +134,14 @@ header nav {
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     border-radius: 5px;
-    top: 100%; /* Pod ikoną */
-    left: 50%; /* Wyśrodkowanie */
+    top: 100%;
+    left: 50%;
     transform: translateX(-50%);
     padding: 10px 0;
 }
 
 .dropdown-content.show {
-    display: block; /* Pokaż, gdy ma klasę 'show' */
+    display: block;
 }
 
 .dropdown-content .dropdown-item {
@@ -150,7 +150,7 @@ header nav {
     text-decoration: none;
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Rozłożenie tekstu i ikony flagi */
+    justify-content: space-between;
     cursor: pointer;
 }
 
@@ -167,14 +167,14 @@ header nav {
 
 /* Sekcja Hero (główna) */
 .hero {
-    background: url('https://source.unsplash.com/1600x900/?airplane,clouds,sky') no-repeat center center/cover; /* Nowe losowe zdjęcie lotnicze */
+    background: url('https://source.unsplash.com/1600x900/?airplane,clouds,sky') no-repeat center center/cover;
     color: white;
     text-align: center;
     padding: 100px 20px;
     position: relative;
     z-index: 1;
-    min-height: 400px; /* Minimalna wysokość, żeby obraz był widoczny */
-    display: flex; /* Flexbox do wyśrodkowania zawartości */
+    min-height: 400px;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -186,16 +186,16 @@ header nav {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.4); /* Półprzezroczysta nakładka */
+    background-color: rgba(0, 0, 0, 0.4);
     z-index: -1;
 }
 
 .hero .container {
-    padding: 0; /* Usuwamy padding z kontenera hero, żeby content był bliżej krawędzi na mobile */
+    padding: 0;
 }
 
 .hero h2 {
-    font-size: 2.5em; /* Mniejszy rozmiar na mobile */
+    font-size: 2.5em;
     margin-bottom: 10px;
 }
 
@@ -205,8 +205,8 @@ header nav {
 }
 
 .search-form {
-    background-color: rgba(255, 255, 255, 0.95); /* Nieco bardziej kryjący */
-    padding: 20px; /* Mniejszy padding */
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 20px;
     border-radius: 8px;
     display: flex;
     flex-direction: column; /* Elementy pod sobą na mobile */
@@ -222,12 +222,12 @@ header nav {
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1em;
-    width: 100%; /* Pełna szerokość */
-    box-sizing: border-box; /* Ważne dla paddingu */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .search-form button {
-    background-color: #007bff; /* Jasnoniebieski przycisk */
+    background-color: #007bff;
     color: white;
     border: none;
     cursor: pointer;
@@ -240,7 +240,7 @@ header nav {
 
 /* Sekcja "O nas" */
 .about-us {
-    padding: 40px 20px; /* Mniejszy padding */
+    padding: 40px 20px;
     background-color: white;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -248,14 +248,14 @@ header nav {
 }
 
 .about-us h3 {
-    font-size: 2em; /* Mniejszy rozmiar */
+    font-size: 2em;
     margin-bottom: 15px;
     color: #004d99;
 }
 
 /* Stopka (Footer) */
 footer {
-    background-color: #222; /* Ciemniejszy odcień */
+    background-color: #222;
     color: white;
     text-align: center;
     padding: 20px 0;
@@ -264,10 +264,10 @@ footer {
 
 footer .container {
     display: flex;
-    flex-direction: column; /* Elementy pod sobą na mobile */
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    gap: 10px; /* Odstęp między elementami stopki */
+    gap: 10px;
 }
 
 footer p {
@@ -282,7 +282,7 @@ footer p {
 .social-links a {
     color: white;
     text-decoration: none;
-    margin: 0 10px; /* Mniejszy margines */
+    margin: 0 10px;
     transition: color 0.3s ease;
 }
 
@@ -290,33 +290,92 @@ footer p {
     color: #b0e0e6;
 }
 
-/* Media Queries dla responsywności (już włączone do styli bazowych) */
-/* Dodatkowe dla większych ekranów */
+/* Flatpickr (Kalendarz) customizacja - niebieski styl */
+.flatpickr-calendar {
+    background: #ffffff; /* Białe tło kalendarza */
+    border: 1px solid #007bff; /* Niebieska ramka */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.flatpickr-months .flatpickr-month {
+    background-color: #007bff; /* Niebieskie tło miesiąca */
+    color: white;
+    fill: white; /* Strzałki nawigacyjne */
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-months-selected {
+    color: #007bff; /* Wybrany miesiąc w rozwijanej liście */
+}
+
+.flatpickr-current-month .numInputWrapper span.arrowUp:after,
+.flatpickr-current-month .numInputWrapper span.arrowDown:after {
+    border-color: white; /* Kolor strzałek w roku */
+}
+
+.dayContainer {
+    padding: 10px;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange,
+.flatpickr-day.selected.inRange,
+.flatpickr-day.startRange.inRange,
+.flatpickr-day.endRange.inRange,
+.flatpickr-day.selected:focus,
+.flatpickr-day.startRange:focus,
+.flatpickr-day.endRange:focus,
+.flatpickr-day.selected:hover,
+.flatpickr-day.startRange:hover,
+.flatpickr-day.endRange:hover,
+.flatpickr-day.selected.prevMonthDay,
+.flatpickr-day.startRange.prevMonthDay,
+.flatpickr-day.endRange.prevMonthDay,
+.flatpickr-day.selected.nextMonthDay,
+.flatpickr-day.startRange.nextMonthDay,
+.flatpickr-day.endRange.nextMonthDay {
+    background: #007bff; /* Niebieskie tło dla wybranych dat i zakresu */
+    border-color: #007bff;
+    color: white;
+}
+
+.flatpickr-day.today.selected {
+    background: #0056b3; /* Ciemniejszy niebieski dla dzisiejszej wybranej daty */
+    border-color: #0056b3;
+}
+
+.flatpickr-day.today:hover {
+    background: #f0f0f0; /* Jasny szary na najechanie dzisiejszą datą */
+}
+
+
+/* Media Queries dla responsywności */
 @media (min-width: 768px) {
     .menu-toggle {
-        display: none; /* Ukryj hamburger na większych ekranach */
+        display: none;
     }
 
     header nav {
-        display: block; /* Pokaż desktopowe menu */
+        display: block; /* Pokaż desktopowe menu na większych ekranach */
     }
 
     header nav ul {
         display: flex;
-        flex-direction: row; /* Linki obok siebie */
+        flex-direction: row;
         margin-top: 0;
     }
 
     header nav ul li {
-        margin-left: 25px; /* Większy odstęp */
+        margin-left: 25px;
     }
 
     .header-left h1 {
-        font-size: 2.5em; /* Większy rozmiar dla pełnej nazwy na desktopie */
+        font-size: 2.5em;
     }
 
     .icon-item {
-        flex-direction: row; /* Ikona obok tekstu na desktopie */
+        flex-direction: row;
         gap: 5px;
         font-size: 1em;
     }
@@ -326,7 +385,7 @@ footer p {
     }
 
     .hero h2 {
-        font-size: 3em; /* Większy rozmiar na desktopie */
+        font-size: 3em;
     }
 
     .hero p {
@@ -339,7 +398,7 @@ footer p {
     }
 
     footer .container {
-        flex-direction: row; /* Elementy obok siebie na desktopie */
+        flex-direction: row;
     }
 
     .social-links {
