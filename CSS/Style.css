@@ -21,7 +21,7 @@ header {
     color: white;
     padding: 10px 0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    position: relative; /* Ważne dla pozycjonowania mobilnego menu */
+    position: relative; /* Ważne dla pozycjonowania mobilnego menu i dropdownów */
     z-index: 100; /* Upewnij się, że nagłówek jest na wierzchu */
 }
 
