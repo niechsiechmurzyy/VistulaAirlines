@@ -1,72 +1,177 @@
 /* Podstawowe style globalne */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif; /* Zmieniamy czcionkę na bardziej nowoczesną */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #f4f4f4;
+    background-color: #f0f2f5; /* Jasnoszary */
     color: #333;
 }
 
 .container {
-    width: 90%;
+    width: 95%; /* Zwiększamy szerokość dla lepszego wykorzystania miejsca na mobile */
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px 0;
+    padding: 10px 0; /* Mniejszy padding na mobile */
 }
 
 /* Nagłówek (Header) */
 header {
-    background-color: #004d99; /* Ciemny niebieski dla linii lotniczych */
+    background: linear-gradient(to right, #004d99, #007bff); /* Gradient niebieski */
     color: white;
     padding: 10px 0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    position: relative; /* Ważne dla pozycjonowania mobilnego menu */
+    z-index: 100; /* Upewnij się, że nagłówek jest na wierzchu */
 }
 
 header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap; /* Pozwala elementom zawijać się na mniejszych ekranach */
-}
-
-header h1 {
-    margin: 0;
-    font-size: 2em;
-}
-
-header nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* Wyśrodkowanie linków na mniejszych ekranach */
 }
 
-header nav ul li {
-    margin-left: 20px;
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Odstęp między hamburgerem a logo */
 }
 
-header nav ul li a {
+.header-left h1 {
+    margin: 0;
+    font-size: 2.2em; /* Rozmiar dla "VIS" */
+    font-weight: bold;
+    letter-spacing: 1px; /* Delikatne rozstawienie liter */
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.menu-toggle {
+    font-size: 1.8em;
+    cursor: pointer;
+    display: block; /* Domyślnie widoczny na mobile */
+}
+
+/* Ikony po prawej stronie */
+.icon-group {
+    display: flex;
+    gap: 20px; /* Odstęp między grupami ikon */
+}
+
+.icon-item {
+    display: flex;
+    flex-direction: column; /* Ikona nad tekstem */
+    align-items: center;
+    cursor: pointer;
+    position: relative; /* Dla wysuwanych okienek */
+    font-size: 0.8em;
+}
+
+.icon-item i {
+    font-size: 1.5em; /* Rozmiar ikony */
+    margin-bottom: 3px;
+}
+
+.icon-item span {
+    font-weight: bold;
+}
+
+/* Ukrycie domyślnej nawigacji na telefonach */
+header nav {
+    display: none; /* Domyślnie ukryj menu desktopowe */
+}
+
+/* Stylizacja mobilnego menu (szufladki) */
+.mobile-nav {
+    display: none; /* Ukryj domyślnie, pokażemy za pomocą JS */
+    width: 250px;
+    background-color: #004d99;
+    position: absolute;
+    top: 100%; /* Poniżej nagłówka */
+    left: 0;
+    height: calc(100vh - 60px); /* Wysokość od nagłówka do dołu ekranu */
+    box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+    padding-top: 20px;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(-100%); /* Początkowo ukryta poza ekranem */
+    z-index: 99; /* Niżej niż nagłówek, ale wyżej niż treść */
+}
+
+.mobile-nav.open {
+    transform: translateX(0); /* Widoczna, gdy otwarta */
+}
+
+.mobile-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mobile-nav ul li a {
+    display: block;
+    padding: 15px 20px;
     color: white;
     text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: background-color 0.3s ease;
 }
 
-header nav ul li a:hover {
-    color: #b0e0e6; /* Jasniejszy niebieski na najechaniu */
+.mobile-nav ul li a:hover {
+    background-color: #003366; /* Ciemniejszy niebieski na najechaniu */
+}
+
+/* Style dla wysuwanych okienek (waluty, państwa, konto) */
+.dropdown-content {
+    display: none; /* Domyślnie ukryte */
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+    top: 100%; /* Pod ikoną */
+    left: 50%; /* Wyśrodkowanie */
+    transform: translateX(-50%);
+    padding: 10px 0;
+}
+
+.dropdown-content .dropdown-item {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Rozłożenie tekstu i ikony flagi */
+    cursor: pointer;
+}
+
+.dropdown-content .dropdown-item:hover {
+    background-color: #f1f1f1;
+}
+
+.flag-icon {
+    width: 20px;
+    height: auto;
+    margin-left: 10px;
+    border: 1px solid #eee;
 }
 
 /* Sekcja Hero (główna) */
 .hero {
-    background: url('https://via.placeholder.com/1500x500/007bff/ffffff?text=Witaj+w+Vistula+Airlines') no-repeat center center/cover; /* Placeholder obrazu */
+    background: url('https://source.unsplash.com/1600x900/?airplane,clouds,sky') no-repeat center center/cover; /* Nowe losowe zdjęcie lotnicze */
     color: white;
     text-align: center;
     padding: 100px 20px;
     position: relative;
     z-index: 1;
+    min-height: 400px; /* Minimalna wysokość, żeby obraz był widoczny */
+    display: flex; /* Flexbox do wyśrodkowania zawartości */
+    align-items: center;
+    justify-content: center;
 }
 
 .hero::before {
@@ -80,22 +185,26 @@ header nav ul li a:hover {
     z-index: -1;
 }
 
+.hero .container {
+    padding: 0; /* Usuwamy padding z kontenera hero, żeby content był bliżej krawędzi na mobile */
+}
+
 .hero h2 {
-    font-size: 3em;
+    font-size: 2.5em; /* Mniejszy rozmiar na mobile */
     margin-bottom: 10px;
 }
 
 .hero p {
-    font-size: 1.2em;
-    margin-bottom: 30px;
+    font-size: 1.1em;
+    margin-bottom: 25px;
 }
 
 .search-form {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.95); /* Nieco bardziej kryjący */
+    padding: 20px; /* Mniejszy padding */
     border-radius: 8px;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column; /* Elementy pod sobą na mobile */
     gap: 15px;
     justify-content: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
@@ -104,16 +213,12 @@ header nav ul li a:hover {
 .search-form input[type="text"],
 .search-form input[type="date"],
 .search-form button {
-    padding: 12px 20px;
-    border: 1px solid #ddd;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1em;
-}
-
-.search-form input[type="text"],
-.search-form input[type="date"] {
-    flex: 1; /* Sprawia, że pola rozciągają się */
-    min-width: 180px; /* Minimalna szerokość, żeby się nie ściskały za bardzo */
+    width: 100%; /* Pełna szerokość */
+    box-sizing: border-box; /* Ważne dla paddingu */
 }
 
 .search-form button {
@@ -130,7 +235,7 @@ header nav ul li a:hover {
 
 /* Sekcja "O nas" */
 .about-us {
-    padding: 60px 20px;
+    padding: 40px 20px; /* Mniejszy padding */
     background-color: white;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -138,14 +243,14 @@ header nav ul li a:hover {
 }
 
 .about-us h3 {
-    font-size: 2.5em;
-    margin-bottom: 20px;
+    font-size: 2em; /* Mniejszy rozmiar */
+    margin-bottom: 15px;
     color: #004d99;
 }
 
 /* Stopka (Footer) */
 footer {
-    background-color: #333;
+    background-color: #222; /* Ciemniejszy odcień */
     color: white;
     text-align: center;
     padding: 20px 0;
@@ -154,9 +259,10 @@ footer {
 
 footer .container {
     display: flex;
+    flex-direction: column; /* Elementy pod sobą na mobile */
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
+    gap: 10px; /* Odstęp między elementami stopki */
 }
 
 footer p {
@@ -164,10 +270,14 @@ footer p {
     font-size: 0.9em;
 }
 
+.social-links {
+    margin-top: 10px;
+}
+
 .social-links a {
     color: white;
     text-decoration: none;
-    margin-left: 15px;
+    margin: 0 10px; /* Mniejszy margines */
     transition: color 0.3s ease;
 }
 
@@ -175,62 +285,59 @@ footer p {
     color: #b0e0e6;
 }
 
-/* Media Queries dla responsywności */
-@media (max-width: 768px) {
-    header .container {
-        flex-direction: column;
-        text-align: center;
+/* Media Queries dla responsywności (już włączone do styli bazowych) */
+/* Dodatkowe dla większych ekranów */
+@media (min-width: 768px) {
+    .menu-toggle {
+        display: none; /* Ukryj hamburger na większych ekranach */
+    }
+
+    header nav {
+        display: block; /* Pokaż desktopowe menu */
     }
 
     header nav ul {
-        margin-top: 15px;
-        flex-direction: column; /* Stack navigation items */
-        align-items: center;
+        display: flex;
+        flex-direction: row; /* Linki obok siebie */
+        margin-top: 0;
     }
 
     header nav ul li {
-        margin: 5px 0;
+        margin-left: 25px; /* Większy odstęp */
     }
 
-    .hero h2 {
-        font-size: 2.2em;
+    .header-left h1 {
+        font-size: 2.5em; /* Większy rozmiar dla pełnej nazwy na desktopie */
     }
 
-    .hero p {
+    .icon-item {
+        flex-direction: row; /* Ikona obok tekstu na desktopie */
+        gap: 5px;
         font-size: 1em;
     }
 
-    .search-form {
-        flex-direction: column;
+    .icon-item i {
+        margin-bottom: 0;
     }
 
-    .search-form input,
-    .search-form button {
-        width: 100%; /* Pełna szerokość na małych ekranach */
-        box-sizing: border-box; /* Ważne, żeby padding nie wychodził poza szerokość */
-    }
-
-    footer .container {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .social-links {
-        margin-top: 15px;
-    }
-}
-
-@media (max-width: 480px) {
     .hero h2 {
-        font-size: 1.8em;
+        font-size: 3em; /* Większy rozmiar na desktopie */
     }
 
     .hero p {
-        font-size: 0.9em;
+        font-size: 1.2em;
     }
 
-    .about-us h3 {
-        font-size: 2em;
+    .search-form {
+        flex-direction: row; /* Elementy obok siebie na desktopie */
+        padding: 30px;
+    }
+
+    footer .container {
+        flex-direction: row; /* Elementy obok siebie na desktopie */
+    }
+
+    .social-links {
+        margin-top: 0;
     }
 }
-
