@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vistula Airlines - Latanie z pasją!</title>
     <link rel="stylesheet" href="CSS/Style.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
 
@@ -15,12 +18,14 @@
                 <div class="menu-toggle" id="menuToggle">
                     <i class="fas fa-bars"></i>
                 </div>
-                <h1>VIS</h1> </div>
+                <h1>VIS</h1> 
+            </div>
             <div class="header-right">
                 <div class="icon-group">
                     <div class="icon-item" id="currencyIcon">
                         <i class="fas fa-money-bill-wave"></i>
-                        <span>PLN</span> <div class="dropdown-content currency-dropdown">
+                        <span>PLN</span> 
+                        <div class="dropdown-content currency-dropdown">
                             <div class="dropdown-item">EUR <i class="fas fa-euro-sign"></i></div>
                             <div class="dropdown-item">USD <i class="fas fa-dollar-sign"></i></div>
                             <div class="dropdown-item">GBP <i class="fas fa-pound-sign"></i></div>
@@ -28,7 +33,8 @@
                     </div>
                     <div class="icon-item" id="countryIcon">
                         <i class="fas fa-globe"></i>
-                        <span>PL</span> <div class="dropdown-content country-dropdown">
+                        <span>PL</span> 
+                        <div class="dropdown-content country-dropdown">
                             <div class="dropdown-item">English <img src="https://flagicons.lipis.dev/flags/4x3/gb.svg" alt="UK Flag" class="flag-icon"></div>
                             <div class="dropdown-item">Polski <img src="https://flagicons.lipis.dev/flags/4x3/pl.svg" alt="PL Flag" class="flag-icon"></div>
                         </div>
@@ -43,12 +49,16 @@
                 </div>
             </div>
         </div>
+        
         <nav class="mobile-nav" id="mobileNav">
             <ul>
-                <li><a href="#">Strona główna</a></li>
-                <li><a href="#">Rezerwacja</a></li>
-                <li><a href="#">Moje rezerwacje</a></li>
-                <li><a href="#">Kontakt</a></li>
+                <li><a href="#">Odpraw Się</a></li>
+                <li><a href="#">Zarezerwuj Lot</a></li>
+                <li><a href="#">Zainspiruj się</a></li>
+                <li><a href="#">Zaplanuj podróż</a></li>
+                <li><a href="#">Zarządzaj Rezerwacją</a></li>
+                <li><a href="#">Pomoc</a></li>
+                <li><a href="#">Flota</a></li>
             </ul>
         </nav>
     </header>
@@ -59,9 +69,9 @@
                 <h2>Odkryj świat z Vistula Airlines</h2>
                 <p>Zarezerwuj swój wymarzony lot już dziś!</p>
                 <div class="search-form">
-                    <input type="text" placeholder="Skąd?">
-                    <input type="text" placeholder="Dokąd?">
-                    <input type="date">
+                    <input type="text" id="departureAirport" placeholder="Skąd?" readonly>
+                    <input type="text" id="arrivalAirport" placeholder="Dokąd?" readonly>
+                    <input type="text" id="departureDate" placeholder="Wylot - Powrót" readonly>
                     <button>Szukaj lotów</button>
                 </div>
             </div>
@@ -87,6 +97,7 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="JS/script.js"></script>
 
 </body>
