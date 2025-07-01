@@ -103,6 +103,7 @@ header nav {
 
 .mobile-nav.open {
     transform: translateX(0); /* Widoczna, gdy otwarta */
+    display: block; /* Pokaż, gdy otwarta */
 }
 
 .mobile-nav ul {
@@ -137,6 +138,10 @@ header nav {
     left: 50%; /* Wyśrodkowanie */
     transform: translateX(-50%);
     padding: 10px 0;
+}
+
+.dropdown-content.show {
+    display: block; /* Pokaż, gdy ma klasę 'show' */
 }
 
 .dropdown-content .dropdown-item {
