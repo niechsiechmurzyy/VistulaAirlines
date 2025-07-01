@@ -1,1 +1,236 @@
+/* Podstawowe style globalne */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* Nagłówek (Header) */
+header {
+    background-color: #004d99; /* Ciemny niebieski dla linii lotniczych */
+    color: white;
+    padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Pozwala elementom zawijać się na mniejszych ekranach */
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Wyśrodkowanie linków na mniejszych ekranach */
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+header nav ul li a:hover {
+    color: #b0e0e6; /* Jasniejszy niebieski na najechaniu */
+}
+
+/* Sekcja Hero (główna) */
+.hero {
+    background: url('https://via.placeholder.com/1500x500/007bff/ffffff?text=Witaj+w+Vistula+Airlines') no-repeat center center/cover; /* Placeholder obrazu */
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4); /* Półprzezroczysta nakładka */
+    z-index: -1;
+}
+
+.hero h2 {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+.search-form {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.search-form input[type="text"],
+.search-form input[type="date"],
+.search-form button {
+    padding: 12px 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.search-form input[type="text"],
+.search-form input[type="date"] {
+    flex: 1; /* Sprawia, że pola rozciągają się */
+    min-width: 180px; /* Minimalna szerokość, żeby się nie ściskały za bardzo */
+}
+
+.search-form button {
+    background-color: #007bff; /* Jasnoniebieski przycisk */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Sekcja "O nas" */
+.about-us {
+    padding: 60px 20px;
+    background-color: white;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: 30px;
+}
+
+.about-us h3 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #004d99;
+}
+
+/* Stopka (Footer) */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.9em;
+}
+
+.social-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #b0e0e6;
+}
+
+/* Media Queries dla responsywności */
+@media (max-width: 768px) {
+    header .container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    header nav ul {
+        margin-top: 15px;
+        flex-direction: column; /* Stack navigation items */
+        align-items: center;
+    }
+
+    header nav ul li {
+        margin: 5px 0;
+    }
+
+    .hero h2 {
+        font-size: 2.2em;
+    }
+
+    .hero p {
+        font-size: 1em;
+    }
+
+    .search-form {
+        flex-direction: column;
+    }
+
+    .search-form input,
+    .search-form button {
+        width: 100%; /* Pełna szerokość na małych ekranach */
+        box-sizing: border-box; /* Ważne, żeby padding nie wychodził poza szerokość */
+    }
+
+    footer .container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .social-links {
+        margin-top: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h2 {
+        font-size: 1.8em;
+    }
+
+    .hero p {
+        font-size: 0.9em;
+    }
+
+    .about-us h3 {
+        font-size: 2em;
+    }
+}
 
