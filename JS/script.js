@@ -1,225 +1,162 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const menuToggle = document.getElementById('menuToggle');
-    const mobileNav = document.getElementById('mobileNav');
-    const currencyIcon = document.getElementById('currencyIcon');
-    const countryIcon = document.getElementById('countryIcon');
-    const accountIcon = document.getElementById('accountIcon');
+// ====== Zmienne globalne dla liczby pasażerów ======
+let adultsCount = 1;
+let teensCount = 0;
+let childrenCount = 0;
+let infantsSeatCount = 0;
+let infantsLapCount = 0;
+let selectedClass = 'economy'; // Domyślnie wybrana klasa
 
-    //airport select inputs
-    const departureAirportInput = document.getElementById('departureAirport');
-    const arrivalAirportInput = document.getElementById('arrivalAirport');
-    const departureDateInput = document.getElementById('departureDate');
+// ====== Funkcje otwierania/zamykania modalu ======
+const passengerModal = document.getElementById('passengerModal');
+const openPassengerModalBtn = document.getElementById('openPassengerModal');
 
-    // Funkcja do zamykania wszystkich dropdownów i menu mobilnego
-    function closeAllDropdownsAndMenus() {
-        document.querySelectorAll('.dropdown-content').forEach(dropdown => {
-            dropdown.classList.remove('show');
-        });
-        if (mobileNav) {
-            mobileNav.classList.remove('open');
-        }
-        // Zamknij kalendarz Flatpickr, jeśli jest otwarty
-        if (departureDateInput && departureDateInput._flatpickr && departureDateInput._flatpickr.isOpen) {
-             departureDateInput._flatpickr.close();
-        }
+// Ukryj modal na początku
+passengerModal.style.display = 'none';
+
+openPassengerModalBtn.addEventListener('click', () => {
+    passengerModal.style.display = 'flex'; // Użyj 'flex' do centrowania
+});
+
+function closePassengerModal() {
+    passengerModal.style.display = 'none';
+}
+
+// Zamknięcie modalu po kliknięciu poza jego zawartością (na overlay)
+passengerModal.addEventListener('click', (event) => {
+    if (event.target === passengerModal) {
+        closePassengerModal();
     }
+});
 
-    // Funkcja pomocnicza do przełączania dropdownów w nagłówku
-    function toggleHeaderDropdown(iconElement) {
-        const dropdown = iconElement.querySelector('.dropdown-content');
-        // Zamknij wszystkie inne dropdowny i menu, ale pomiń aktualny dropdown
-        document.querySelectorAll('.dropdown-content').forEach(d => {
-            if (d !== dropdown) {
-                d.classList.remove('show');
+// ====== Obsługa wyboru klasy podróży ======
+document.querySelectorAll('.class-button').forEach(button => {
+    button.addEventListener('click', () => {
+        // Usuń 'selected' ze wszystkich przycisków
+        document.querySelectorAll('.class-button').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+        // Dodaj 'selected' do klikniętego przycisku
+        button.classList.add('selected');
+        selectedClass = button.dataset.class; // Zapisz wybraną klasę
+        console.log('Wybrana klasa:', selectedClass);
+    });
+});
+
+// ====== Obsługa stepperów pasażerów ======
+document.querySelectorAll('.stepper-button').forEach(button => {
+    button.addEventListener('click', (event) => {
+        const type = event.target.dataset.type;
+        const action = event.target.dataset.action;
+        let currentCount;
+        let countElement;
+
+        switch (type) {
+            case 'adults':
+                currentCount = adultsCount;
+                countElement = document.getElementById('adultsCount');
+                break;
+            case 'teens':
+                currentCount = teensCount;
+                countElement = document.getElementById('teensCount');
+                break;
+            case 'children':
+                currentCount = childrenCount;
+                countElement = document.getElementById('childrenCount');
+                break;
+            case 'infants-seat':
+                currentCount = infantsSeatCount;
+                countElement = document.getElementById('infantsSeatCount');
+                break;
+            case 'infants-lap':
+                currentCount = infantsLapCount;
+                countElement = document.getElementById('infantsLapCount');
+                break;
+            default:
+                return;
+        }
+
+        if (action === 'increase') {
+            currentCount++;
+        } else if (action === 'decrease' && currentCount > 0) {
+            // Dorośli muszą być co najmniej 1
+            if (type === 'adults' && currentCount === 1) {
+                 return; // Nie pozwól na zmniejszenie dorosłych poniżej 1
             }
-        });
-        mobileNav.classList.remove('open'); // Zamknij menu mobilne
-        if (departureDateInput && departureDateInput._flatpickr && departureDateInput._flatpickr.isOpen) {
-             departureDateInput._flatpickr.close(); // Zamknij kalendarz
+            currentCount--;
+        } else {
+            return; // Nie rób nic, jeśli próbuje zmniejszyć poniżej 0 (poza dorosłymi)
         }
-        
-        if (dropdown) { 
-            dropdown.classList.toggle('show');
+
+        // Zaktualizuj zmienną globalną i wyświetlany tekst
+        switch (type) {
+            case 'adults': adultsCount = currentCount; break;
+            case 'teens': teensCount = currentCount; break;
+            case 'children': childrenCount = currentCount; break;
+            case 'infants-seat': infantsSeatCount = currentCount; break;
+            case 'infants-lap': infantsLapCount = currentCount; break;
         }
-    }
+        countElement.textContent = currentCount;
+        console.log(`Liczba ${type}: ${currentCount}`);
+    });
+});
 
-    // Obsługa kliknięcia w hamburger menu
-    if (menuToggle && mobileNav) {
-        menuToggle.addEventListener('click', function(event) {
-            mobileNav.classList.toggle('open');
-            // Zamknij inne dropdowny gdy menu mobilne jest otwierane
-            document.querySelectorAll('.dropdown-content').forEach(dropdown => {
-                dropdown.classList.remove('show');
-            });
-            if (departureDateInput && departureDateInput._flatpickr && departureDateInput._flatpickr.isOpen) {
-                departureDateInput._flatpickr.close();
-            }
-            event.stopPropagation();
-        });
-    }
+// ====== Funkcja po naciśnięciu "Potwierdź" ======
+function confirmSelection() {
+    const selection = {
+        klasaPodrozy: selectedClass,
+        pasazerowie: {
+            dorosli: adultsCount,
+            nastolatkowie: teensCount,
+            dzieci: childrenCount,
+            niemowletaZ miejscem: infantsSeatCount,
+            niemowletaNaKolanach: infantsLapCount
+        }
+    };
+    console.log("Potwierdzono wybór:", selection);
+    alert(`Potwierdzono:
+    Klasa: ${selection.klasaPodrozy}
+    Dorośli: ${selection.pasazerowie.dorosli}
+    Nastolatkowie: ${selection.pasazerowie.nastolatkowie}
+    Dzieci: ${selection.pasazerowie.dzieci}
+    Niemowlęta (miejsce): ${selection.pasazerowie.niemowletaZ miejscem}
+    Niemowlęta (na kolanach): ${selection.pasazerowie.niemowletaNaKolanach}
+    `);
+    closePassengerModal(); // Zamknij modal po potwierdzeniu
+}
 
-    // Obsługa kliknięcia w ikonę waluty
-    if (currencyIcon) {
-        currencyIcon.addEventListener('click', function(event) {
-            toggleHeaderDropdown(this);
-            event.stopPropagation();
-        });
-        // Obsługa wyboru waluty z dropdownu
-        currencyIcon.querySelectorAll('.dropdown-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const selectedValue = this.dataset.value;
-                const displaySpan = currencyIcon.querySelector('span');
-                if (displaySpan) {
-                    displaySpan.textContent = selectedValue;
-                }
-                currencyIcon.querySelector('.dropdown-content').classList.remove('show');
-            });
-        });
-    }
-
-    // Obsługa kliknięcia w ikonę państwa/języka
-    if (countryIcon) {
-        countryIcon.addEventListener('click', function(event) {
-            toggleHeaderDropdown(this);
-            event.stopPropagation();
-        });
-        // Obsługa wyboru języka/kraju z dropdownu
-        countryIcon.querySelectorAll('.dropdown-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const selectedValue = this.dataset.value;
-                const displaySpan = countryIcon.querySelector('span');
-                if (displaySpan) {
-                    displaySpan.textContent = selectedValue.toUpperCase(); 
-                }
-                countryIcon.querySelector('.dropdown-content').classList.remove('show');
-            });
-        });
-    }
-
-    // Obsługa kliknięcia w ikonę konta
-    if (accountIcon) {
-        accountIcon.addEventListener('click', function(event) {
-            toggleHeaderDropdown(this);
-            event.stopPropagation();
-        });
-    }
-
-    // Zamykanie wszystkich wysuwanych elementów po kliknięciu poza nimi
-    document.addEventListener('click', function(event) {
-        const isClickInsideHeader = event.target.closest('header');
-        const isClickInsideSearchForm = event.target.closest('.search-form');
-        const isClickInsideMobileNav = event.target.closest('#mobileNav'); // Sprawdź, czy kliknięcie wewnątrz menu mobilnego
-
-        // Zamknij wszystko, jeśli kliknięcie nie nastąpiło w nagłówku, formularzu ani menu mobilnym
-        if (!isClickInsideHeader && !isClickInsideSearchForm && !isClickInsideMobileNav) {
-            closeAllDropdownsAndMenus();
+// ====== Implementacja kalendarza (przykładowa - wymaga biblioteki) ======
+// To jest tylko placeholder. Aby to działało, musisz użyć biblioteki Datepicker.
+// Przykład użycia popularnej biblioteki jQuery UI Datepicker (jeśli masz jQuery):
+/*
+$(function() {
+    $("#departureDate").datepicker({
+        dateFormat: "yy-mm-dd", // Format daty
+        minDate: 0, // Nie można wybrać daty z przeszłości
+        onSelect: function(dateText, inst) {
+            console.log("Wybrano datę wylotu:", dateText);
+            // Tutaj możesz zapisać wybraną datę do zmiennej lub formularza
         }
     });
+});
+*/
 
+// Bez jQuery UI, możesz użyć czystego JavaScriptu lub innej biblioteki.
+// Poniżej bardzo prosty przykład z HTML5 date input, który działa natywnie w przeglądarkach.
+// Jeśli chcesz bardziej zaawansowany kalendarz, poszukaj bibliotek takich jak flatpickr, Pikaday, lub użyj jQuery UI Datepicker.
 
-    // --- Inicjalizacja Kalendarza Flatpickr ---
-    if (departureDateInput) {
-        flatpickr(departureDateInput, {
-            mode: "range", // Pozwala na wybór zakresu dat (wylot-powrót)
-            minDate: "today", // Minimalna data to dziś
-            maxDate: new Date().fp_incr("1 year"), // Maksymalna data to rok w przód
-            dateFormat: "d.m.Y", // Format daty np. 25.07.2025
-            locale: "pl", // Ustawia język na polski (wymaga dodatkowego pliku Flatpickr locale)
-            onOpen: function(selectedDates, dateStr, instance) {
-                closeAllDropdownsAndMenus(); // Zamknij inne dropdowny i menu, gdy otwierasz kalendarz
-            },
-            onChange: function(selectedDates, dateStr, instance) {
-                // Ta funkcja wykonuje się, gdy data zostanie zmieniona
-                if (selectedDates.length === 2) {
-                    // Jeśli wybrano datę wylotu i powrotu, możesz zamknąć kalendarz
-                    // instance.close(); 
-                }
-            }
-        });
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    const departureDateInput = document.getElementById('departureDate');
 
-    // --- Dane dla lotnisk i funkcja ich wyświetlania ---
-    const airportsData = {
-        "Polska": [
-            "Warszawa-Chopin (WAW)",
-            "Kraków (KRK)",
-            "Gdańsk (GDN)",
-            "Katowice (KTW)",
-            "Wrocław (WRO)",
-            "Modlin (WMI)",
-            "Poznań (POZ)",
-            "Łódź (LCJ)",
-            "Szczecin (SZZ)",
-            "Lublin (LUZ)",
-            "Rzeszów (RZE)",
-            "CPK (Lotnisko Centralne) - w budowie" 
-        ],
-        "Niemcy": [
-            "Berlin (BER)",
-            "Monachium (MUC)",
-            "Frankfurt (FRA)",
-            "Düsseldorf (DUS)",
-            "Hamburg (HAM)",
-            "Kolonia/Bonn (CGN)"
-        ],
-        "Wielka Brytania": [
-            "Londyn-Heathrow (LHR)",
-            "Londyn-Gatwick (LGW)",
-            "Londyn-Stansted (STN)",
-            "Manchester (MAN)",
-            "Birmingham (BHX)"
-        ],
-        "Francja": [
-            "Paryż-CDG (CDG)",
-            "Paryż-Orly (ORY)",
-            "Nicea (NCE)",
-            "Marsylia (MRS)"
-        ]
-    };
+    // Aby symulować "pokazanie się okna kalendarza" można po prostu zmienić typ inputu
+    // na "date", co w nowoczesnych przeglądarkach wywoła natywny kalendarz.
+    // Jeśli chcesz niestandardowy kalendarz, musisz zintegrować zewnętrzną bibliotekę.
+    departureDateInput.type = 'date'; // Zmienia typ inputu na date, co aktywuje natywny kalendarz
 
-    function createAirportDropdown(inputElement) {
-        const dropdown = document.createElement('div');
-        dropdown.classList.add('airport-dropdown-content', 'dropdown-content');
+    departureDateInput.addEventListener('change', (event) => {
+        console.log("Wybrano datę wylotu (natywny kalendarz):", event.target.value);
+        // Tutaj możesz przetworzyć wybraną datę
+    });
 
-        for (const country in airportsData) {
-            const countryHeader = document.createElement('div');
-            countryHeader.classList.add('dropdown-country-header');
-            countryHeader.textContent = country;
-            dropdown.appendChild(countryHeader);
-
-            airportsData[country].forEach(airport => {
-                const airportItem = document.createElement('div');
-                airportItem.classList.add('dropdown-item');
-                airportItem.textContent = airport;
-                airportItem.addEventListener('click', (event) => {
-                    inputElement.value = airport;
-                    dropdown.classList.remove('show');
-                    event.stopPropagation(); 
-                });
-                dropdown.appendChild(airportItem);
-            });
-        }
-        // Dodaj dropdown do input-container
-        inputElement.closest('.input-container').appendChild(dropdown);
-
-        // Obsługa kliknięcia inputa
-        inputElement.addEventListener('click', (event) => {
-            closeAllDropdownsAndMenus(); // Zamknij inne elementy
-            dropdown.classList.toggle('show'); // Pokaż/ukryj ten dropdown
-            event.stopPropagation(); 
-        });
-        
-        // Zamykanie dropdownu po kliknięciu poza nim
-        document.addEventListener('click', function(event) {
-            const inputContainer = inputElement.closest('.input-container');
-            if (inputContainer && !inputContainer.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.remove('show');
-            }
-        });
-    }
-
-    // Inicjalizacja dropdownów lotnisk
-    createAirportDropdown(departureAirportInput);
-    createAirportDropdown(arrivalAirportInput);
-
+    // Jeżeli chcesz, aby input date wyglądał jak zwykły input, a kalendarz pojawiał się po kliknięciu
+    // musisz użyć biblioteki JS. Bez niej input type="date" zawsze będzie miał małą ikonkę kalendarza.
 });
