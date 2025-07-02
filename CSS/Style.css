@@ -6,6 +6,7 @@ body {
     box-sizing: border-box;
     background-color: #FFFFFF; /* Białe tło całej strony */
     color: #333;
+    overflow-x: hidden; /* Zapobiega poziomemu scrollowaniu na małych ekranach */
 }
 
 .container {
@@ -90,20 +91,21 @@ header nav {
     display: none;
     width: 250px;
     background-color: #004d99;
-    position: absolute;
-    top: 100%;
+    position: fixed; /* Zmienione na fixed, aby zawsze było widoczne na ekranie */
+    top: 0; /* Zaczyna się od samej góry */
     left: 0;
-    height: calc(100vh - 60px);
+    height: 100vh; /* Pełna wysokość viewportu */
+    overflow-y: auto; /* Włącz scrollowanie, jeśli menu jest dłuższe niż ekran */
     box-shadow: 2px 0 5px rgba(0,0,0,0.3);
-    padding-top: 20px;
+    padding-top: 60px; /* Przestrzeń na nagłówek, jeśli header jest fixed */
     transition: transform 0.3s ease-in-out;
     transform: translateX(-100%);
-    z-index: 99;
+    z-index: 1000; /* Bardzo wysoki z-index, aby zawsze było na wierzchu */
 }
 
 .mobile-nav.open {
     transform: translateX(0);
-    display: block;
+    display: block; /* Zapewnia, że jest widoczne */
 }
 
 .mobile-nav ul {
@@ -132,11 +134,12 @@ header nav {
     background-color: #f9f9f9;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 100; /* Zwiększony z-index, żeby był nad innymi elementami */
+    z-index: 101; /* Zwiększony z-index, aby był nad innymi elementami */
     border-radius: 5px;
-    top: 100%; /* Ważne: poniżej elementu rodzica z position: relative */
-    left: 50%;
-    transform: translateX(-50%);
+    top: 100%; 
+    right: 0; /* Przyklejamy do prawej krawędzi ikony */
+    left: auto; /* Resetujemy lewą pozycję */
+    transform: none; /* Resetujemy transform, jeśli było wcześniej */
     padding: 10px 0;
 }
 
@@ -213,12 +216,11 @@ header nav {
     gap: 15px;
     justify-content: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    position: relative; /* Ważne dla pozycjonowania dropdownów lotnisk, ale teraz na kontenerach inputów */
 }
 
 /* Kontener dla inputów w formularzu, aby dropdowny były poprawnie pozycjonowane */
 .input-container {
-    position: relative; /* Ważne! To jest rodzic dla airport-dropdown-content */
+    position: relative; 
     width: 100%;
 }
 
@@ -248,17 +250,17 @@ header nav {
 /* Style dla wysuwanych list lotnisk */
 .airport-dropdown-content {
     position: absolute;
-    top: 100%; /* Poniżej inputa, bo rodzicem jest .input-container */
+    top: 100%; 
     left: 0;
-    width: 100%;
-    max-height: 200px; /* Ograniczenie wysokości i scroll */
+    width: 100%; 
+    max-height: 200px; 
     overflow-y: auto;
     background-color: #fff;
     border: 1px solid #ddd;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    z-index: 10; /* Wysoki z-index, aby były nad innymi elementami formularza */
-    display: none; /* Domyślnie ukryte */
-    border-radius: 0 0 5px 5px; /* Zaokrąglone rogi tylko na dole */
+    z-index: 99; 
+    display: none; 
+    border-radius: 0 0 5px 5px; 
 }
 
 .airport-dropdown-content.show {
@@ -271,7 +273,7 @@ header nav {
     font-weight: bold;
     color: #555;
     border-bottom: 1px solid #ddd;
-    position: sticky; /* Nagłówki krajów przyklejają się przy scrollu */
+    position: sticky; 
     top: 0;
     z-index: 5;
 }
@@ -330,30 +332,38 @@ footer p {
 
 /* Flatpickr (Kalendarz) customizacja - niebieski styl */
 .flatpickr-calendar {
-    background: #ffffff; /* Białe tło kalendarza */
-    border: 1px solid #007bff; /* Niebieska ramka */
+    background: #ffffff; 
+    border: 1px solid #007bff; 
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     z-index: 9999; /* Bardzo wysoki z-index, aby był zawsze na wierzchu */
+    /* Zmiana pozycjonowania Flatpickr, aby lepiej działał na mobile */
+    /* Użycie !important, żeby nadpisać domyślne style Flatpickr */
+    position: fixed !important; /* Fixed dla lepszej widoczności na mobile */
+    top: 50% !important;
+    left: 50% !important; 
+    transform: translate(-50%, -50%) !important; /* Centrowanie na ekranie */
+    max-width: 90vw; /* Ograniczenie szerokości na małych ekranach */
+    width: auto !important; /* Pozwoli na automatyczne dopasowanie szerokości Flatpickr */
 }
 
 .flatpickr-months .flatpickr-month {
-    background-color: #007bff; /* Niebieskie tło miesiąca */
+    background-color: #007bff; 
     color: white;
-    fill: white; /* Strzałki nawigacyjne */
+    fill: white; 
 }
 
 .flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-months-selected {
-    color: #007bff; /* Wybrany miesiąc w rozwijanej liście */
+    color: #007bff; 
 }
 
 .flatpickr-current-month .numInputWrapper span.arrowUp:after,
 .flatpickr-current-month .numInputWrapper span.arrowDown:after {
-    border-color: white; /* Kolor strzałek w roku */
+    border-color: white; 
 }
 
 .flatpickr-day {
-    color: #333; /* Domyślny kolor dni */
+    color: #333; 
 }
 
 .flatpickr-day.selected,
@@ -374,24 +384,241 @@ footer p {
 .flatpickr-day.selected.nextMonthDay,
 .flatpickr-day.startRange.nextMonthDay,
 .flatpickr-day.endRange.nextMonthDay {
-    background: #007bff; /* Niebieskie tło dla wybranych dat i zakresu */
+    background: #007bff; 
     border-color: #007bff;
     color: white;
 }
 
 .flatpickr-day.today {
-    border-color: #007bff; /* Niebieska ramka dla dzisiejszego dnia */
+    border-color: #007bff; 
     color: #007bff;
 }
 
 .flatpickr-day.today.selected {
-    background: #0056b3; /* Ciemniejszy niebieski dla dzisiejszej wybranej daty */
+    background: #0056b3; 
     border-color: #0056b3;
 }
 
 .flatpickr-day.today:hover {
-    background: #f0f0f0; /* Jasny szary na najechanie dzisiejszą datą */
+    background: #f0f0f0; 
 }
+
+/* --- Style dla Modal (Klasa podróży i pasażerowie) --- */
+.modal {
+    display: none; /* Domyślnie ukryty */
+    position: fixed; /* Pozostaje na wierzchu */
+    z-index: 10000; /* Bardzo wysoki z-index */
+    left: 0;
+    top: 0;
+    width: 100%; /* Pełna szerokość */
+    height: 100%; /* Pełna wysokość */
+    overflow: auto; /* Włącz scrollowanie, jeśli zawartość jest za duża */
+    background-color: rgba(0,0,0,0.4); /* Półprzezroczyste tło */
+    display: flex; /* Flexbox dla centrowania zawartości */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Centruje w pionie i poziomie */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%; /* Szerokość na mobile */
+    max-width: 500px; /* Maksymalna szerokość na desktopie */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh; /* Ograniczenie wysokości na mobile */
+    overflow-y: auto; /* Scrollowanie wewnątrz modala */
+}
+
+/* Animacja wysuwania modala */
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #004d99;
+}
+
+.close-button {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-body h4 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #555;
+    font-size: 1.1em;
+}
+
+.travel-class-options {
+    display: flex;
+    flex-wrap: wrap; /* Pozwala na zawijanie elementów na mniejszych ekranach */
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.class-option {
+    flex: 1; /* Równa szerokość dla wszystkich opcji */
+    min-width: 120px; /* Minimalna szerokość, żeby nie były za małe */
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    transition: background-color 0.2s, border-color 0.2s;
+    font-weight: bold;
+    color: #555;
+}
+
+.class-option.selected {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.class-option:hover:not(.selected) {
+    background-color: #e0e0e0;
+}
+
+.passenger-type {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.passenger-type:last-child {
+    border-bottom: none;
+}
+
+.passenger-type label {
+    font-size: 1em;
+    color: #333;
+    display: flex; /* Umożliwia ułożenie tekstu i ikony "i" obok siebie */
+    align-items: center;
+}
+
+.info-icon {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    line-height: 18px;
+    font-size: 0.8em;
+    margin-left: 5px;
+    cursor: help;
+    position: relative;
+}
+
+/* Tooltip dla ikony "i" */
+.info-icon::after {
+    content: attr(data-info); /* Wyświetla tekst z atrybutu data-info */
+    position: absolute;
+    bottom: 120%; /* Nad ikoną */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 0.7em;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    z-index: 10;
+}
+
+.info-icon:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quantity-control button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 1.2em;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.quantity-control button:hover {
+    background-color: #0056b3;
+}
+
+.quantity {
+    font-size: 1.1em;
+    font-weight: bold;
+    min-width: 20px; /* Minimalna szerokość dla wyświetlania liczby */
+    text-align: center;
+}
+
+.modal-footer {
+    padding-top: 20px;
+    text-align: center;
+}
+
+.confirm-button {
+    background-color: #28a745; /* Zielony przycisk potwierdzenia */
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.confirm-button:hover {
+    background-color: #218838;
+}
+
 
 /* Media Queries dla responsywności */
 @media (min-width: 768px) {
@@ -400,7 +627,7 @@ footer p {
     }
 
     header nav {
-        display: block; /* Pokaż desktopowe menu na większych ekranach */
+        display: block; 
     }
 
     header nav ul {
@@ -438,19 +665,44 @@ footer p {
     .search-form {
         flex-direction: row;
         padding: 30px;
+        flex-wrap: wrap; /* Pozwoli inputom zawijać się na desktopie, jeśli jest ich więcej */
     }
 
     .input-container {
-        /* W trybie desktop, inputy są w jednym rzędzie, więc kontener może zająć 1/3 szerokości */
         flex: 1; 
-        max-width: 30%; /* Dostosuj w razie potrzeby */
+        min-width: 200px; /* Zapewnia minimalną szerokość na desktopie */
+        max-width: 23%; /* Dostosuj w razie potrzeby, aby formularz wyglądał ładnie */
+        margin-right: 1%; /* Mały odstęp między inputami */
     }
 
+    .input-container:last-of-type {
+        margin-right: 0;
+    }
+
+    .search-form button {
+        flex: 0 0 100%; /* Przycisk na całą szerokość pod inputami na desktopie */
+        margin-top: 15px; /* Odstęp od inputów */
+    }
+    
     footer .container {
         flex-direction: row;
     }
 
     .social-links {
         margin-top: 0;
+    }
+
+    /* Modal na desktopie będzie miał stałą szerokość */
+    .modal-content {
+        width: 500px; /* Stała szerokość na desktopie */
+    }
+
+    .travel-class-options {
+        flex-wrap: nowrap; /* Na desktopie niech się nie zawija */
+    }
+
+    .class-option {
+        flex: 1; /* Dzieli równo przestrzeń */
+        min-width: auto; /* Resetujemy min-width */
     }
 }
