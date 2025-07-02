@@ -88,7 +88,7 @@ header nav {
 
 /* Stylizacja mobilnego menu (szufladki) */
 .mobile-nav {
-    display: none;
+    display: none; /* Domyślnie ukryte */
     width: 250px;
     background-color: #004d99;
     position: fixed; /* Zmienione na fixed, aby zawsze było widoczne na ekranie */
@@ -99,12 +99,12 @@ header nav {
     box-shadow: 2px 0 5px rgba(0,0,0,0.3);
     padding-top: 60px; /* Przestrzeń na nagłówek, jeśli header jest fixed */
     transition: transform 0.3s ease-in-out;
-    transform: translateX(-100%);
+    transform: translateX(-100%); /* Domyślnie poza ekranem */
     z-index: 1000; /* Bardzo wysoki z-index, aby zawsze było na wierzchu */
 }
 
 .mobile-nav.open {
-    transform: translateX(0);
+    transform: translateX(0); /* Wysuwa menu na ekran */
     display: block; /* Zapewnia, że jest widoczne */
 }
 
@@ -250,16 +250,16 @@ header nav {
 /* Style dla wysuwanych list lotnisk */
 .airport-dropdown-content {
     position: absolute;
-    top: 100%; 
+    top: 100%; /* Poniżej pola input */
     left: 0;
-    width: 100%; 
-    max-height: 200px; 
-    overflow-y: auto;
+    width: 100%; /* Pełna szerokość inputa */
+    max-height: 200px; /* Maksymalna wysokość, aby nie zajmować całego ekranu */
+    overflow-y: auto; /* Włącz scrollowanie, jeśli lista jest długa */
     background-color: #fff;
     border: 1px solid #ddd;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    z-index: 99; 
-    display: none; 
+    z-index: 99; /* Niżej niż modale, ale wyżej niż tło */
+    display: none; /* Domyślnie ukryte */
     border-radius: 0 0 5px 5px; 
 }
 
@@ -273,7 +273,7 @@ header nav {
     font-weight: bold;
     color: #555;
     border-bottom: 1px solid #ddd;
-    position: sticky; 
+    position: sticky; /* Nagłówek kraju będzie się przyklejać podczas scrollowania */
     top: 0;
     z-index: 5;
 }
@@ -405,7 +405,7 @@ footer p {
 
 /* --- Style dla Modal (Klasa podróży i pasażerowie) --- */
 .modal {
-    display: none; /* Domyślnie ukryty */
+    display: none; /* Domyślnie ukryty - kluczowa zmiana */
     position: fixed; /* Pozostaje na wierzchu */
     z-index: 10000; /* Bardzo wysoki z-index */
     left: 0;
