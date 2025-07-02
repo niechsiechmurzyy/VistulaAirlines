@@ -67,7 +67,7 @@ header .container {
     flex-direction: column;
     align-items: center;
     cursor: pointer;
-    position: relative;
+    position: relative; /* Ważne dla pozycjonowania dropdown-content */
     font-size: 0.8em;
 }
 
@@ -132,9 +132,9 @@ header nav {
     background-color: #f9f9f9;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 10; /* Zwiększony z-index, żeby był nad innymi elementami */
+    z-index: 100; /* Zwiększony z-index, żeby był nad innymi elementami */
     border-radius: 5px;
-    top: 100%;
+    top: 100%; /* Ważne: poniżej elementu rodzica z position: relative */
     left: 50%;
     transform: translateX(-50%);
     padding: 10px 0;
@@ -213,7 +213,13 @@ header nav {
     gap: 15px;
     justify-content: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    position: relative; /* Ważne dla pozycjonowania dropdownów lotnisk */
+    position: relative; /* Ważne dla pozycjonowania dropdownów lotnisk, ale teraz na kontenerach inputów */
+}
+
+/* Kontener dla inputów w formularzu, aby dropdowny były poprawnie pozycjonowane */
+.input-container {
+    position: relative; /* Ważne! To jest rodzic dla airport-dropdown-content */
+    width: 100%;
 }
 
 .search-form input[type="text"],
@@ -242,17 +248,17 @@ header nav {
 /* Style dla wysuwanych list lotnisk */
 .airport-dropdown-content {
     position: absolute;
-    top: 100%; /* Poniżej inputa */
+    top: 100%; /* Poniżej inputa, bo rodzicem jest .input-container */
     left: 0;
     width: 100%;
     max-height: 200px; /* Ograniczenie wysokości i scroll */
     overflow-y: auto;
     background-color: #fff;
     border: 1px solid #ddd;
-    border-top: none;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    z-index: 10;
+    z-index: 10; /* Wysoki z-index, aby były nad innymi elementami formularza */
     display: none; /* Domyślnie ukryte */
+    border-radius: 0 0 5px 5px; /* Zaokrąglone rogi tylko na dole */
 }
 
 .airport-dropdown-content.show {
@@ -270,12 +276,65 @@ header nav {
     z-index: 5;
 }
 
+/* Sekcja "O nas" */
+.about-us {
+    padding: 40px 20px;
+    background-color: white;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: 30px;
+}
+
+.about-us h3 {
+    font-size: 2em;
+    margin-bottom: 15px;
+    color: #004d99;
+}
+
+/* Stopka (Footer) */
+footer {
+    background-color: #222;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+footer .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.9em;
+}
+
+.social-links {
+    margin-top: 10px;
+}
+
+.social-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #b0e0e6;
+}
+
 /* Flatpickr (Kalendarz) customizacja - niebieski styl */
 .flatpickr-calendar {
     background: #ffffff; /* Białe tło kalendarza */
     border: 1px solid #007bff; /* Niebieska ramka */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
+    z-index: 9999; /* Bardzo wysoki z-index, aby był zawsze na wierzchu */
 }
 
 .flatpickr-months .flatpickr-month {
@@ -379,6 +438,12 @@ header nav {
     .search-form {
         flex-direction: row;
         padding: 30px;
+    }
+
+    .input-container {
+        /* W trybie desktop, inputy są w jednym rzędzie, więc kontener może zająć 1/3 szerokości */
+        flex: 1; 
+        max-width: 30%; /* Dostosuj w razie potrzeby */
     }
 
     footer .container {
