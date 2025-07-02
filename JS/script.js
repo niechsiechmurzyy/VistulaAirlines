@@ -192,8 +192,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 dropdown.appendChild(airportItem);
             });
         }
-        // Dodaj dropdown jako rodzeństwo inputa, w obrębie search-form
-        inputElement.parentNode.insertBefore(dropdown, inputElement.nextSibling);
+        // Dodaj dropdown do input-container
+        inputElement.closest('.input-container').appendChild(dropdown);
 
         // Obsługa kliknięcia inputa
         inputElement.addEventListener('click', (event) => {
@@ -204,7 +204,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Zamykanie dropdownu po kliknięciu poza nim, ale wewnątrz search-form
         document.addEventListener('click', function(event) {
-            if (!inputElement.contains(event.target) && !dropdown.contains(event.target)) {
+            // Sprawdź, czy kliknięcie było wewnątrz kontenera inputa lub w samym dropdownie
+            const inputContainer = inputElement.closest('.input-container');
+            if (inputContainer && !inputContainer.contains(event.target)) {
                 dropdown.classList.remove('show');
             }
         });
