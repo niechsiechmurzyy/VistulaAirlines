@@ -6,6 +6,7 @@ body {
     box-sizing: border-box;
     background-color: #FFFFFF; /* Białe tło całej strony */
     color: #333;
+    overflow-x: hidden; /* Zapobiega poziomemu scrollowaniu na małych ekranach */
 }
 
 .container {
@@ -90,20 +91,21 @@ header nav {
     display: none;
     width: 250px;
     background-color: #004d99;
-    position: absolute;
-    top: 100%;
+    position: fixed; /* Zmienione na fixed, aby zawsze było widoczne na ekranie */
+    top: 0; /* Zaczyna się od samej góry */
     left: 0;
-    height: calc(100vh - 60px);
+    height: 100vh; /* Pełna wysokość viewportu */
+    overflow-y: auto; /* Włącz scrollowanie, jeśli menu jest dłuższe niż ekran */
     box-shadow: 2px 0 5px rgba(0,0,0,0.3);
-    padding-top: 20px;
+    padding-top: 60px; /* Przestrzeń na nagłówek, jeśli header jest fixed */
     transition: transform 0.3s ease-in-out;
     transform: translateX(-100%);
-    z-index: 99;
+    z-index: 1000; /* Bardzo wysoki z-index, aby zawsze było na wierzchu */
 }
 
 .mobile-nav.open {
     transform: translateX(0);
-    display: block;
+    display: block; /* Zapewnia, że jest widoczne */
 }
 
 .mobile-nav ul {
@@ -132,11 +134,12 @@ header nav {
     background-color: #f9f9f9;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 100; /* Zwiększony z-index, żeby był nad innymi elementami */
+    z-index: 101; /* Zwiększony z-index, aby był nad innymi elementami */
     border-radius: 5px;
-    top: 100%; /* Ważne: poniżej elementu rodzica z position: relative */
-    left: 50%;
-    transform: translateX(-50%);
+    top: 100%; 
+    right: 0; /* Przyklejamy do prawej krawędzi ikony */
+    left: auto; /* Resetujemy lewą pozycję */
+    transform: none; /* Resetujemy transform, jeśli było wcześniej */
     padding: 10px 0;
 }
 
@@ -213,7 +216,7 @@ header nav {
     gap: 15px;
     justify-content: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    position: relative; /* Ważne dla pozycjonowania dropdownów lotnisk, ale teraz na kontenerach inputów */
+    /* usunięto position: relative; bo teraz to input-container ma być relative */
 }
 
 /* Kontener dla inputów w formularzu, aby dropdowny były poprawnie pozycjonowane */
@@ -250,13 +253,13 @@ header nav {
     position: absolute;
     top: 100%; /* Poniżej inputa, bo rodzicem jest .input-container */
     left: 0;
-    width: 100%;
+    width: 100%; /* Rozciąga się na całą szerokość input-container */
     max-height: 200px; /* Ograniczenie wysokości i scroll */
     overflow-y: auto;
     background-color: #fff;
     border: 1px solid #ddd;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    z-index: 10; /* Wysoki z-index, aby były nad innymi elementami formularza */
+    z-index: 99; /* Wysoki z-index, aby były nad innymi elementami formularza */
     display: none; /* Domyślnie ukryte */
     border-radius: 0 0 5px 5px; /* Zaokrąglone rogi tylko na dole */
 }
@@ -335,6 +338,10 @@ footer p {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     z-index: 9999; /* Bardzo wysoki z-index, aby był zawsze na wierzchu */
+    /* Zmiana pozycjonowania Flatpickr, aby lepiej działał na mobile */
+    left: 50% !important; 
+    transform: translateX(-50%) !important;
+    max-width: 90vw; /* Ograniczenie szerokości na małych ekranach */
 }
 
 .flatpickr-months .flatpickr-month {
@@ -443,7 +450,7 @@ footer p {
     .input-container {
         /* W trybie desktop, inputy są w jednym rzędzie, więc kontener może zająć 1/3 szerokości */
         flex: 1; 
-        max-width: 30%; /* Dostosuj w razie potrzeby */
+        max-width: 30%; /* Dostosuj w razie potrzeby, aby formularz wyglądał ładnie */
     }
 
     footer .container {
