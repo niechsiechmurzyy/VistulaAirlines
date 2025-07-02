@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Funkcja pomocnicza do przełączania dropdownów (waluta, kraj, konto)
+    // Funkcja pomocnicza do przełączania dropdownów w nagłówku
     function toggleHeaderDropdown(iconElement) {
         const dropdown = iconElement.querySelector('.dropdown-content');
         // Zamknij wszystkie inne dropdowny i menu, ale pomiń aktualny dropdown
@@ -33,12 +33,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 d.classList.remove('show');
             }
         });
-        mobileNav.classList.remove('open');
+        mobileNav.classList.remove('open'); // Zamknij menu mobilne
         if (departureDateInput && departureDateInput._flatpickr && departureDateInput._flatpickr.isOpen) {
-             departureDateInput._flatpickr.close();
+             departureDateInput._flatpickr.close(); // Zamknij kalendarz
         }
         
-        if (dropdown) { // Sprawdź czy dropdown istnieje
+        if (dropdown) { 
             dropdown.classList.toggle('show');
         }
     }
@@ -47,7 +47,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (menuToggle && mobileNav) {
         menuToggle.addEventListener('click', function(event) {
             mobileNav.classList.toggle('open');
-            closeAllDropdownsAndMenus(); // Zamknij inne elementy, gdy otwierasz menu
+            // Zamknij inne dropdowny gdy menu mobilne jest otwierane
+            document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+            if (departureDateInput && departureDateInput._flatpickr && departureDateInput._flatpickr.isOpen) {
+                departureDateInput._flatpickr.close();
+            }
             event.stopPropagation();
         });
     }
@@ -83,8 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const selectedValue = this.dataset.value;
                 const displaySpan = countryIcon.querySelector('span');
                 if (displaySpan) {
-                    // Możesz tu zaimplementować bardziej zaawansowaną logikę zmiany języka
-                    displaySpan.textContent = selectedValue.toUpperCase(); // np. 'PL', 'EN'
+                    displaySpan.textContent = selectedValue.toUpperCase(); 
                 }
                 countryIcon.querySelector('.dropdown-content').classList.remove('show');
             });
@@ -103,12 +108,14 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', function(event) {
         const isClickInsideHeader = event.target.closest('header');
         const isClickInsideSearchForm = event.target.closest('.search-form');
+        const isClickInsideMobileNav = event.target.closest('#mobileNav'); // Sprawdź, czy kliknięcie wewnątrz menu mobilnego
 
-        // Zamknij wszystko, jeśli kliknięcie nie nastąpiło w nagłówku ani formularzu
-        if (!isClickInsideHeader && !isClickInsideSearchForm) {
+        // Zamknij wszystko, jeśli kliknięcie nie nastąpiło w nagłówku, formularzu ani menu mobilnym
+        if (!isClickInsideHeader && !isClickInsideSearchForm && !isClickInsideMobileNav) {
             closeAllDropdownsAndMenus();
         }
     });
+
 
     // --- Inicjalizacja Kalendarza Flatpickr ---
     if (departureDateInput) {
@@ -125,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Ta funkcja wykonuje się, gdy data zostanie zmieniona
                 if (selectedDates.length === 2) {
                     // Jeśli wybrano datę wylotu i powrotu, możesz zamknąć kalendarz
-                    // instance.close(); // Możesz to odkomentować, jeśli chcesz auto-zamykanie
+                    // instance.close(); 
                 }
             }
         });
@@ -145,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "Szczecin (SZZ)",
             "Lublin (LUZ)",
             "Rzeszów (RZE)",
-            "CPK (Lotnisko Centralne) - w budowie" // Symbolicznie
+            "CPK (Lotnisko Centralne) - w budowie" 
         ],
         "Niemcy": [
             "Berlin (BER)",
@@ -187,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 airportItem.addEventListener('click', (event) => {
                     inputElement.value = airport;
                     dropdown.classList.remove('show');
-                    event.stopPropagation(); // Zapobiegaj zamykaniu innych dropdownów
+                    event.stopPropagation(); 
                 });
                 dropdown.appendChild(airportItem);
             });
@@ -199,14 +206,13 @@ document.addEventListener('DOMContentLoaded', function() {
         inputElement.addEventListener('click', (event) => {
             closeAllDropdownsAndMenus(); // Zamknij inne elementy
             dropdown.classList.toggle('show'); // Pokaż/ukryj ten dropdown
-            event.stopPropagation(); // Zapobiegaj zamykaniu po kliknięciu na dokument
+            event.stopPropagation(); 
         });
         
-        // Zamykanie dropdownu po kliknięciu poza nim, ale wewnątrz search-form
+        // Zamykanie dropdownu po kliknięciu poza nim
         document.addEventListener('click', function(event) {
-            // Sprawdź, czy kliknięcie było wewnątrz kontenera inputa lub w samym dropdownie
             const inputContainer = inputElement.closest('.input-container');
-            if (inputContainer && !inputContainer.contains(event.target)) {
+            if (inputContainer && !inputContainer.contains(event.target) && !dropdown.contains(event.target)) {
                 dropdown.classList.remove('show');
             }
         });
