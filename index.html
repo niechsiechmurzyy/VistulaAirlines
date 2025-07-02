@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-</head>
+    </head>
 <body>
 
     <header>
@@ -26,17 +26,23 @@
                         <i class="fas fa-money-bill-wave"></i>
                         <span>PLN</span> 
                         <div class="dropdown-content currency-dropdown">
-                            <div class="dropdown-item">EUR <i class="fas fa-euro-sign"></i></div>
-                            <div class="dropdown-item">USD <i class="fas fa-dollar-sign"></i></div>
-                            <div class="dropdown-item">GBP <i class="fas fa-pound-sign"></i></div>
+                            <div class="dropdown-item" data-value="PLN">PLN <i class="fas fa-money-bill-wave"></i></div>
+                            <div class="dropdown-item" data-value="EUR">EUR <i class="fas fa-euro-sign"></i></div>
+                            <div class="dropdown-item" data-value="USD">USD <i class="fas fa-dollar-sign"></i></div>
+                            <div class="dropdown-item" data-value="GBP">GBP <i class="fas fa-pound-sign"></i></div>
+                            <div class="dropdown-item" data-value="JPY">JPY <i class="fas fa-yen-sign"></i></div>
+                            <div class="dropdown-item" data-value="CHF">CHF <i class="fas fa-franc-sign"></i></div>
                         </div>
                     </div>
                     <div class="icon-item" id="countryIcon">
                         <i class="fas fa-globe"></i>
                         <span>PL</span> 
                         <div class="dropdown-content country-dropdown">
-                            <div class="dropdown-item">English <img src="https://flagicons.lipis.dev/flags/4x3/gb.svg" alt="UK Flag" class="flag-icon"></div>
-                            <div class="dropdown-item">Polski <img src="https://flagicons.lipis.dev/flags/4x3/pl.svg" alt="PL Flag" class="flag-icon"></div>
+                            <div class="dropdown-item" data-value="en">English <img src="https://flagicons.lipis.dev/flags/4x3/gb.svg" alt="UK Flag" class="flag-icon"></div>
+                            <div class="dropdown-item" data-value="pl">Polski <img src="https://flagicons.lipis.dev/flags/4x3/pl.svg" alt="PL Flag" class="flag-icon"></div>
+                            <div class="dropdown-item" data-value="de">Deutsch <img src="https://flagicons.lipis.dev/flags/4x3/de.svg" alt="DE Flag" class="flag-icon"></div>
+                            <div class="dropdown-item" data-value="fr">Français <img src="https://flagicons.lipis.dev/flags/4x3/fr.svg" alt="FR Flag" class="flag-icon"></div>
+                            <div class="dropdown-item" data-value="es">Español <img src="https://flagicons.lipis.dev/flags/4x3/es.svg" alt="ES Flag" class="flag-icon"></div>
                         </div>
                     </div>
                     <div class="icon-item" id="accountIcon">
@@ -98,6 +104,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script>
     <script src="JS/script.js"></script>
 
 </body>
