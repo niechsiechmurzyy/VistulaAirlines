@@ -40,11 +40,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (mobileNav) {
             mobileNav.classList.remove('open');
         }
+        // Sprawdź, czy Flatpickr jest zainicjalizowany i otwarty
         if (departureDateInput && departureDateInput._flatpickr && departureDateInput._flatpickr.isOpen) {
              departureDateInput._flatpickr.close();
         }
         if (passengerModal) {
-            passengerModal.style.display = 'none';
+            passengerModal.style.display = 'none'; // Ukryj modal
         }
     }
 
@@ -53,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const dropdown = iconElement.querySelector('.dropdown-content');
         closeAllInteractiveElements(); // Zamknij wszystko, zanim otworzysz ten dropdown
         if (dropdown) { 
-            dropdown.classList.toggle('show');
+            dropdown.classList.add('show'); // Zawsze dodaj klasę, aby pokazać
         }
     }
 
@@ -61,8 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (menuToggle && mobileNav) {
         menuToggle.addEventListener('click', function(event) {
             closeAllInteractiveElements(); // Zamknij wszystko, zanim otworzysz menu
-            mobileNav.classList.toggle('open');
-            event.stopPropagation();
+            mobileNav.classList.add('open'); // Dodaj klasę, aby otworzyć menu
+            event.stopPropagation(); // Zapobiega zamknięciu od razu
         });
     }
 
@@ -73,13 +74,14 @@ document.addEventListener('DOMContentLoaded', function() {
             event.stopPropagation();
         });
         currencyIcon.querySelectorAll('.dropdown-item').forEach(item => {
-            item.addEventListener('click', function() {
+            item.addEventListener('click', function(event) {
                 const selectedValue = this.dataset.value;
                 const displaySpan = currencyIcon.querySelector('span');
                 if (displaySpan) {
                     displaySpan.textContent = selectedValue;
                 }
                 currencyIcon.querySelector('.dropdown-content').classList.remove('show');
+                event.stopPropagation(); 
             });
         });
     }
@@ -91,13 +93,14 @@ document.addEventListener('DOMContentLoaded', function() {
             event.stopPropagation();
         });
         countryIcon.querySelectorAll('.dropdown-item').forEach(item => {
-            item.addEventListener('click', function() {
+            item.addEventListener('click', function(event) {
                 const selectedValue = this.dataset.value;
                 const displaySpan = countryIcon.querySelector('span');
                 if (displaySpan) {
                     displaySpan.textContent = selectedValue.toUpperCase(); 
                 }
                 countryIcon.querySelector('.dropdown-content').classList.remove('show');
+                event.stopPropagation();
             });
         });
     }
@@ -112,12 +115,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Zamykanie wszystkich wysuwanych elementów po kliknięciu poza nimi
     document.addEventListener('click', function(event) {
-        const isClickInsideHeader = event.target.closest('header');
-        const isClickInsideSearchForm = event.target.closest('.search-form');
-        const isClickInsideMobileNav = event.target.closest('#mobileNav');
-        const isClickInsideModal = event.target.closest('.modal-content'); // Sprawdź, czy kliknięcie wewnątrz modala
+        const isClickInsideHeaderDropdown = event.target.closest('.dropdown-content.show');
+        const isClickInsideMobileNav = event.target.closest('#mobileNav.open');
+        const isClickInsideAirportDropdown = event.target.closest('.airport-dropdown-content.show');
+        const isClickInsideModal = event.target.closest('#passengerModal .modal-content');
+        const isClickInsideFlatpickr = event.target.closest('.flatpickr-calendar');
 
-        if (!isClickInsideHeader && !isClickInsideSearchForm && !isClickInsideMobileNav && !isClickInsideModal) {
+        if (!isClickInsideHeaderDropdown && !isClickInsideMobileNav && !isClickInsideAirportDropdown && !isClickInsideModal && !isClickInsideFlatpickr) {
             closeAllInteractiveElements();
         }
     });
@@ -132,11 +136,11 @@ document.addEventListener('DOMContentLoaded', function() {
             locale: "pl", 
             onOpen: function(selectedDates, dateStr, instance) {
                 closeAllInteractiveElements(); // Zamknij inne elementy przed otwarciem kalendarza
+                // Upewnij się, że kalendarz jest zawsze widoczny na środku
+                instance.redraw(); 
             },
-            onChange: function(selectedDates, dateStr, instance) {
-                // Ta funkcja wykonuje się, gdy data zostanie zmieniona
-                // Możesz dodać logikę aktualizacji pola input, jeśli Flatpickr nie robi tego automatycznie
-                // np. if (selectedDates.length === 2) { departureDateInput.value = dateStr; }
+            onClose: function(selectedDates, dateStr, instance) {
+                // Ta funkcja wykonuje się po zamknięciu kalendarza
             }
         });
     }
@@ -163,7 +167,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function createAirportDropdown(inputElement) {
         const dropdown = document.createElement('div');
-        dropdown.classList.add('airport-dropdown-content', 'dropdown-content');
+        dropdown.classList.add('airport-dropdown-content'); // Usunięto 'dropdown-content'
+        dropdown.setAttribute('aria-expanded', 'false'); // Dla dostępności
 
         for (const country in airportsData) {
             const countryHeader = document.createElement('div');
@@ -178,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 airportItem.addEventListener('click', (event) => {
                     inputElement.value = airport;
                     dropdown.classList.remove('show');
+                    dropdown.setAttribute('aria-expanded', 'false');
                     event.stopPropagation(); 
                 });
                 dropdown.appendChild(airportItem);
@@ -187,15 +193,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         inputElement.addEventListener('click', (event) => {
             closeAllInteractiveElements(); 
-            dropdown.classList.toggle('show'); 
+            dropdown.classList.add('show'); // Dodaj klasę, aby pokazać
+            dropdown.setAttribute('aria-expanded', 'true');
             event.stopPropagation(); 
         });
         
-        // Zamykanie dropdownu po kliknięciu poza nim, ale wewnątrz input-container
+        // Zamykanie dropdownu po kliknięciu poza nim
         document.addEventListener('click', function(event) {
-            const inputContainer = inputElement.closest('.input-container');
-            if (inputContainer && !inputContainer.contains(event.target) && !dropdown.contains(event.target)) {
+            if (!inputElement.closest('.input-container').contains(event.target) && !dropdown.contains(event.target)) {
                 dropdown.classList.remove('show');
+                dropdown.setAttribute('aria-expanded', 'false');
             }
         });
     }
@@ -217,37 +224,38 @@ document.addEventListener('DOMContentLoaded', function() {
         else {
             passengerClassInput.value = `${totalPassengers} Pasażerów, ${selectedClass}`;
         }
-        // Możesz dodać bardziej szczegółowy opis, np.
-        // passengerClassInput.value = `${currentAdults} Dorosłych, ${currentTeens} Nastolatków, ${selectedClass}`;
     }
 
     // Obsługa otwierania modala
     if (passengerClassInput) {
-        passengerClassInput.addEventListener('click', function() {
+        passengerClassInput.addEventListener('click', function(event) {
             closeAllInteractiveElements(); // Zamknij inne elementy przed otwarciem modala
             passengerModal.style.display = 'flex'; // Ustaw na flex, aby zadziałało centrowanie
+            event.stopPropagation(); // Zapobiega natychmiastowemu zamknięciu przez kliknięcie w body
         });
     }
 
     // Obsługa zamykania modala przyciskiem X
     if (closeModalButton) {
-        closeModalButton.addEventListener('click', function() {
+        closeModalButton.addEventListener('click', function(event) {
             passengerModal.style.display = 'none';
+            event.stopPropagation();
         });
     }
 
     // Obsługa zamykania modala przyciskiem "Potwierdź"
     if (confirmModalButton) {
-        confirmModalButton.addEventListener('click', function() {
+        confirmModalButton.addEventListener('click', function(event) {
             passengerModal.style.display = 'none';
             updatePassengerClassInput(); // Zaktualizuj pole input po potwierdzeniu
+            event.stopPropagation();
         });
     }
 
-    // Zamykanie modala po kliknięciu poza nim (na overlay)
+    // Zamykanie modala po kliknięciu poza nim (na overlay), ale upewnij się, że nie kliknięto w modal-content
     if (passengerModal) {
         passengerModal.addEventListener('click', function(event) {
-            if (event.target === passengerModal) {
+            if (event.target === passengerModal) { // Sprawdź, czy kliknięto bezpośrednio na overlay
                 passengerModal.style.display = 'none';
             }
         });
@@ -272,7 +280,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         decrementBtn.addEventListener('click', function() {
             let currentValue = parseInt(quantitySpan.textContent);
-            if (currentValue > 0) { // Minimalna wartość to 0
+            if (quantityId === 'adultsQuantity' && currentValue === 1) {
+                // Dorośli muszą mieć minimum 1
+                return; 
+            }
+            if (currentValue > 0) { // Minimalna wartość to 0 dla pozostałych
                 currentValue--;
                 quantitySpan.textContent = currentValue;
                 updatePassengerCounts(quantityId, currentValue);
