@@ -8,42 +8,50 @@ document.addEventListener('DOMContentLoaded', function() {
     // Airport and Date select inputs
     const departureAirportInput = document.getElementById('departureAirport');
     const arrivalAirportInput = document.getElementById('arrivalAirport');
-    const departureDateInput = document.getElementById('departureDate');
+    const departureDateInput = document.getElementById('departureDate'); // Upewnij się, że ID jest poprawne
 
     // Passenger & Class Modal elements
     const passengerClassInput = document.getElementById('passengerClassInput');
     const passengerModal = document.getElementById('passengerModal');
-    const closeModalButton = passengerModal.querySelector('.close-button');
-    const confirmModalButton = passengerModal.querySelector('.confirm-button');
-    const classOptions = passengerModal.querySelectorAll('.class-option');
+    const closeModalButton = passengerModal ? passengerModal.querySelector('.close-button') : null;
+    const confirmModalButton = passengerModal ? passengerModal.querySelector('.confirm-button') : null;
+    const classOptions = passengerModal ? passengerModal.querySelectorAll('.class-option') : [];
     
-    // Passenger quantity controls
+    // Passenger quantity controls elements
     const adultsQuantity = document.getElementById('adultsQuantity');
     const teensQuantity = document.getElementById('teensQuantity');
     const childrenQuantity = document.getElementById('childrenQuantity');
     const infantsWithSeatQuantity = document.getElementById('infantsWithSeatQuantity');
     const infantsLapQuantity = document.getElementById('infantsLapQuantity');
 
-    // Initial values for passengers and class
-    let currentAdults = parseInt(adultsQuantity.textContent);
-    let currentTeens = parseInt(teensQuantity.textContent);
-    let currentChildren = parseInt(childrenQuantity.textContent);
-    let currentInfantsWithSeat = parseInt(infantsWithSeatQuantity.textContent);
-    let currentInfantsLap = parseInt(infantsLapQuantity.textContent);
-    let selectedClass = passengerModal.querySelector('.class-option.selected').dataset.class;
+    // Initial values for passengers and class (używamy domyślnych wartości z HTML, jeśli dostępne)
+    let currentAdults = adultsQuantity ? parseInt(adultsQuantity.textContent) : 1;
+    let currentTeens = teensQuantity ? parseInt(teensQuantity.textContent) : 0;
+    let currentChildren = childrenQuantity ? parseInt(childrenQuantity.textContent) : 0;
+    let currentInfantsWithSeat = infantsWithSeatQuantity ? parseInt(infantsWithSeatQuantity.textContent) : 0;
+    let currentInfantsLap = infantsLapQuantity ? parseInt(infantsLapQuantity.textContent) : 0;
+    let selectedClass = passengerModal ? (passengerModal.querySelector('.class-option.selected')?.dataset.class || 'Ekonomiczna') : 'Ekonomiczna';
+
 
     // Funkcja do zamykania wszystkich dropdownów, menu mobilnego i modali
     function closeAllInteractiveElements() {
         document.querySelectorAll('.dropdown-content').forEach(dropdown => {
             dropdown.classList.remove('show');
         });
+        document.querySelectorAll('.airport-dropdown-content').forEach(dropdown => { // Zamknij dropdowny lotnisk
+            dropdown.classList.remove('show');
+            dropdown.setAttribute('aria-expanded', 'false');
+        });
+
         if (mobileNav) {
             mobileNav.classList.remove('open');
         }
+        
         // Sprawdź, czy Flatpickr jest zainicjalizowany i otwarty
         if (departureDateInput && departureDateInput._flatpickr && departureDateInput._flatpickr.isOpen) {
              departureDateInput._flatpickr.close();
         }
+        
         if (passengerModal) {
             passengerModal.style.display = 'none'; // Ukryj modal
         }
@@ -54,16 +62,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const dropdown = iconElement.querySelector('.dropdown-content');
         closeAllInteractiveElements(); // Zamknij wszystko, zanim otworzysz ten dropdown
         if (dropdown) { 
-            dropdown.classList.add('show'); // Zawsze dodaj klasę, aby pokazać
+            dropdown.classList.add('show'); 
         }
     }
 
     // Obsługa kliknięcia w hamburger menu
     if (menuToggle && mobileNav) {
         menuToggle.addEventListener('click', function(event) {
-            closeAllInteractiveElements(); // Zamknij wszystko, zanim otworzysz menu
-            mobileNav.classList.add('open'); // Dodaj klasę, aby otworzyć menu
-            event.stopPropagation(); // Zapobiega zamknięciu od razu
+            closeAllInteractiveElements(); 
+            mobileNav.classList.add('open'); 
+            event.stopPropagation(); 
         });
     }
 
@@ -120,8 +128,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const isClickInsideAirportDropdown = event.target.closest('.airport-dropdown-content.show');
         const isClickInsideModal = event.target.closest('#passengerModal .modal-content');
         const isClickInsideFlatpickr = event.target.closest('.flatpickr-calendar');
+        const isClickOnAnyInput = event.target.tagName === 'INPUT';
 
-        if (!isClickInsideHeaderDropdown && !isClickInsideMobileNav && !isClickInsideAirportDropdown && !isClickInsideModal && !isClickInsideFlatpickr) {
+
+        if (!isClickInsideHeaderDropdown && !isClickInsideMobileNav && !isClickInsideAirportDropdown && !isClickInsideModal && !isClickInsideFlatpickr && !isClickOnAnyInput) {
             closeAllInteractiveElements();
         }
     });
@@ -136,12 +146,23 @@ document.addEventListener('DOMContentLoaded', function() {
             locale: "pl", 
             onOpen: function(selectedDates, dateStr, instance) {
                 closeAllInteractiveElements(); // Zamknij inne elementy przed otwarciem kalendarza
-                // Upewnij się, że kalendarz jest zawsze widoczny na środku
+                // Dodajemy klasę `open` po otwarciu, aby style CSS zastosowały widoczność
+                instance.calendarContainer.classList.add('open'); 
                 instance.redraw(); 
             },
             onClose: function(selectedDates, dateStr, instance) {
-                // Ta funkcja wykonuje się po zamknięciu kalendarza
+                // Usuwamy klasę `open` po zamknięciu
+                instance.calendarContainer.classList.remove('open');
             }
+        });
+        // Dodatkowe kliknięcie na input odświeży Flatpickr i zamknie inne elementy
+        departureDateInput.addEventListener('click', function(event) {
+            closeAllInteractiveElements();
+            if (this._flatpickr) {
+                this._flatpickr.clear(); // Czyści poprzedni wybór daty
+                this._flatpickr.open(); // Otwiera kalendarz
+            }
+            event.stopPropagation();
         });
     }
 
@@ -166,9 +187,11 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     function createAirportDropdown(inputElement) {
+        if (!inputElement) return; // Zabezpieczenie przed brakiem elementu
+
         const dropdown = document.createElement('div');
-        dropdown.classList.add('airport-dropdown-content'); // Usunięto 'dropdown-content'
-        dropdown.setAttribute('aria-expanded', 'false'); // Dla dostępności
+        dropdown.classList.add('airport-dropdown-content'); 
+        dropdown.setAttribute('aria-expanded', 'false'); 
 
         for (const country in airportsData) {
             const countryHeader = document.createElement('div');
@@ -189,18 +212,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 dropdown.appendChild(airportItem);
             });
         }
-        inputElement.closest('.input-container').appendChild(dropdown);
+        // Sprawdź, czy inputElement ma rodzica '.input-container'
+        const inputContainer = inputElement.closest('.input-container');
+        if (inputContainer) {
+            inputContainer.appendChild(dropdown);
+        } else {
+            console.error("Błąd: Element input nie znajduje się w .input-container. Nie można dodać dropdownu lotnisk.");
+            return;
+        }
+
 
         inputElement.addEventListener('click', (event) => {
             closeAllInteractiveElements(); 
-            dropdown.classList.add('show'); // Dodaj klasę, aby pokazać
+            dropdown.classList.add('show'); 
             dropdown.setAttribute('aria-expanded', 'true');
             event.stopPropagation(); 
         });
         
         // Zamykanie dropdownu po kliknięciu poza nim
         document.addEventListener('click', function(event) {
-            if (!inputElement.closest('.input-container').contains(event.target) && !dropdown.contains(event.target)) {
+            if (!inputContainer.contains(event.target) && !dropdown.contains(event.target)) {
                 dropdown.classList.remove('show');
                 dropdown.setAttribute('aria-expanded', 'false');
             }
@@ -227,16 +258,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Obsługa otwierania modala
-    if (passengerClassInput) {
+    if (passengerClassInput && passengerModal) { // Upewnij się, że oba elementy istnieją
         passengerClassInput.addEventListener('click', function(event) {
-            closeAllInteractiveElements(); // Zamknij inne elementy przed otwarciem modala
+            closeAllInteractiveElements(); 
             passengerModal.style.display = 'flex'; // Ustaw na flex, aby zadziałało centrowanie
-            event.stopPropagation(); // Zapobiega natychmiastowemu zamknięciu przez kliknięcie w body
+            event.stopPropagation(); 
         });
     }
 
     // Obsługa zamykania modala przyciskiem X
-    if (closeModalButton) {
+    if (closeModalButton && passengerModal) {
         closeModalButton.addEventListener('click', function(event) {
             passengerModal.style.display = 'none';
             event.stopPropagation();
@@ -244,10 +275,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Obsługa zamykania modala przyciskiem "Potwierdź"
-    if (confirmModalButton) {
+    if (confirmModalButton && passengerModal) {
         confirmModalButton.addEventListener('click', function(event) {
             passengerModal.style.display = 'none';
-            updatePassengerClassInput(); // Zaktualizuj pole input po potwierdzeniu
+            updatePassengerClassInput(); 
             event.stopPropagation();
         });
     }
@@ -255,50 +286,58 @@ document.addEventListener('DOMContentLoaded', function() {
     // Zamykanie modala po kliknięciu poza nim (na overlay), ale upewnij się, że nie kliknięto w modal-content
     if (passengerModal) {
         passengerModal.addEventListener('click', function(event) {
-            if (event.target === passengerModal) { // Sprawdź, czy kliknięto bezpośrednio na overlay
+            if (event.target === passengerModal) { 
                 passengerModal.style.display = 'none';
             }
         });
     }
 
     // Obsługa wyboru klasy podróży
-    classOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            classOptions.forEach(opt => opt.classList.remove('selected'));
-            this.classList.add('selected');
-            selectedClass = this.dataset.class;
-            updatePassengerClassInput(); // Aktualizuj pole input natychmiast po zmianie klasy
+    if (classOptions.length > 0) {
+        classOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                classOptions.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedClass = this.dataset.class;
+                updatePassengerClassInput(); 
+            });
         });
-    });
+    }
+
 
     // Obsługa liczników pasażerów
     document.querySelectorAll('.quantity-control').forEach(control => {
         const decrementBtn = control.querySelector('.decrement');
         const incrementBtn = control.querySelector('.increment');
         const quantitySpan = control.querySelector('.quantity');
-        const quantityId = quantitySpan.id; // np. 'adultsQuantity'
+        const quantityId = quantitySpan ? quantitySpan.id : null; 
 
-        decrementBtn.addEventListener('click', function() {
-            let currentValue = parseInt(quantitySpan.textContent);
-            if (quantityId === 'adultsQuantity' && currentValue === 1) {
-                // Dorośli muszą mieć minimum 1
-                return; 
-            }
-            if (currentValue > 0) { // Minimalna wartość to 0 dla pozostałych
-                currentValue--;
+        if (decrementBtn) {
+            decrementBtn.addEventListener('click', function() {
+                if (!quantityId) return;
+                let currentValue = parseInt(quantitySpan.textContent);
+                if (quantityId === 'adultsQuantity' && currentValue === 1) {
+                    return; 
+                }
+                if (currentValue > 0) { 
+                    currentValue--;
+                    quantitySpan.textContent = currentValue;
+                    updatePassengerCounts(quantityId, currentValue);
+                    updatePassengerClassInput();
+                }
+            });
+        }
+
+        if (incrementBtn) {
+            incrementBtn.addEventListener('click', function() {
+                if (!quantityId) return;
+                let currentValue = parseInt(quantitySpan.textContent);
+                currentValue++;
                 quantitySpan.textContent = currentValue;
                 updatePassengerCounts(quantityId, currentValue);
                 updatePassengerClassInput();
-            }
-        });
-
-        incrementBtn.addEventListener('click', function() {
-            let currentValue = parseInt(quantitySpan.textContent);
-            currentValue++;
-            quantitySpan.textContent = currentValue;
-            updatePassengerCounts(quantityId, currentValue);
-            updatePassengerClassInput();
-        });
+            });
+        }
     });
 
     // Funkcja aktualizująca zmienne pasażerów
@@ -323,6 +362,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Początkowa aktualizacja pola input po załadowaniu strony
-    updatePassengerClassInput();
-
+    // Upewnij się, że input istnieje zanim spróbujesz go zaktualizować
+    if (passengerClassInput) {
+        updatePassengerClassInput();
+    }
 });
