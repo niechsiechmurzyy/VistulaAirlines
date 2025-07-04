@@ -59,7 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
             "Polska": [
                 "Warszawa (WAW)", "Kraków (KRK)", "Gdańsk (GDN)", "Wrocław (WRO)",
                 "Katowice (KTW)", "Poznań (POZ)", "Łódź (LCJ)", "Szczecin (SZZ)",
-                "Rzeszów (RZE)", "Lublin (LUZ)", "Bydgoszcz (BZG)", "Olsztyn (SZY)"
+                "Rzeszów (RZE)", "Lublin (LUZ)", "Bydgoszcz (BZG)", "Olsztyn (SZY)",
+                "Zielona Góra (IEG)", "Radom (RDO)", "CPK (XER)" // Dodane lotniska
             ],
             "Niemcy": ["Berlin (BER)", "Monachium (MUC)", "Frankfurt (FRA)", "Hamburg (HAM)", "Düsseldorf (DUS)", "Kolonia (CGN)"],
             "Francja": ["Paryż (CDG)", "Nicea (NCE)", "Lyon (LYS)", "Marsylia (MRS)", "Tuluza (TLS)"],
@@ -188,6 +189,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         icon.querySelector('span').textContent = item.dataset.value;
                     } else if (icon.id === 'countryIcon') {
                         icon.querySelector('span').textContent = item.dataset.value;
+                    } else if (icon.id === 'accountIcon') {
+                        // Tutaj można dodać logikę dla "Zaloguj się" / "Zarejestruj się"
+                        // W tym przykładzie tylko zamyka dropdown
+                        console.log(`Wybrano: ${item.textContent}`);
                     }
                     closeAllInteractiveElements(); // Zamknij po wyborze
                     event.stopPropagation();
