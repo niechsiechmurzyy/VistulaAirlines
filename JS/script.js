@@ -8,28 +8,30 @@ document.addEventListener('DOMContentLoaded', function() {
     // Airport and Date select inputs
     const departureAirportInput = document.getElementById('departureAirport');
     const arrivalAirportInput = document.getElementById('arrivalAirport');
-    const departureDateInput = document.getElementById('departureDate'); // Upewnij się, że ID jest poprawne
+    const departureDateInput = document.getElementById('departureDate');
 
     // Passenger & Class Modal elements
     const passengerClassInput = document.getElementById('passengerClassInput');
     const passengerModal = document.getElementById('passengerModal');
+    // Upewnij się, że elementy istnieją przed próbą ich pobrania
     const closeModalButton = passengerModal ? passengerModal.querySelector('.close-button') : null;
     const confirmModalButton = passengerModal ? passengerModal.querySelector('.confirm-button') : null;
     const classOptions = passengerModal ? passengerModal.querySelectorAll('.class-option') : [];
     
-    // Passenger quantity controls elements
+    // Passenger quantity controls elements (upewnij się, że ID są poprawne w HTML)
     const adultsQuantity = document.getElementById('adultsQuantity');
     const teensQuantity = document.getElementById('teensQuantity');
     const childrenQuantity = document.getElementById('childrenQuantity');
     const infantsWithSeatQuantity = document.getElementById('infantsWithSeatQuantity');
     const infantsLapQuantity = document.getElementById('infantsLapQuantity');
 
-    // Initial values for passengers and class (używamy domyślnych wartości z HTML, jeśli dostępne)
+    // Initial values for passengers and class
     let currentAdults = adultsQuantity ? parseInt(adultsQuantity.textContent) : 1;
     let currentTeens = teensQuantity ? parseInt(teensQuantity.textContent) : 0;
     let currentChildren = childrenQuantity ? parseInt(childrenQuantity.textContent) : 0;
     let currentInfantsWithSeat = infantsWithSeatQuantity ? parseInt(infantsWithSeatQuantity.textContent) : 0;
     let currentInfantsLap = infantsLapQuantity ? parseInt(infantsLapQuantity.textContent) : 0;
+    // Pobieramy domyślną wybraną klasę lub ustawiamy "Ekonomiczna"
     let selectedClass = passengerModal ? (passengerModal.querySelector('.class-option.selected')?.dataset.class || 'Ekonomiczna') : 'Ekonomiczna';
 
 
@@ -38,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.dropdown-content').forEach(dropdown => {
             dropdown.classList.remove('show');
         });
-        document.querySelectorAll('.airport-dropdown-content').forEach(dropdown => { // Zamknij dropdowny lotnisk
+        document.querySelectorAll('.airport-dropdown-content').forEach(dropdown => {
             dropdown.classList.remove('show');
             dropdown.setAttribute('aria-expanded', 'false');
         });
@@ -53,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (passengerModal) {
-            passengerModal.style.display = 'none'; // Ukryj modal
+            passengerModal.classList.remove('show-modal'); // Używamy klasy CSS
         }
     }
 
@@ -123,15 +125,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Zamykanie wszystkich wysuwanych elementów po kliknięciu poza nimi
     document.addEventListener('click', function(event) {
+        // Sprawdzamy, czy kliknięcie NIE jest wewnątrz żadnego z interaktywnych elementów
         const isClickInsideHeaderDropdown = event.target.closest('.dropdown-content.show');
         const isClickInsideMobileNav = event.target.closest('#mobileNav.open');
         const isClickInsideAirportDropdown = event.target.closest('.airport-dropdown-content.show');
-        const isClickInsideModal = event.target.closest('#passengerModal .modal-content');
+        const isClickInsideModalContent = event.target.closest('#passengerModal .modal-content'); // Sprawdzamy content modala
         const isClickInsideFlatpickr = event.target.closest('.flatpickr-calendar');
-        const isClickOnAnyInput = event.target.tagName === 'INPUT';
+        const isClickOnAnyInput = event.target.tagName === 'INPUT'; // Kliknięcie na input (np. daty, lotniska) nie powinno zamykać
 
-
-        if (!isClickInsideHeaderDropdown && !isClickInsideMobileNav && !isClickInsideAirportDropdown && !isClickInsideModal && !isClickInsideFlatpickr && !isClickOnAnyInput) {
+        // Jeśli kliknięcie nie jest w żadnym z tych elementów, to zamykamy wszystko
+        if (!isClickInsideHeaderDropdown && !isClickInsideMobileNav && !isClickInsideAirportDropdown && !isClickInsideModalContent && !isClickInsideFlatpickr && !isClickOnAnyInput) {
             closeAllInteractiveElements();
         }
     });
@@ -146,20 +149,19 @@ document.addEventListener('DOMContentLoaded', function() {
             locale: "pl", 
             onOpen: function(selectedDates, dateStr, instance) {
                 closeAllInteractiveElements(); // Zamknij inne elementy przed otwarciem kalendarza
-                // Dodajemy klasę `open` po otwarciu, aby style CSS zastosowały widoczność
-                instance.calendarContainer.classList.add('open'); 
+                instance.calendarContainer.classList.add('open'); // Dodajemy klasę `open` po otwarciu
                 instance.redraw(); 
             },
             onClose: function(selectedDates, dateStr, instance) {
-                // Usuwamy klasę `open` po zamknięciu
-                instance.calendarContainer.classList.remove('open');
+                instance.calendarContainer.classList.remove('open'); // Usuwamy klasę `open` po zamknięciu
             }
         });
+        
         // Dodatkowe kliknięcie na input odświeży Flatpickr i zamknie inne elementy
         departureDateInput.addEventListener('click', function(event) {
             closeAllInteractiveElements();
             if (this._flatpickr) {
-                this._flatpickr.clear(); // Czyści poprzedni wybór daty
+                // this._flatpickr.clear(); // Opcjonalnie: czyść poprzedni wybór daty przy każdym otwarciu
                 this._flatpickr.open(); // Otwiera kalendarz
             }
             event.stopPropagation();
@@ -202,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
             airportsData[country].forEach(airport => {
                 const airportItem = document.createElement('div');
                 airportItem.classList.add('dropdown-item');
-                airportItem.textContent = airport;
+                airportItem.textContent = airport; // Tutaj jest tekst lotniska
                 airportItem.addEventListener('click', (event) => {
                     inputElement.value = airport;
                     dropdown.classList.remove('show');
@@ -218,12 +220,14 @@ document.addEventListener('DOMContentLoaded', function() {
             inputContainer.appendChild(dropdown);
         } else {
             console.error("Błąd: Element input nie znajduje się w .input-container. Nie można dodać dropdownu lotnisk.");
-            return;
+            return; // Ważne, aby wyjść z funkcji, jeśli kontenera nie ma
         }
 
 
         inputElement.addEventListener('click', (event) => {
-            closeAllInteractiveElements(); 
+            closeAllInteractiveElements(); // Zamknij wszystko inne
+            // Najpierw usuń klasę, a potem dodaj, żeby upewnić się, że stan jest "czysty"
+            dropdown.classList.remove('show'); 
             dropdown.classList.add('show'); 
             dropdown.setAttribute('aria-expanded', 'true');
             event.stopPropagation(); 
@@ -261,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (passengerClassInput && passengerModal) { // Upewnij się, że oba elementy istnieją
         passengerClassInput.addEventListener('click', function(event) {
             closeAllInteractiveElements(); 
-            passengerModal.style.display = 'flex'; // Ustaw na flex, aby zadziałało centrowanie
+            passengerModal.classList.add('show-modal'); // Używamy klasy CSS do pokazania
             event.stopPropagation(); 
         });
     }
@@ -269,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Obsługa zamykania modala przyciskiem X
     if (closeModalButton && passengerModal) {
         closeModalButton.addEventListener('click', function(event) {
-            passengerModal.style.display = 'none';
+            passengerModal.classList.remove('show-modal');
             event.stopPropagation();
         });
     }
@@ -277,17 +281,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Obsługa zamykania modala przyciskiem "Potwierdź"
     if (confirmModalButton && passengerModal) {
         confirmModalButton.addEventListener('click', function(event) {
-            passengerModal.style.display = 'none';
+            passengerModal.classList.remove('show-modal');
             updatePassengerClassInput(); 
             event.stopPropagation();
         });
     }
 
-    // Zamykanie modala po kliknięciu poza nim (na overlay), ale upewnij się, że nie kliknięto w modal-content
+    // Zamykanie modala po kliknięciu poza nim (na overlay)
     if (passengerModal) {
         passengerModal.addEventListener('click', function(event) {
+            // Sprawdź, czy kliknięto bezpośrednio na overlay (nie na zawartość modala)
             if (event.target === passengerModal) { 
-                passengerModal.style.display = 'none';
+                passengerModal.classList.remove('show-modal');
             }
         });
     }
@@ -313,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const quantityId = quantitySpan ? quantitySpan.id : null; 
 
         if (decrementBtn) {
-            decrementBtn.addEventListener('click', function() {
+            decrementBtn.addEventListener('click', function(event) {
                 if (!quantityId) return;
                 let currentValue = parseInt(quantitySpan.textContent);
                 if (quantityId === 'adultsQuantity' && currentValue === 1) {
@@ -325,17 +330,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     updatePassengerCounts(quantityId, currentValue);
                     updatePassengerClassInput();
                 }
+                event.stopPropagation(); // Ważne, aby nie zamykać modala kliknięciem na przycisk
             });
         }
 
         if (incrementBtn) {
-            incrementBtn.addEventListener('click', function() {
+            incrementBtn.addEventListener('click', function(event) {
                 if (!quantityId) return;
                 let currentValue = parseInt(quantitySpan.textContent);
                 currentValue++;
                 quantitySpan.textContent = currentValue;
                 updatePassengerCounts(quantityId, currentValue);
                 updatePassengerClassInput();
+                event.stopPropagation(); // Ważne, aby nie zamykać modala kliknięciem na przycisk
             });
         }
     });
