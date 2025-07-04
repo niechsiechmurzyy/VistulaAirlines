@@ -1,1 +1,33 @@
+[
+  {
+    "flightNumber": "VA001",
+    "origin": "XER",
+    "destination": "GDN",
+    "departureTime": "22:55",
+    "arrivalTime": "23:50",
+    "aircraftModel": "A220-300",
+    "availableSeats": 150,
+    "classes": [
+      {"name": "Economy", "price": 130},
+      {"name": "Business", "price": 800}
+    ],
+    "frequency": "daily",
+    "isInternational": false
+  },
+  {
+    "flightNumber": "VA002",
+    "origin": "GDN",
+    "destination": "XER",
+    "departureTime": "20:00",
+    "arrivalTime": "20:55",
+    "aircraftModel": "A220-300",
+    "availableSeats": 150,
+    "classes": [
+      {"name": "Economy", "price": 130},
+      {"name": "Business", "price": 800}
+    ],
+    "frequency": "daily",
+    "isInternational": false
+  }
+]
 
