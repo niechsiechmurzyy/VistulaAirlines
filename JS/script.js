@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
         flatpickr(departureDateInput, {
             mode: "range", 
             minDate: "today", 
-            maxDate: new Date().fp_incr("1 year"), 
+            maxDate: new Date().fp_incr("365"), // KLUCZOWA ZMIANA: Ustawia zakres na 365 dni do przodu (około roku)
             dateFormat: "d.m.Y", 
             locale: "pl", 
             onOpen: function(selectedDates, dateStr, instance) {
@@ -161,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function() {
         departureDateInput.addEventListener('click', function(event) {
             closeAllInteractiveElements();
             if (this._flatpickr) {
-                // this._flatpickr.clear(); // Opcjonalnie: czyść poprzedni wybór daty przy każdym otwarciu
                 this._flatpickr.open(); // Otwiera kalendarz
             }
             event.stopPropagation();
