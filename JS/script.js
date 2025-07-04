@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             passengerText = '0 Pasażerów'; // Should not happen if adults starts at 1
         }
-        
+
         if (passengerClassInput) {
             passengerClassInput.value = `${passengerText}, ${selectedTravelClass}`;
         }
@@ -56,19 +56,35 @@ document.addEventListener('DOMContentLoaded', () => {
     // Funkcja do generowania listy lotnisk
     const generateAirportDropdown = (inputElement, type) => {
         const airports = {
-            "Polska": ["Warszawa (WAW)", "Kraków (KRK)", "Gdańsk (GDN)"],
-            "Niemcy": ["Berlin (BER)", "Monachium (MUC)", "Frankfurt (FRA)"],
-            "Francja": ["Paryż (CDG)", "Nicea (NCE)", "Lyon (LYS)"],
-            "Wielka Brytania": ["Londyn (LHR)", "Manchester (MAN)", "Edynburg (EDI)"]
+            "Polska": [
+                "Warszawa (WAW)", "Kraków (KRK)", "Gdańsk (GDN)", "Wrocław (WRO)",
+                "Katowice (KTW)", "Poznań (POZ)", "Łódź (LCJ)", "Szczecin (SZZ)",
+                "Rzeszów (RZE)", "Lublin (LUZ)", "Bydgoszcz (BZG)", "Olsztyn (SZY)"
+            ],
+            "Niemcy": ["Berlin (BER)", "Monachium (MUC)", "Frankfurt (FRA)", "Hamburg (HAM)", "Düsseldorf (DUS)", "Kolonia (CGN)"],
+            "Francja": ["Paryż (CDG)", "Nicea (NCE)", "Lyon (LYS)", "Marsylia (MRS)", "Tuluza (TLS)"],
+            "Wielka Brytania": ["Londyn (LHR)", "Manchester (MAN)", "Edynburg (EDI)", "Birmingham (BHX)", "Glasgow (GLA)"],
+            "Hiszpania": ["Madryt (MAD)", "Barcelona (BCN)", "Malaga (AGP)", "Palma de Mallorca (PMI)"],
+            "Włochy": ["Rzym (FCO)", "Mediolan (MXP)", "Wenecja (VCE)", "Neapol (NAP)"],
+            "USA": ["Nowy Jork (JFK)", "Los Angeles (LAX)", "Chicago (ORD)", "Miami (MIA)", "San Francisco (SFO)"],
+            "Chiny": ["Pekin (PEK)", "Szanghaj (PVG)", "Guangzhou (CAN)"],
+            "Indie": ["Delhi (DEL)", "Mumbaj (BOM)", "Bengaluru (BLR)"],
+            "RPA": ["Johannesburg (JNB)", "Kapsztad (CPT)", "Durban (DUR)"],
+            "Singapur": ["Singapur (SIN)"],
+            "Rumunia": ["Bukareszt (OTP)", "Kluż-Napoka (CLJ)"]
         };
 
         let dropdown = inputElement.nextElementSibling;
+        // Sprawdź, czy dropdown już istnieje i czy ma poprawną klasę
         if (!dropdown || !dropdown.classList.contains('airport-dropdown-content')) {
             dropdown = document.createElement('div');
             dropdown.classList.add('airport-dropdown-content');
             inputElement.parentNode.insertBefore(dropdown, inputElement.nextSibling);
         }
-        dropdown.innerHTML = '';
+        dropdown.innerHTML = ''; // Wyczyść zawartość przed ponownym generowaniem
+
+        // Przechowywanie aktualnie wybranego lotniska dla danego inputa
+        let currentSelectedValue = inputElement.value;
 
         for (const country in airports) {
             const countryHeader = document.createElement('div');
@@ -80,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const item = document.createElement('div');
                 item.classList.add('dropdown-item');
                 item.textContent = airport;
+
                 item.addEventListener('click', () => {
                     inputElement.value = airport;
                     if (type === 'departure') {
@@ -100,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedDepartureAirport && selectedArrivalAirport) {
             if (selectedDepartureAirport === selectedArrivalAirport) {
                 alert('Lotnisko wylotu i przylotu nie może być takie samo. Proszę wybrać różne lotniska.');
-                // Możesz zdecydować, które pole wyczyścić, np. pole przylotu
+                // Wyczyść pole przylotu, ponieważ to drugie zostało wybrane jako identyczne
                 if (arrivalAirportInput) {
                     arrivalAirportInput.value = '';
                     selectedArrivalAirport = null;
@@ -113,20 +130,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Zamykanie wszystkich elementów po kliknięciu poza nimi
     document.addEventListener('click', (event) => {
-        if (!currencyIcon.contains(event.target) && !countryIcon.contains(event.target) && !accountIcon.contains(event.target) && !menuToggle.contains(event.target) && (!mobileNav || !mobileNav.contains(event.target)) && (!departureAirportInput || !departureAirportInput.contains(event.target)) && (!arrivalAirportInput || !arrivalAirportInput.contains(event.target)) && (!departureDateInput || !departureDateInput.contains(event.target)) && (!passengerClassInput || !passengerClassInput.contains(event.target)) && (!passengerModal || !passengerModal.contains(event.target))) {
+        // Lista elementów, które powinny zamykać inne
+        const clickableElements = [
+            currencyIcon, countryIcon, accountIcon, menuToggle,
+            mobileNav, departureAirportInput, arrivalAirportInput,
+            departureDateInput, passengerClassInput, passengerModal
+        ].filter(Boolean); // Usuń null/undefined z listy
+
+        let isClickInsideAnyInteractiveElement = false;
+        for (const el of clickableElements) {
+            if (el.contains(event.target)) {
+                isClickInsideAnyInteractiveElement = true;
+                break;
+            }
+        }
+
+        // Dodatkowo sprawdź, czy kliknięcie było wewnątrz airport-dropdown
+        let isClickInsideAirportDropdown = false;
+        document.querySelectorAll('.airport-dropdown-content').forEach(dropdown => {
+            if (dropdown.contains(event.target)) {
+                isClickInsideAirportDropdown = true;
+            }
+        });
+        
+        // Dodatkowo sprawdź, czy kliknięcie było wewnątrz Flatpickr
+        let isClickInsideFlatpickr = false;
+        if (flatpickrInstance && flatpickrInstance.calendarContainer) {
+             if (flatpickrInstance.calendarContainer.contains(event.target)) {
+                 isClickInsideFlatpickr = true;
+             }
+        }
+
+        if (!isClickInsideAnyInteractiveElement && !isClickInsideAirportDropdown && !isClickInsideFlatpickr) {
             closeAllInteractiveElements();
         }
     });
 
-    // Dropdowny waluty, kraju, konta
+    // Dropdowny waluty, kraju, konta (desktopowe)
     [currencyIcon, countryIcon, accountIcon].forEach(icon => {
         if (icon) {
             icon.addEventListener('click', (event) => {
-                closeAllInteractiveElements();
+                // Zamknij wszystkie inne dropdowny przed otwarciem nowego
+                document.querySelectorAll('.dropdown-content.show').forEach(el => {
+                    if (el.parentNode !== icon) { // Zamknij inne, ale nie rodzica bieżącego ikona
+                        el.classList.remove('show');
+                    }
+                });
+                closeAllInteractiveElements(); // Upewnij się, że inne typy elementów (np. mobilne menu) są zamknięte
                 icon.querySelector('.dropdown-content').classList.toggle('show');
                 event.stopPropagation(); // Zapobiega natychmiastowemu zamknięciu przez document click
             });
 
+            // Obsługa kliknięcia w element dropdownu
             icon.querySelectorAll('.dropdown-item').forEach(item => {
                 item.addEventListener('click', (event) => {
                     if (icon.id === 'currencyIcon') {
@@ -134,17 +189,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else if (icon.id === 'countryIcon') {
                         icon.querySelector('span').textContent = item.dataset.value;
                     }
-                    closeAllInteractiveElements();
+                    closeAllInteractiveElements(); // Zamknij po wyborze
                     event.stopPropagation();
                 });
             });
         }
     });
 
-    // Menu mobilne
+    // Mobilne menu
     if (menuToggle) {
         menuToggle.addEventListener('click', (event) => {
-            closeAllInteractiveElements();
+            closeAllInteractiveElements(); // Zamknij wszystko, co otwarte
             if (mobileNav) mobileNav.classList.toggle('open');
             event.stopPropagation();
         });
@@ -159,18 +214,17 @@ document.addEventListener('DOMContentLoaded', () => {
             locale: "pl",
             minDate: "today",
             onOpen: function(selectedDates, dateStr, instance) {
-                closeAllInteractiveElements(); // Zamknij inne elementy
-                // Upewnij się, że flatpickr jest na wierzchu
+                closeAllInteractiveElements();
                 instance.calendarContainer.style.zIndex = '99999';
-                instance.calendarContainer.classList.add('open'); // Dodaj klasę do animacji
+                instance.calendarContainer.classList.add('open');
             },
             onClose: function(selectedDates, dateStr, instance) {
-                instance.calendarContainer.classList.remove('open'); // Usuń klasę po zamknięciu
+                instance.calendarContainer.classList.remove('open');
             }
         });
     }
 
-    // Lotniska
+    // Obsługa kliknięć/focusu na polach lotnisk
     if (departureAirportInput) {
         departureAirportInput.addEventListener('focus', () => {
             closeAllInteractiveElements();
@@ -182,6 +236,12 @@ document.addEventListener('DOMContentLoaded', () => {
             generateAirportDropdown(departureAirportInput, 'departure');
             departureAirportInput.nextElementSibling.classList.add('show');
             event.stopPropagation();
+        });
+        // Dodatkowo, aby zamykać po wyborze z listy
+        departureAirportInput.nextElementSibling?.addEventListener('click', (event) => {
+            if (event.target.classList.contains('dropdown-item')) {
+                departureAirportInput.nextElementSibling.classList.remove('show');
+            }
         });
     }
 
@@ -197,6 +257,12 @@ document.addEventListener('DOMContentLoaded', () => {
             arrivalAirportInput.nextElementSibling.classList.add('show');
             event.stopPropagation();
         });
+        // Dodatkowo, aby zamykać po wyborze z listy
+        arrivalAirportInput.nextElementSibling?.addEventListener('click', (event) => {
+            if (event.target.classList.contains('dropdown-item')) {
+                arrivalAirportInput.nextElementSibling.classList.remove('show');
+            }
+        });
     }
 
     // Modal Pasażerowie i Klasa
@@ -204,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         passengerClassInput.addEventListener('click', (event) => {
             closeAllInteractiveElements();
             if (passengerModal) passengerModal.classList.add('show-modal');
-            event.stopPropagation(); // Zapobiega zamknięciu modala przez kliknięcie na dokument
+            event.stopPropagation();
         });
     }
 
