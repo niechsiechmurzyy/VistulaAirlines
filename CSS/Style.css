@@ -729,3 +729,88 @@ footer p {
         min-width: auto; 
     }
 }
+
+/* --- Sekcja Uzupełnij swoją podróż --- */
+.complete-your-trip {
+    padding: 60px 20px;
+    background-color: #FFFFFF; /* Upewnij się, że tło jest białe */
+    text-align: center;
+    margin-top: 30px;
+}
+
+.complete-your-trip h2 {
+    font-size: 2.2em;
+    margin-bottom: 10px;
+    color: #004d99;
+}
+
+.complete-your-trip p {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 40px;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsywna siatka */
+    gap: 25px;
+    max-width: 1000px; /* Ogranicz szerokość siatki */
+    margin: 0 auto; /* Wyśrodkuj siatkę */
+}
+
+.option-card {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 150px; /* Minimalna wysokość karty */
+}
+
+.option-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    background-color: #e6f2ff; /* Lekko niebieskie tło po najechaniu */
+}
+
+.icon-placeholder {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #007bff; /* Kolor ikon */
+}
+
+.icon-placeholder svg {
+    width: 100%;
+    height: 100%;
+}
+
+.option-card h3 {
+    font-size: 1.1em;
+    color: #333;
+    margin: 0;
+    text-align: center;
+}
+
+/* Media Query dla większych ekranów */
+@media (min-width: 768px) {
+    .options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 30px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .options-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 kolumny na dużych ekranach */
+    }
+}
