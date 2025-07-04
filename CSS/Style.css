@@ -100,8 +100,7 @@ header nav {
     transition: transform 0.3s ease-in-out;
     transform: translateX(-100%); /* Domyślnie poza ekranem */
     z-index: 1000; 
-    /* KLUCZOWA ZMIANA: Domyślnie ukryte za pomocą transformacji, a nie display: none */
-    /* display: block; jest używane tylko, gdy jest aktywne, ale transformacja jest główna */
+    display: block; /* Upewniamy się, że element jest w DOM i gotowy do animacji */
 }
 
 .mobile-nav.open {
@@ -259,12 +258,12 @@ header nav {
     border: 1px solid #ddd;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     z-index: 99; /* Niżej niż modale, ale wyżej niż tło */
-    display: none; /* Domyślnie ukryte */
+    display: none !important; /* KLUCZOWA ZMIANA: Domyślnie ukryte i wymuszone */
     border-radius: 0 0 5px 5px; 
 }
 
 .airport-dropdown-content.show {
-    display: block;
+    display: block !important; /* KLUCZOWA ZMIANA: Pokazuj i wymuś */
 }
 
 .dropdown-country-header {
@@ -277,6 +276,17 @@ header nav {
     top: 0;
     z-index: 5;
 }
+
+.airport-dropdown-content .dropdown-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.airport-dropdown-content .dropdown-item:hover {
+    background-color: #f1f1f1;
+}
+
 
 /* Sekcja "O nas" */
 .about-us {
@@ -336,7 +346,7 @@ footer p {
     border: 1px solid #007bff; 
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    z-index: 9999; /* Bardzo wysoki z-index, aby był zawsze na wierzchu */
+    z-index: 99999 !important; /* KLUCZOWA ZMIANA: Bardzo wysoki z-index, wymuszony */
     position: fixed !important; 
     top: 50% !important;
     left: 50% !important; 
@@ -346,6 +356,7 @@ footer p {
     opacity: 0; /* Domyślnie ukryty, pokaże się po otwarciu */
     visibility: hidden; /* Domyślnie ukryty */
     transition: opacity 0.3s ease, visibility 0.3s ease;
+    display: block !important; /* Upewniamy się, że jest w DOM, ale niewidoczny */
 }
 
 .flatpickr-calendar.open {
@@ -411,7 +422,7 @@ footer p {
 
 /* --- Style dla Modal (Klasa podróży i pasażerowie) --- */
 .modal {
-    display: none; /* KLUCZOWA ZMIANA: Domyślnie ukryty */
+    display: none !important; /* KLUCZOWA ZMIANA: Domyślnie ukryty i wymuszony */
     position: fixed; 
     z-index: 10000; 
     left: 0;
@@ -423,6 +434,12 @@ footer p {
     justify-content: center; /* Centruje zawartość */
     align-items: center; /* Centruje zawartość */
 }
+
+/* Kiedy JS doda klasę .show-modal, wtedy jest widoczny */
+.modal.show-modal { 
+    display: flex !important; /* Pokazuj modal, gdy ma klasę .show-modal */
+}
+
 
 .modal-content {
     background-color: #fefefe;
