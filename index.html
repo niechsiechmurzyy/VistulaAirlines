@@ -3,293 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vistula Airlines</title>
+    <title>Strona główna - Linia Lotnicza</title>
     <link rel="stylesheet" href="CSS/Style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <div class="container">
-            <div class="header-left">
-                <div class="menu-toggle" id="menuToggle">
-                    <i class="fas fa-bars"></i>
-                </div>
-                <h1>VIS</h1> </div>
-            <div class="header-right">
-                <div class="icon-group">
-                    <div class="icon-item" id="currencyIcon">
-                        <i class="fas fa-money-bill-wave"></i>
-                        <span>PLN</span>
-                        <div class="dropdown-content">
-                            <div class="dropdown-item" data-value="PLN">PLN</div>
-                            <div class="dropdown-item" data-value="EUR">EUR</div>
-                            <div class="dropdown-item" data-value="USD">USD</div>
-                            <div class="dropdown-item" data-value="GBP">GBP</div>
-                        </div>
-                    </div>
-                    <div class="icon-item" id="countryIcon">
-                        <i class="fas fa-globe"></i>
-                        <span>PL</span>
-                        <div class="dropdown-content">
-                            <div class="dropdown-item" data-value="PL">PL <img src="https://flagcdn.com/w20/pl.png" alt="Poland Flag" class="flag-icon"></div>
-                            <div class="dropdown-item" data-value="EN">EN <img src="https://flagcdn.com/w20/gb.png" alt="UK Flag" class="flag-icon"></div>
-                            <div class="dropdown-item" data-value="DE">DE <img src="https://flagcdn.com/w20/de.png" alt="Germany Flag" class="flag-icon"></div>
-                        </div>
-                    </div>
-                    <div class="icon-item" id="accountIcon">
-                        <i class="fas fa-user-circle"></i>
-                        <span>Moje konto</span>
-                        <div class="dropdown-content">
-                            <div class="dropdown-item">Zaloguj się</div>
-                            <div class="dropdown-item">Zarejestruj się</div>
-                            </div>
-                    </div>
-                </div>
+        <div class="header-container">
+            <div class="logo">
+                <img src="https://via.placeholder.com/150x50?text=TwojeLogo" alt="Logo Linii Lotniczej">
+            </div>
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="#">Strona Główna</a></li>
+                    <li><a href="#">Rezerwacja Lotów</a></li>
+                    <li><a href="#">Status Lotu</a></li>
+                    <li><a href="#">O Nas</a></li>
+                    <li><a href="#">Kontakt</a></li>
+                </ul>
+            </nav>
+            <div class="header-icons">
+                <a href="#" class="icon-link"><img src="https://img.icons8.com/ios-filled/24/000000/money-bag-euro.png" alt="Waluta"></a>
+                <a href="#" class="icon-link"><img src="https://img.icons8.com/ios-filled/24/000000/globe--v1.png" alt="Język"></a>
+                <a href="#" class="icon-link"><img src="https://img.icons8.com/ios-filled/24/000000/user--v1.png" alt="Konto"></a>
+            </div>
+            <div class="hamburger-menu">
+                <img src="https://img.icons8.com/ios-filled/24/000000/menu--v1.png" alt="Menu">
             </div>
         </div>
+        <nav class="mobile-nav hidden">
+            <ul>
+                <li><a href="#">Strona Główna</a></li>
+                <li><a href="#">Rezerwacja Lotów</a></li>
+                <li><a href="#">Status Lotu</a></li>
+                <li><a href="#">O Nas</a></li>
+                <li><a href="#">Kontakt</a></li>
+                <li><a href="#"><img src="https://img.icons8.com/ios-filled/20/000000/money-bag-euro.png" alt="Waluta"> Waluta</a></li>
+                <li><a href="#"><img src="https://img.icons8.com/ios-filled/20/000000/globe--v1.png" alt="Język"> Język</a></li>
+                <li><a href="#"><img src="https://img.icons8.com/ios-filled/20/000000/user--v1.png" alt="Konto"> Moje Konto</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <nav class="mobile-nav" id="mobileNav">
-        <ul>
-            <li><a href="#">Zarządzaj Rezerwacją</a></li>
-            <li><a href="#">Odpraw się</a></li>
-            <li><a href="#">Zainspiruj się</a></li>
-            <li><a href="#">Pomoc</a></li>
-            <li><a href="#">Kontakt</a></li>
-            <li><a href="#">Flota</a></li>
-            </ul>
-    </nav>
-
-    <section class="hero">
-        <div class="container">
-            <h2>Lataj z nami. Odkrywaj świat.</h2>
-            <p>Zarezerwuj swój wymarzony lot już dziś.</p>
-            <div class="search-form">
-                <div class="input-container">
-                    <label for="departureAirport">Wylot z</label>
-                    <input type="text" id="departureAirport" placeholder="Wybierz lotnisko wylotu" autocomplete="off">
-                </div>
-                <div class="input-container">
-                    <label for="arrivalAirport">Przylot do</label>
-                    <input type="text" id="arrivalAirport" placeholder="Wybierz lotnisko przylotu" autocomplete="off">
-                </div>
-                <div class="input-container">
-                    <label for="departureDate">Data wylotu / powrotu</label>
-                    <input type="text" id="departureDate" placeholder="Wybierz daty">
-                </div>
-                <div class="input-container">
-                    <label for="passengerClassInput">Pasażerowie i klasa</label>
-                    <input type="text" id="passengerClassInput" placeholder="1 Pasażer, Ekonomiczna" readonly>
-                </div>
-                <button type="submit">Szukaj lotów</button>
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Zarezerwuj swój wymarzony lot</h1>
+                <p>Odkryj świat z nami. Bezpiecznie, komfortowo, na czas.</p>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <div id="passengerModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Klasa podróży i pasażerowie</h3>
-                <span class="close-button">&times;</span>
+        <section id="search-form-section" class="search-form">
+            <h2>Wyszukaj lot</h2>
+            <form id="flight-search-form">
+                <div class="form-group">
+                    <label for="departure-airport">Skąd:</label>
+                    <input type="text" id="departure-airport" placeholder="Lotnisko odlotu (np. GDN, WAW)" required>
+                </div>
+                <div class="form-group">
+                    <label for="arrival-airport">Dokąd:</label>
+                    <input type="text" id="arrival-airport" placeholder="Lotnisko przylotu (np. XER, LHR)" required>
+                </div>
+                <div class="form-group">
+                    <label for="departure-date">Data odlotu:</label>
+                    <input type="date" id="departure-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="num-passengers">Liczba pasażerów:</label>
+                    <input type="number" id="num-passengers" min="1" value="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="travel-class">Klasa podróży:</label>
+                    <select id="travel-class" required>
+                        <option value="Economy">Ekonomiczna</option>
+                        <option value="Business">Biznes</option>
+                    </select>
+                </div>
+                <button type="submit" class="button-primary">Wyszukaj loty</button>
+            </form>
+        </section>
+
+        <section id="flight-results" class="hidden">
+            <h2>Dostępne loty</h2>
+            <div id="results-list" class="flight-results-list">
+                <p>Wyszukaj lot, aby zobaczyć wyniki.</p>
             </div>
-            <div class="modal-body">
-                <h4>Klasa podróży</h4>
-                <div class="travel-class-options">
-                    <div class="class-option selected" data-class="Ekonomiczna">Ekonomiczna</div>
-                    <div class="class-option" data-class="Premium">Premium</div>
-                    <div class="class-option" data-class="Biznes">Biznes</div>
-                    <div class="class-option" data-class="Pierwsza">Pierwsza</div>
+            <button id="back-to-search" class="button-primary">Wróć do wyszukiwania</button>
+        </section>
+
+        <section id="booking-details" class="hidden">
+            <h2>Szczegóły rezerwacji</h2>
+            <div id="selected-flight-summary" class="flight-summary">
                 </div>
 
-                <h4>Pasażerowie</h4>
-                <div class="passenger-type">
-                    <label>Dorośli <span class="info-icon" data-info="Od 12 lat">i</span></label>
-                    <div class="quantity-control">
-                        <button class="decrement">-</button>
-                        <span class="quantity" id="adultsQuantity">1</span>
-                        <button class="increment">+</button>
-                    </div>
+            <h3>Dane pasażera</h3>
+            <form id="passenger-form">
+                <div class="form-group">
+                    <label for="passenger-name">Imię:</label>
+                    <input type="text" id="passenger-name" required>
                 </div>
-                <div class="passenger-type">
-                    <label>Młodzież <span class="info-icon" data-info="Od 2 do 11 lat">i</span></label>
-                    <div class="quantity-control">
-                        <button class="decrement">-</button>
-                        <span class="quantity" id="teensQuantity">0</span>
-                        <button class="increment">+</button>
-                    </div>
+                <div class="form-group">
+                    <label for="passenger-surname">Nazwisko:</label>
+                    <input type="text" id="passenger-surname" required>
                 </div>
-                <div class="passenger-type">
-                    <label>Dzieci <span class="info-icon" data-info="Poniżej 2 lat, wymagają miejsca">i</span></label>
-                    <div class="quantity-control">
-                        <button class="decrement">-</button>
-                        <span class="quantity" id="childrenQuantity">0</span>
-                        <button class="increment">+</button>
-                    </div>
+                <div class="form-group">
+                    <label for="passenger-dob">Data urodzenia:</label>
+                    <input type="date" id="passenger-dob" required>
                 </div>
-                <div class="passenger-type">
-                    <label>Niemowlęta (z miejscem) <span class="info-icon" data-info="Poniżej 2 lat, wymagają miejsca">i</span></label>
-                    <div class="quantity-control">
-                        <button class="decrement">-</button>
-                        <span class="quantity" id="infantsWithSeatQuantity">0</span>
-                        <button class="increment">+</button>
-                    </div>
+                <div class="form-group">
+                    <label for="passenger-email">Adres E-mail:</label>
+                    <input type="email" id="passenger-email" required>
                 </div>
-                <div class="passenger-type">
-                    <label>Niemowlęta (na kolanach) <span class="info-icon" data-info="Poniżej 2 lat, na kolanach rodzica">i</span></label>
-                    <div class="quantity-control">
-                        <button class="decrement">-</button>
-                        <span class="quantity" id="infantsLapQuantity">0</span>
-                        <button class="increment">+</button>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="confirm-button">Potwierdź</button>
-            </div>
-        </div>
-    </div>
+                <button type="submit" class="button-primary">Przejdź do płatności</button>
+                <button type="button" id="back-to-results" class="button-secondary">Wróć do wyników</button>
+            </form>
+        </section>
 
-    <section class="complete-your-trip">
-        <div class="container">
-            <h2>Uzupełnij swoją podróż</h2>
-            <p>Wybierz dodatkowe usługi i ułatw sobie podróż.</p>
-            <div class="options-grid">
-                <div class="option-card">
-                    <div class="icon-placeholder">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                            <path d="M15 2H9a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"></path>
-                            <line x1="12" y1="11" x2="12" y2="17"></line>
-                            <line x1="9" y1="14" x2="15" y2="14"></line>
-                        </svg>
-                    </div>
-                    <h3>Dodatkowy bagaż</h3>
+        <section id="payment-section" class="hidden">
+            <h2>Płatność</h2>
+            <div id="payment-summary" class="flight-summary">
                 </div>
-                <div class="option-card">
-                    <div class="icon-placeholder">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M2 17h20"></path>
-                            <path d="M20 17L12 2L4 17"></path>
-                            <path d="M7 17v-4"></path>
-                            <path d="M12 17v-4"></path>
-                            <path d="M17 17v-4"></path>
-                            <line x1="12" y1="9" x2="12" y2="5"></line>
-                            <line x1="9" y1="6" x2="15" y2="6"></line>
-                        </svg>
-                    </div>
-                    <h3>LOT Upgrade</h3>
+            <form id="payment-form">
+                <div class="form-group">
+                    <label for="card-number">Numer karty:</label>
+                    <input type="text" id="card-number" pattern="\d{16}" placeholder="XXXX XXXX XXXX XXXX" required>
                 </div>
-                <div class="option-card">
-                    <div class="icon-placeholder">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 2a7 7 0 0 0-7 7c0 4.2 4.4 7.2 7 10.2s7-6 7-10.2a7 7 0 0 0-7-7z"></path>
-                            <path d="M12 22s-2.5-2.2-5-5c-2.5-2.8-5-6.2-5-9.5A7 7 0 0 1 12 2z"></path>
-                            <line x1="12" y1="12" x2="12" y2="18"></line>
-                            <line x1="9" y1="15" x2="15" y2="15"></line>
-                        </svg>
-                    </div>
-                    <h3>Ubezpieczenie podróży</h3>
+                <div class="form-group">
+                    <label for="card-expiry">Data ważności (MM/RR):</label>
+                    <input type="text" id="card-expiry" pattern="(0[1-9]|1[0-2])\/\d{2}" placeholder="MM/RR" required>
                 </div>
-                <div class="option-card">
-                    <div class="icon-placeholder">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 9.5L12 4l9 5.5"></path>
-                            <path d="M19 13.5V22H5V13.5"></path>
-                            <rect x="9" y="15" width="6" height="7"></rect>
-                            <line x1="12" y1="15" x2="12" y2="22"></line>
-                            <line x1="5" y1="18" x2="19" y2="18"></line>
-                        </svg>
-                    </div>
-                    <h3>Hotel</h3>
+                <div class="form-group">
+                    <label for="card-cvv">CVV:</label>
+                    <input type="text" id="card-cvv" pattern="\d{3,4}" placeholder="XXX" required>
                 </div>
-                <div class="option-card">
-                    <div class="icon-placeholder">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                            <path d="M19 17h-1.5c-1.3 0-2.5-.9-2.9-2.2L12 7H5c-2.2 0-4 1.8-4 4v7h22v-7c0-2.2-1.8-4-4-4h-7l-1.5 5.5h-2.5"></path>
-                        </svg>
-                    </div>
-                    <h3>Transport</h3>
-                </div>
-                <div class="option-card">
-                    <div class="icon-placeholder">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                            <rect x="7" y="10" width="10" height="8" rx="1"></rect>
-                        </svg>
-                    </div>
-                    <h3>Domki wypoczynkowe</h3>
-                </div>
-                <div class="option-card">
-                    <div class="icon-placeholder">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 10h-1.26a2 2 0 0 0-1.29.98l-2.75 4.5a2 2 0 0 0 .29 2.52h5.01a2 2 0 0 0 1.29-3.48l-2.75-4.5A2 2 0 0 0 18 10z"></path>
-                            <path d="M16 16.5L16.5 17h-4.26a2 2 0 0 1-1.29-.98l-2.75-4.5A2 2 0 0 1 8 8.5h5.01a2 2 0 0 1 1.29 3.48l-2.75 4.5"></path>
-                            <path d="M14 6L8 2 2 6v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6z"></path>
-                        </svg>
-                    </div>
-                    <h3>Pakiet podróży</h3>
-                </div>
-            </div>
-        </div>
-    </section>
+                <button type="submit" class="button-primary">Zapłać</button>
+                <button type="button" id="back-to-booking" class="button-secondary">Wróć do rezerwacji</button>
+            </form>
+        </section>
 
-    <section class="recommended-destinations">
-        <div class="container">
-            <h2>Polecane Kierunki</h2>
-            <div class="destinations-grid">
-                <div class="destination-card">
-                    <img src="https://images.unsplash.com/photo-1549749176-7956a6a0e67b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwyfHxidWNoYXJlc3N0fGVufDB8fHx8MTcyMDA3NjQ2MXww&ixlib=rb-4.0.3&q=80&w=1080" alt="Loty do Bukaresztu">
-                    <h3>Loty do Bukaresztu</h3>
-                </div>
-                <div class="destination-card">
-                    <img src="https://images.unsplash.com/photo-1600885292404-b90ce8832a76?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwxNHx8ZGVsaGklZW58MHx8fHwxNzIwMDc2NDYxfDA&ixlib=rb-4.0.3&q=80&w=1080" alt="Loty do Delhi">
-                    <h3>Loty do Delhi</h3>
-                </div>
-                <div class="destination-card">
-                    <img src="https://images.unsplash.com/photo-1621251910609-b42795e6f663?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwzfHxwb2xhbmR8ZW58MHx8fHwxNzIwMDc2NDYxfDA&ixlib=rb-4.0.3&q=80&w=1080" alt="Loty do Polski">
-                    <h3>Loty do Polski</h3>
-                </div>
-                <div class="destination-card">
-                    <img src="https://images.unsplash.com/photo-1599307730303-c23f2b2e8c56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwzfHxiZWlqaW5nfGVufDB8fHx8MTcyMDA3NjQ2MXww&ixlib=rb-4.0.3&q=80&w=1080" alt="Loty do Pekinu">
-                    <h3>Loty do Pekinu</h3>
-                </div>
-                <div class="destination-card">
-                    <img src="https://images.unsplash.com/photo-1563857500174-8b6f3c1d1a8e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwxOXx8c291dGglMjBhZnJpY2F8ZW58MHx8fHwxNzIwMDc2NDYxfDA&ixlib=rb-4.0.3&q=80&w=1080" alt="Loty do RPA">
-                    <h3>Loty do RPA</h3>
-                </div>
-                <div class="destination-card">
-                    <img src="https://images.unsplash.com/photo-1577770838150-13f56d953d6d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwxNHx8c2luZ2Fwb3JlfGVufDB8fHx8MTcyMDA3NjQ2MXww&ixlib=rb-4.0.3&q=80&w=1080" alt="Loty do Singapuru">
-                    <h3>Loty do Singapuru</h3>
-                </div>
+        <section id="confirmation-section" class="hidden">
+            <h2>Potwierdzenie rezerwacji</h2>
+            <div id="reservation-confirmation-message">
+                <p>Twoja rezerwacja została pomyślnie zakończona!</p>
+                <p>Numer rezerwacji: <strong id="reservation-number"></strong></p>
             </div>
-        </div>
-    </section>
+            <div id="confirmed-booking-summary" class="flight-summary">
+                </div>
+            <button id="check-in-button" class="button-primary">Rozpocznij odprawę online</button>
+            <button id="new-search-button" class="button-secondary">Rozpocznij nowe wyszukiwanie</button>
+        </section>
 
-    <section class="about-us">
-        <div class="container">
-            <h3>O nas</h3>
-            <p>Jesteśmy dumni z zapewniania komfortowych i bezpiecznych podróży naszym pasażerom. Z nami każda podróż staje się niezapomnianą przygodą.</p>
-        </div>
-    </section>
+        <section id="check-in-section" class="hidden">
+            <h2>Odprawa online</h2>
+            <div id="check-in-summary" class="flight-summary">
+                </div>
+
+            <h3>Dane do odprawy</h3>
+            <form id="check-in-form">
+                <div class="form-group">
+                    <label for="check-in-seat">Wybór miejsca:</label>
+                    <select id="check-in-seat" required>
+                        <option value="">Wybierz miejsce</option>
+                    </select>
+                </div>
+                <button type="submit" class="button-primary">Zakończ odprawę</button>
+                <button type="button" id="back-to-confirmation" class="button-secondary">Wróć</button>
+            </form>
+
+            <div id="boarding-pass-preview" class="hidden boarding-pass">
+                <h3>Twoja Karta Pokładowa (Symulacja)</h3>
+                <p>Lot: <strong id="bp-flight-number"></strong></p>
+                <p>Z: <strong id="bp-origin"></strong> Do: <strong id="bp-destination"></strong></p>
+                <p>Data: <strong id="bp-date"></strong> Godzina: <strong id="bp-time"></strong></p>
+                <p>Pasażer: <strong id="bp-passenger-name"></strong> <strong id="bp-passenger-surname"></strong></p>
+                <p>Miejsce: <strong id="bp-seat"></strong></p>
+                <p>Status: <span style="color: green; font-weight: bold;">ODPRAWIONY</span></p>
+                <p><em>To jest symulowana karta pokładowa i nie jest ważna do podróży.</em></p>
+                <button id="print-boarding-pass" class="button-primary">Drukuj (Symulacja)</button>
+            </div>
+        </section>
+
+    </main>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2024 Vistula Airlines. Wszelkie prawa zastrzeżone.</p>
-            <div class="social-links">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-        </div>
+        <p>&copy; 2024 Twoja Linia Lotnicza. Wszelkie prawa zastrzeżone.</p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script>
     <script src="JS/script.js"></script>
 </body>
 </html>
