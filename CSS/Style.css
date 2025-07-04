@@ -877,22 +877,39 @@ footer p {
 
     .header-left {
         order: 1;
-        flex: unset; /* Resetujemy flex, żeby h1 nie zajmowało całej szerokości */
-        gap: 10px; /* Mniejsze odstępy */
+        flex: unset;
+        gap: 10px;
     }
 
     .header-left h1 {
-        margin: 0; /* Usuwamy auto margin na mobile, żeby było obok hamburgera */
+        margin: 0;
     }
 
     .menu-toggle {
-        display: block; /* Pokaż hamburger na mobile */
-        order: 0; /* Ustaw hamburgera na początku */
+        display: block;
+        order: 0;
     }
 
+    /* Zmiana tutaj: Pokaż ikony na mobilce */
     .header-right {
         order: 2;
-        display: none; /* Ukryj ikony waluty/kraju/konta na mobilce w nagłówku, przeniosłem je do menu mobilnego */
+        display: flex; /* Zmieniono z 'none' na 'flex' */
+        gap: 10px; /* Dodano odstęp między ikonami na mobilce */
+        align-items: center; /* Wyśrodkuj ikony pionowo */
+    }
+
+    .icon-group {
+        display: flex;
+        gap: 10px; /* Odstęp wewnątrz grupy ikon */
+    }
+
+    .icon-item {
+        font-size: 0.8em; /* Lekko zmniejsz rozmiar czcionki dla lepszego dopasowania na mobilce */
+    }
+
+    .icon-item i {
+        font-size: 1em; /* Lekko zmniejsz rozmiar ikony dla lepszego dopasowania na mobilce */
+        margin-right: 2px;
     }
 
     .search-form label {
