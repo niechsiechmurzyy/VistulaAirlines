@@ -4,9 +4,9 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #FFFFFF; /* KLUCZOWA ZMIANA: Białe tło całej strony */
+    background-color: #FFFFFF;
     color: #333;
-    overflow-x: hidden; /* Zapobiega poziomemu scrollowaniu na małych ekranach */
+    overflow-x: hidden;
 }
 
 .container {
@@ -18,19 +18,19 @@ body {
 
 /* Nagłówek (Header) */
 header {
-    background: linear-gradient(to right, #004d99, #007bff); /* Gradient niebieski */
+    background: linear-gradient(to right, #004d99, #007bff);
     color: white;
     padding: 10px 0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    position: relative; /* Naprawa problemu z paskiem nawigacyjnym: Ustawienie pozycji względnej */
-    z-index: 100; /* Upewnij się, że header jest nad innymi elementami */
+    position: relative;
+    z-index: 100;
 }
 
 header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Pozwoli na zawijanie elementów na mniejszych ekranach */
 }
 
 .header-left {
@@ -49,15 +49,16 @@ header .container {
 .header-right {
     display: flex;
     align-items: center;
+    gap: 20px; /* Odstęp między grupą ikon a menu-toggle */
 }
 
 .menu-toggle {
     font-size: 1.8em;
     cursor: pointer;
-    display: block; /* Widoczny na mobile */
+    display: none; /* Domyślnie ukryty na desktopie */
 }
 
-/* Ikony po prawej stronie */
+/* Ikony po prawej stronie (Desktop) */
 .icon-group {
     display: flex;
     gap: 20px;
@@ -65,41 +66,63 @@ header .container {
 
 .icon-item {
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* Ikony i tekst obok siebie na desktopie */
     align-items: center;
     cursor: pointer;
-    position: relative; /* Ważne dla pozycjonowania dropdown-content */
-    font-size: 0.8em;
+    position: relative;
+    font-size: 0.9em; /* Nieco mniejsza czcionka */
+    font-weight: bold;
 }
 
 .icon-item i {
-    font-size: 1.5em;
-    margin-bottom: 3px;
+    font-size: 1.2em; /* Mniejsze ikony */
+    margin-right: 5px; /* Odstęp między ikoną a tekstem */
+    margin-bottom: 0; /* Resetowanie margin-bottom */
 }
 
 .icon-item span {
     font-weight: bold;
 }
 
-/* Ukrycie domyślnej nawigacji na telefonach */
+/* Domyślna nawigacja (Desktop) */
 header nav {
-    display: none;
+    display: block; /* Widoczna na desktopie */
 }
 
-/* Stylizacja mobilnego menu (szufladki) */
+header nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 25px; /* Odstępy między elementami nawigacji */
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1em;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+header nav ul li a:hover {
+    color: #b0e0e6; /* Jaśniejszy niebieski po najechaniu */
+}
+
+/* Stylizacja mobilnego menu (szufladki) - domyślnie ukryte na desktopie */
 .mobile-nav {
     width: 250px;
     background-color: #004d99;
-    position: fixed; 
-    top: 0; 
+    position: fixed;
+    top: 0;
     left: 0;
-    height: 100vh; 
-    overflow-y: auto; 
+    height: 100vh;
+    overflow-y: auto;
     box-shadow: 2px 0 5px rgba(0,0,0,0.3);
-    padding-top: 60px; 
+    padding-top: 60px;
     transition: transform 0.3s ease-in-out;
     transform: translateX(-100%); /* Domyślnie poza ekranem */
-    z-index: 1000; 
+    z-index: 1000;
     display: block; /* Upewniamy się, że element jest w DOM i gotowy do animacji */
 }
 
@@ -126,19 +149,29 @@ header nav {
     background-color: #003366;
 }
 
+.mobile-dropdown-header {
+    background-color: #003366;
+    color: #b0e0e6;
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 0.9em;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-top: 10px;
+}
+
 /* Style dla wysuwanych okienek (waluty, państwa, konto) w nagłówku */
 .dropdown-content {
-    display: none; /* Domyślnie ukryte */
+    display: none;
     position: absolute;
     background-color: #f9f9f9;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 101; /* Zwiększony z-index, aby był nad innymi elementami */
+    z-index: 101;
     border-radius: 5px;
-    top: 100%; 
-    right: 0; /* Przyklejamy do prawej krawędzi ikony */
-    left: auto; /* Resetujemy lewą pozycję */
-    transform: none; /* Resetujemy transform, jeśli było wcześniej */
+    top: 100%;
+    right: 0;
+    left: auto;
+    transform: none;
     padding: 10px 0;
 }
 
@@ -188,7 +221,7 @@ header nav {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.25); /* KLUCZOWA ZMIANA: Mniejsza przezroczystość */
+    background-color: rgba(0, 0, 0, 0.25);
     z-index: -1;
 }
 
@@ -207,7 +240,7 @@ header nav {
 }
 
 .search-form {
-    background-color: #FFFFFF; /* KLUCZOWA ZMIANA: Białe tło formularza */
+    background-color: #FFFFFF;
     padding: 20px;
     border-radius: 8px;
     display: flex;
@@ -217,9 +250,8 @@ header nav {
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-/* Kontener dla inputów w formularzu, aby dropdowny były poprawnie pozycjonowane */
 .input-container {
-    position: relative; 
+    position: relative;
     width: 100%;
 }
 
@@ -232,6 +264,15 @@ header nav {
     font-size: 1em;
     width: 100%;
     box-sizing: border-box;
+}
+
+.search-form label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    color: #555;
+    font-weight: bold;
+    font-size: 0.9em;
 }
 
 .search-form button {
@@ -249,21 +290,21 @@ header nav {
 /* Style dla wysuwanych list lotnisk */
 .airport-dropdown-content {
     position: absolute;
-    top: 100%; /* Poniżej pola input */
+    top: 100%;
     left: 0;
-    width: 100%; /* Pełna szerokość inputa */
-    max-height: 250px; /* KLUCZOWA ZMIANA: Zwiększona maksymalna wysokość */
-    overflow-y: auto; /* Włącz scrollowanie, jeśli lista jest długa */
+    width: 100%;
+    max-height: 250px;
+    overflow-y: auto;
     background-color: #fff;
     border: 1px solid #ddd;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* KLUCZOWA ZMIANA: Wyraźny cień */
-    z-index: 99; /* Niżej niż modale, ale wyżej niż tło */
-    display: none !important; /* KLUCZOWA ZMIANA: Domyślnie ukryte i wymuszone */
-    border-radius: 0 0 5px 5px; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    z-index: 99;
+    display: none; /* Użyjemy JS do pokazywania/ukrywania */
+    border-radius: 0 0 5px 5px;
 }
 
 .airport-dropdown-content.show {
-    display: block !important; /* KLUCZOWA ZMIANA: Pokazuj i wymuś */
+    display: block;
 }
 
 .dropdown-country-header {
@@ -272,7 +313,7 @@ header nav {
     font-weight: bold;
     color: #555;
     border-bottom: 1px solid #ddd;
-    position: sticky; /* Nagłówek kraju będzie się przyklejać podczas scrollowania */
+    position: sticky;
     top: 0;
     z-index: 5;
 }
@@ -281,13 +322,12 @@ header nav {
     padding: 8px 12px;
     cursor: pointer;
     border-bottom: 1px solid #eee;
-    color: #333; /* Upewniamy się, że tekst jest widoczny */
+    color: #333;
 }
 
 .airport-dropdown-content .dropdown-item:hover {
     background-color: #f1f1f1;
 }
-
 
 /* Sekcja "O nas" */
 .about-us {
@@ -341,23 +381,23 @@ footer p {
     color: #b0e0e6;
 }
 
-/* Flatpickr (Kalendarz) customizacja - niebieski styl */
+/* Flatpickr (Kalendarz) customizacja */
 .flatpickr-calendar {
-    background: #ffffff; 
-    border: 1px solid #007bff; 
+    background: #ffffff;
+    border: 1px solid #007bff;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    z-index: 99999 !important; /* KLUCZOWA ZMIANA: Bardzo wysoki z-index, wymuszony */
-    position: fixed !important; 
-    top: 50% !important;
-    left: 50% !important; 
-    transform: translate(-50%, -50%) !important; 
-    max-width: 90vw; 
-    width: auto !important; 
-    opacity: 0; /* Domyślnie ukryty, pokaże się po otwarciu */
-    visibility: hidden; /* Domyślnie ukryty */
+    z-index: 99999;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90vw;
+    width: auto;
+    opacity: 0;
+    visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
-    display: block !important; /* Upewniamy się, że jest w DOM, ale niewidoczny */
+    display: block;
 }
 
 .flatpickr-calendar.open {
@@ -366,22 +406,22 @@ footer p {
 }
 
 .flatpickr-months .flatpickr-month {
-    background-color: #007bff; 
+    background-color: #007bff;
     color: white;
-    fill: white; 
+    fill: white;
 }
 
 .flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-months-selected {
-    color: #007bff; 
+    color: #007bff;
 }
 
 .flatpickr-current-month .numInputWrapper span.arrowUp:after,
 .flatpickr-current-month .numInputWrapper span.arrowDown:after {
-    border-color: white; 
+    border-color: white;
 }
 
 .flatpickr-day {
-    color: #333; 
+    color: #333;
 }
 
 .flatpickr-day.selected,
@@ -402,64 +442,61 @@ footer p {
 .flatpickr-day.selected.nextMonthDay,
 .flatpickr-day.startRange.nextMonthDay,
 .flatpickr-day.endRange.nextMonthDay {
-    background: #007bff; 
+    background: #007bff;
     border-color: #007bff;
     color: white;
 }
 
 .flatpickr-day.today {
-    border-color: #007bff; 
+    border-color: #007bff;
     color: #007bff;
 }
 
 .flatpickr-day.today.selected {
-    background: #0056b3; 
+    background: #0056b3;
     border-color: #0056b3;
 }
 
 .flatpickr-day.today:hover {
-    background: #f0f0f0; 
+    background: #f0f0f0;
 }
 
 /* --- Style dla Modal (Klasa podróży i pasażerowie) --- */
 .modal {
-    display: none !important; /* KLUCZOWA ZMIANA: Domyślnie ukryty i wymuszony */
-    position: fixed; 
-    z-index: 10000; 
+    display: none;
+    position: fixed;
+    z-index: 10000;
     left: 0;
     top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgba(0,0,0,0.4); 
-    justify-content: center; /* Centruje zawartość */
-    align-items: center; /* Centruje zawartość */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
 }
 
-/* Kiedy JS doda klasę .show-modal, wtedy jest widoczny */
-.modal.show-modal { 
-    display: flex !important; /* Pokazuj modal, gdy ma klasę .show-modal */
+.modal.show-modal {
+    display: flex;
 }
-
 
 .modal-content {
     background-color: #fefefe;
-    margin: auto; 
+    margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 90%; 
-    max-width: 500px; 
+    width: 90%;
+    max-width: 500px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     animation-name: animatetop;
     animation-duration: 0.4s;
     display: flex;
     flex-direction: column;
-    max-height: 90vh; 
-    overflow-y: auto; 
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
-/* Animacja wysuwania modala */
 @keyframes animatetop {
     from {top: -300px; opacity: 0}
     to {top: 0; opacity: 1}
@@ -502,14 +539,14 @@ footer p {
 
 .travel-class-options {
     display: flex;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 20px;
 }
 
 .class-option {
-    flex: 1; 
-    min-width: 120px; 
+    flex: 1;
+    min-width: 120px;
     padding: 10px 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -546,7 +583,7 @@ footer p {
 .passenger-type label {
     font-size: 1em;
     color: #333;
-    display: flex; 
+    display: flex;
     align-items: center;
 }
 
@@ -565,11 +602,10 @@ footer p {
     position: relative;
 }
 
-/* Tooltip dla ikony "i" */
 .info-icon::after {
-    content: attr(data-info); 
+    content: attr(data-info);
     position: absolute;
-    bottom: 120%; 
+    bottom: 120%;
     left: 50%;
     transform: translateX(-50%);
     background-color: #333;
@@ -588,7 +624,6 @@ footer p {
     opacity: 1;
     visibility: visible;
 }
-
 
 .quantity-control {
     display: flex;
@@ -618,7 +653,7 @@ footer p {
 .quantity {
     font-size: 1.1em;
     font-weight: bold;
-    min-width: 20px; 
+    min-width: 20px;
     text-align: center;
 }
 
@@ -628,7 +663,7 @@ footer p {
 }
 
 .confirm-button {
-    background-color: #28a745; 
+    background-color: #28a745;
     color: white;
     border: none;
     padding: 12px 30px;
@@ -642,98 +677,10 @@ footer p {
     background-color: #218838;
 }
 
-
-/* Media Queries dla responsywności */
-@media (min-width: 768px) {
-    .menu-toggle {
-        display: none;
-    }
-
-    header nav {
-        display: block; 
-    }
-
-    header nav ul {
-        display: flex;
-        flex-direction: row;
-        margin-top: 0;
-    }
-
-    header nav ul li {
-        margin-left: 25px;
-    }
-
-    .header-left h1 {
-        font-size: 2.5em;
-    }
-
-    .icon-item {
-        flex-direction: row;
-        gap: 5px;
-        font-size: 1em;
-    }
-
-    .icon-item i {
-        margin-bottom: 0;
-    }
-
-    .hero h2 {
-        font-size: 3em;
-    }
-
-    .hero p {
-        font-size: 1.2em;
-    }
-
-    .search-form {
-        flex-direction: row;
-        padding: 30px;
-        flex-wrap: wrap; 
-    }
-
-    .input-container {
-        flex: 1; 
-        min-width: 200px; 
-        max-width: 23%; 
-        margin-right: 1%; 
-    }
-
-    .input-container:last-of-type {
-        margin-right: 0;
-    }
-
-    .search-form button {
-        flex: 0 0 100%; 
-        margin-top: 15px; 
-    }
-    
-    footer .container {
-        flex-direction: row;
-    }
-
-    .social-links {
-        margin-top: 0;
-    }
-
-    /* Modal na desktopie będzie miał stałą szerokość */
-    .modal-content {
-        width: 500px; 
-    }
-
-    .travel-class-options {
-        flex-wrap: nowrap; 
-    }
-
-    .class-option {
-        flex: 1; 
-        min-width: auto; 
-    }
-}
-
 /* --- Sekcja Uzupełnij swoją podróż --- */
 .complete-your-trip {
     padding: 60px 20px;
-    background-color: #FFFFFF; /* Upewnij się, że tło jest białe */
+    background-color: #FFFFFF;
     text-align: center;
     margin-top: 30px;
 }
@@ -752,10 +699,10 @@ footer p {
 
 .options-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsywna siatka */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 25px;
-    max-width: 1000px; /* Ogranicz szerokość siatki */
-    margin: 0 auto; /* Wyśrodkuj siatkę */
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
 .option-card {
@@ -770,13 +717,13 @@ footer p {
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    min-height: 150px; /* Minimalna wysokość karty */
+    min-height: 150px;
 }
 
 .option-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    background-color: #e6f2ff; /* Lekko niebieskie tło po najechaniu */
+    background-color: #e6f2ff;
 }
 
 .icon-placeholder {
@@ -786,7 +733,7 @@ footer p {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #007bff; /* Kolor ikon */
+    color: #007bff;
 }
 
 .icon-placeholder svg {
@@ -801,60 +748,46 @@ footer p {
     text-align: center;
 }
 
-/* Media Query dla większych ekranów */
-@media (min-width: 768px) {
-    .options-grid {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 30px;
-    }
-}
-
-@media (min-width: 1024px) {
-    .options-grid {
-        grid-template-columns: repeat(3, 1fr); /* 3 kolumny na dużych ekranach */
-    }
-}
-
 /* --- Sekcja Polecane Kierunki --- */
 .recommended-destinations {
     padding: 40px 20px;
-    background-color: #f8f9fa; /* Jasnoszare tło dla wyróżnienia */
+    background-color: #f8f9fa;
     text-align: center;
-    margin-top: 30px; /* Odstęp od poprzedniej sekcji */
+    margin-top: 30px;
 }
 
 .recommended-destinations h2 {
     font-size: 2.2em;
     margin-bottom: 20px;
-    color: #004d99; /* Kolor nagłówka */
+    color: #004d99;
 }
 
 .destinations-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsywna siatka */
-    gap: 20px; /* Odstępy między kartami */
-    max-width: 1200px; /* Ograniczenie szerokości siatki */
-    margin: 0 auto; /* Wyśrodkowanie siatki */
-    padding: 20px; /* Wewnętrzne wypełnienie siatki */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .destination-card {
     background-color: white;
-    border-radius: 10px; /* Zaokrąglone rogi */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Delikatny cień */
-    overflow: hidden; /* Ukryj to, co wychodzi poza zaokrąglone rogi */
-    transition: transform 0.3s ease-in-out; /* Płynna animacja po najechaniu */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
 }
 
 .destination-card:hover {
-    transform: scale(1.03); /* Lekkie powiększenie po najechaniu */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Wyraźniejszy cień po najechaniu */
+    transform: scale(1.03);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .destination-card img {
     width: 100%;
-    height: 180px; /* Stała wysokość obrazka */
-    object-fit: cover; /* Dopasuj obraz do ramki, zachowując proporcje */
+    height: 180px;
+    object-fit: cover;
     display: block;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -868,16 +801,129 @@ footer p {
     text-align: center;
 }
 
-/* Media Query dla większych ekranów dla siatki kierunków */
+/* Media Queries dla responsywności */
 @media (min-width: 768px) {
+    .menu-toggle {
+        display: none; /* Ukryj hamburger na desktopie */
+    }
+
+    header nav {
+        display: block; /* Pokaż główną nawigację na desktopie */
+    }
+
+    .mobile-nav {
+        display: none; /* Ukryj mobilne menu na desktopie */
+    }
+
+    .header-left h1 {
+        font-size: 2.5em;
+    }
+
+    .icon-item {
+        font-size: 1em;
+    }
+
+    .hero h2 {
+        font-size: 3em;
+    }
+
+    .hero p {
+        font-size: 1.2em;
+    }
+
+    .search-form {
+        flex-direction: row;
+        padding: 30px;
+        flex-wrap: wrap;
+    }
+
+    .input-container {
+        flex: 1;
+        min-width: 200px;
+        max-width: 23%;
+        margin-right: 1%;
+    }
+
+    .input-container:last-of-type {
+        margin-right: 0;
+    }
+
+    .search-form button {
+        flex: 0 0 100%;
+        margin-top: 15px;
+    }
+
+    footer .container {
+        flex-direction: row;
+    }
+
+    .social-links {
+        margin-top: 0;
+    }
+
+    .modal-content {
+        width: 500px;
+    }
+
+    .travel-class-options {
+        flex-wrap: nowrap;
+    }
+
+    .class-option {
+        flex: 1;
+        min-width: auto;
+    }
+
+    .options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 30px;
+    }
+
     .destinations-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Większe min-width dla kart */
-        gap: 30px; /* Większe odstępy */
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
     }
 }
 
-@media (min-width: 1024px) {
+@media (max-width: 767px) {
+    header .container {
+        flex-direction: row; /* Zapewnij, że elementy są w rzędzie */
+        justify-content: space-between; /* Rozrzuć elementy po bokach */
+        align-items: center;
+    }
+
+    .header-left {
+        order: 1; /* Ustawienie kolejności */
+    }
+
+    .header-right {
+        order: 2; /* Ustawienie kolejności */
+        display: flex;
+        align-items: center;
+        gap: 10px; /* Mniejsze odstępy na mobilce */
+    }
+
+    .icon-group {
+        display: none; /* Ukryj ikony waluty/kraju/konta na mobilce w nagłówku, będą w menu mobilnym */
+    }
+
+    .menu-toggle {
+        display: block; /* Pokaż hamburger na mobilce */
+    }
+
+    header nav {
+        display: none; /* Ukryj główną nawigację na mobilce */
+    }
+
+    .search-form label {
+        text-align: left; /* Wyrównanie etykiet do lewej */
+    }
+
     .destinations-grid {
-        grid-template-columns: repeat(3, 1fr); /* 3 kolumny na dużych ekranach */
+        padding: 10px;
+    }
+
+    .destination-card img {
+        height: 150px; /* Nieco mniejsza wysokość obrazków na telefonach */
     }
 }
