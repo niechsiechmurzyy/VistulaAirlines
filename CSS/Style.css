@@ -22,7 +22,7 @@ header {
     color: white;
     padding: 10px 0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    position: relative;
+    position: relative; /* Naprawa problemu z paskiem nawigacyjnym: Ustawienie pozycji względnej */
     z-index: 100; /* Upewnij się, że header jest nad innymi elementami */
 }
 
@@ -811,6 +811,73 @@ footer p {
 
 @media (min-width: 1024px) {
     .options-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 kolumny na dużych ekranach */
+    }
+}
+
+/* --- Sekcja Polecane Kierunki --- */
+.recommended-destinations {
+    padding: 40px 20px;
+    background-color: #f8f9fa; /* Jasnoszare tło dla wyróżnienia */
+    text-align: center;
+    margin-top: 30px; /* Odstęp od poprzedniej sekcji */
+}
+
+.recommended-destinations h2 {
+    font-size: 2.2em;
+    margin-bottom: 20px;
+    color: #004d99; /* Kolor nagłówka */
+}
+
+.destinations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsywna siatka */
+    gap: 20px; /* Odstępy między kartami */
+    max-width: 1200px; /* Ograniczenie szerokości siatki */
+    margin: 0 auto; /* Wyśrodkowanie siatki */
+    padding: 20px; /* Wewnętrzne wypełnienie siatki */
+}
+
+.destination-card {
+    background-color: white;
+    border-radius: 10px; /* Zaokrąglone rogi */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Delikatny cień */
+    overflow: hidden; /* Ukryj to, co wychodzi poza zaokrąglone rogi */
+    transition: transform 0.3s ease-in-out; /* Płynna animacja po najechaniu */
+}
+
+.destination-card:hover {
+    transform: scale(1.03); /* Lekkie powiększenie po najechaniu */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Wyraźniejszy cień po najechaniu */
+}
+
+.destination-card img {
+    width: 100%;
+    height: 180px; /* Stała wysokość obrazka */
+    object-fit: cover; /* Dopasuj obraz do ramki, zachowując proporcje */
+    display: block;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.destination-card h3 {
+    padding: 15px;
+    margin: 0;
+    font-size: 1.1em;
+    color: #333;
+    text-align: center;
+}
+
+/* Media Query dla większych ekranów dla siatki kierunków */
+@media (min-width: 768px) {
+    .destinations-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Większe min-width dla kart */
+        gap: 30px; /* Większe odstępy */
+    }
+}
+
+@media (min-width: 1024px) {
+    .destinations-grid {
         grid-template-columns: repeat(3, 1fr); /* 3 kolumny na dużych ekranach */
     }
 }
