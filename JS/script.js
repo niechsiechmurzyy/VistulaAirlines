@@ -1,375 +1,266 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const menuToggle = document.getElementById('menuToggle');
-    const mobileNav = document.getElementById('mobileNav');
+document.addEventListener('DOMContentLoaded', () => {
+    // === Elementy DOM ===
     const currencyIcon = document.getElementById('currencyIcon');
     const countryIcon = document.getElementById('countryIcon');
     const accountIcon = document.getElementById('accountIcon');
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileNav = document.getElementById('mobileNav');
 
-    // Airport and Date select inputs
     const departureAirportInput = document.getElementById('departureAirport');
     const arrivalAirportInput = document.getElementById('arrivalAirport');
     const departureDateInput = document.getElementById('departureDate');
-
-    // Passenger & Class Modal elements
     const passengerClassInput = document.getElementById('passengerClassInput');
     const passengerModal = document.getElementById('passengerModal');
-    // Upewnij się, że elementy istnieją przed próbą ich pobrania
     const closeModalButton = passengerModal ? passengerModal.querySelector('.close-button') : null;
     const confirmModalButton = passengerModal ? passengerModal.querySelector('.confirm-button') : null;
-    const classOptions = passengerModal ? passengerModal.querySelectorAll('.class-option') : [];
-    
-    // Passenger quantity controls elements (upewnij się, że ID są poprawne w HTML)
-    const adultsQuantity = document.getElementById('adultsQuantity');
-    const teensQuantity = document.getElementById('teensQuantity');
-    const childrenQuantity = document.getElementById('childrenQuantity');
-    const infantsWithSeatQuantity = document.getElementById('infantsWithSeatQuantity');
-    const infantsLapQuantity = document.getElementById('infantsLapQuantity');
 
-    // Initial values for passengers and class
-    let currentAdults = adultsQuantity ? parseInt(adultsQuantity.textContent) : 1;
-    let currentTeens = teensQuantity ? parseInt(teensQuantity.textContent) : 0;
-    let currentChildren = childrenQuantity ? parseInt(childrenQuantity.textContent) : 0;
-    let currentInfantsWithSeat = infantsWithSeatQuantity ? parseInt(infantsWithSeatQuantity.textContent) : 0;
-    let currentInfantsLap = infantsLapQuantity ? parseInt(infantsLapQuantity.textContent) : 0;
-    // Pobieramy domyślną wybraną klasę lub ustawiamy "Ekonomiczna"
-    let selectedClass = passengerModal ? (passengerModal.querySelector('.class-option.selected')?.dataset.class || 'Ekonomiczna') : 'Ekonomiczna';
+    let selectedTravelClass = 'Ekonomiczna';
+    let adults = 1;
+    let teens = 0;
+    let children = 0;
+    let infantsWithSeat = 0;
+    let infantsLap = 0;
 
+    let selectedDepartureAirport = null;
+    let selectedArrivalAirport = null;
 
-    // Funkcja do zamykania wszystkich dropdownów, menu mobilnego i modali
-    function closeAllInteractiveElements() {
-        document.querySelectorAll('.dropdown-content').forEach(dropdown => {
-            dropdown.classList.remove('show');
-        });
-        document.querySelectorAll('.airport-dropdown-content').forEach(dropdown => {
-            dropdown.classList.remove('show');
-            dropdown.setAttribute('aria-expanded', 'false');
-        });
+    // === Funkcje pomocnicze ===
 
-        if (mobileNav) {
-            mobileNav.classList.remove('open');
-        }
-        
-        // Sprawdź, czy Flatpickr jest zainicjalizowany i otwarty
-        if (departureDateInput && departureDateInput._flatpickr && departureDateInput._flatpickr.isOpen) {
-             departureDateInput._flatpickr.close();
-        }
-        
-        if (passengerModal) {
-            passengerModal.classList.remove('show-modal'); // Używamy klasy CSS
-        }
-    }
-
-    // Funkcja pomocnicza do przełączania dropdownów w nagłówku
-    function toggleHeaderDropdown(iconElement) {
-        const dropdown = iconElement.querySelector('.dropdown-content');
-        closeAllInteractiveElements(); // Zamknij wszystko, zanim otworzysz ten dropdown
-        if (dropdown) { 
-            dropdown.classList.add('show'); 
-        }
-    }
-
-    // Obsługa kliknięcia w hamburger menu
-    if (menuToggle && mobileNav) {
-        menuToggle.addEventListener('click', function(event) {
-            closeAllInteractiveElements(); 
-            mobileNav.classList.add('open'); 
-            event.stopPropagation(); 
-        });
-    }
-
-    // Obsługa kliknięcia w ikonę waluty
-    if (currencyIcon) {
-        currencyIcon.addEventListener('click', function(event) {
-            toggleHeaderDropdown(this);
-            event.stopPropagation();
-        });
-        currencyIcon.querySelectorAll('.dropdown-item').forEach(item => {
-            item.addEventListener('click', function(event) {
-                const selectedValue = this.dataset.value;
-                const displaySpan = currencyIcon.querySelector('span');
-                if (displaySpan) {
-                    displaySpan.textContent = selectedValue;
-                }
-                currencyIcon.querySelector('.dropdown-content').classList.remove('show');
-                event.stopPropagation(); 
-            });
-        });
-    }
-
-    // Obsługa kliknięcia w ikonę państwa/języka
-    if (countryIcon) {
-        countryIcon.addEventListener('click', function(event) {
-            toggleHeaderDropdown(this);
-            event.stopPropagation();
-        });
-        countryIcon.querySelectorAll('.dropdown-item').forEach(item => {
-            item.addEventListener('click', function(event) {
-                const selectedValue = this.dataset.value;
-                const displaySpan = countryIcon.querySelector('span');
-                if (displaySpan) {
-                    displaySpan.textContent = selectedValue.toUpperCase(); 
-                }
-                countryIcon.querySelector('.dropdown-content').classList.remove('show');
-                event.stopPropagation();
-            });
-        });
-    }
-
-    // Obsługa kliknięcia w ikonę konta
-    if (accountIcon) {
-        accountIcon.addEventListener('click', function(event) {
-            toggleHeaderDropdown(this);
-            event.stopPropagation();
-        });
-    }
-
-    // Zamykanie wszystkich wysuwanych elementów po kliknięciu poza nimi
-    document.addEventListener('click', function(event) {
-        // Sprawdzamy, czy kliknięcie NIE jest wewnątrz żadnego z interaktywnych elementów
-        const isClickInsideHeaderDropdown = event.target.closest('.dropdown-content.show');
-        const isClickInsideMobileNav = event.target.closest('#mobileNav.open');
-        const isClickInsideAirportDropdown = event.target.closest('.airport-dropdown-content.show');
-        const isClickInsideModalContent = event.target.closest('#passengerModal .modal-content'); // Sprawdzamy content modala
-        const isClickInsideFlatpickr = event.target.closest('.flatpickr-calendar');
-        const isClickOnAnyInput = event.target.tagName === 'INPUT'; // Kliknięcie na input (np. daty, lotniska) nie powinno zamykać
-
-        // Jeśli kliknięcie nie jest w żadnym z tych elementów, to zamykamy wszystko
-        if (!isClickInsideHeaderDropdown && !isClickInsideMobileNav && !isClickInsideAirportDropdown && !isClickInsideModalContent && !isClickInsideFlatpickr && !isClickOnAnyInput) {
-            closeAllInteractiveElements();
-        }
-    });
-
-    // --- Inicjalizacja Kalendarza Flatpickr ---
-    if (departureDateInput) {
-        flatpickr(departureDateInput, {
-            mode: "range", 
-            minDate: "today", 
-            maxDate: new Date().fp_incr("365"), // KLUCZOWA ZMIANA: Ustawia zakres na 365 dni do przodu (około roku)
-            dateFormat: "d.m.Y", 
-            locale: "pl", 
-            onOpen: function(selectedDates, dateStr, instance) {
-                closeAllInteractiveElements(); // Zamknij inne elementy przed otwarciem kalendarza
-                instance.calendarContainer.classList.add('open'); // Dodajemy klasę `open` po otwarciu
-                instance.redraw(); 
-            },
-            onClose: function(selectedDates, dateStr, instance) {
-                instance.calendarContainer.classList.remove('open'); // Usuwamy klasę `open` po zamknięciu
-            }
-        });
-        
-        // Dodatkowe kliknięcie na input odświeży Flatpickr i zamknie inne elementy
-        departureDateInput.addEventListener('click', function(event) {
-            closeAllInteractiveElements();
-            if (this._flatpickr) {
-                this._flatpickr.open(); // Otwiera kalendarz
-            }
-            event.stopPropagation();
-        });
-    }
-
-    // --- Dane dla lotnisk i funkcja ich wyświetlania ---
-    const airportsData = {
-        "Polska": [
-            "Warszawa-Chopin (WAW)", "Kraków (KRK)", "Gdańsk (GDN)", "Katowice (KTW)", 
-            "Wrocław (WRO)", "Modlin (WMI)", "Poznań (POZ)", "Łódź (LCJ)", 
-            "Szczecin (SZZ)", "Lublin (LUZ)", "Rzeszów (RZE)", "CPK (Lotnisko Centralne) - w budowie"
-        ],
-        "Niemcy": [
-            "Berlin (BER)", "Monachium (MUC)", "Frankfurt (FRA)", "Düsseldorf (DUS)", 
-            "Hamburg (HAM)", "Kolonia/Bonn (CGN)"
-        ],
-        "Wielka Brytania": [
-            "Londyn-Heathrow (LHR)", "Londyn-Gatwick (LGW)", "Londyn-Stansted (STN)", 
-            "Manchester (MAN)", "Birmingham (BHX)"
-        ],
-        "Francja": [
-            "Paryż-CDG (CDG)", "Paryż-Orly (ORY)", "Nicea (NCE)", "Marsylia (MRS)"
-        ]
+    // Funkcja do zamykania wszystkich interaktywnych elementów
+    const closeAllInteractiveElements = () => {
+        document.querySelectorAll('.dropdown-content.show').forEach(el => el.classList.remove('show'));
+        if (mobileNav) mobileNav.classList.remove('open');
+        if (flatpickrInstance) flatpickrInstance.close();
+        document.querySelectorAll('.airport-dropdown-content.show').forEach(el => el.classList.remove('show'));
+        if (passengerModal) passengerModal.classList.remove('show-modal');
     };
 
-    function createAirportDropdown(inputElement) {
-        if (!inputElement) return; // Zabezpieczenie przed brakiem elementu
+    // Funkcja do aktualizacji tekstu w polu Pasażerowie i Klasa
+    const updatePassengerClassInput = () => {
+        const totalPassengers = adults + teens + children + infantsWithSeat + infantsLap;
+        let passengerText = '';
 
-        const dropdown = document.createElement('div');
-        dropdown.classList.add('airport-dropdown-content'); 
-        dropdown.setAttribute('aria-expanded', 'false'); 
+        if (totalPassengers === 1) {
+            passengerText = '1 Pasażer';
+        } else if (totalPassengers > 1) {
+            passengerText = `${totalPassengers} Pasażerów`;
+        } else {
+            passengerText = '0 Pasażerów'; // Should not happen if adults starts at 1
+        }
+        
+        if (passengerClassInput) {
+            passengerClassInput.value = `${passengerText}, ${selectedTravelClass}`;
+        }
+    };
 
-        for (const country in airportsData) {
+    // Funkcja do generowania listy lotnisk
+    const generateAirportDropdown = (inputElement, type) => {
+        const airports = {
+            "Polska": ["Warszawa (WAW)", "Kraków (KRK)", "Gdańsk (GDN)"],
+            "Niemcy": ["Berlin (BER)", "Monachium (MUC)", "Frankfurt (FRA)"],
+            "Francja": ["Paryż (CDG)", "Nicea (NCE)", "Lyon (LYS)"],
+            "Wielka Brytania": ["Londyn (LHR)", "Manchester (MAN)", "Edynburg (EDI)"]
+        };
+
+        let dropdown = inputElement.nextElementSibling;
+        if (!dropdown || !dropdown.classList.contains('airport-dropdown-content')) {
+            dropdown = document.createElement('div');
+            dropdown.classList.add('airport-dropdown-content');
+            inputElement.parentNode.insertBefore(dropdown, inputElement.nextSibling);
+        }
+        dropdown.innerHTML = '';
+
+        for (const country in airports) {
             const countryHeader = document.createElement('div');
             countryHeader.classList.add('dropdown-country-header');
             countryHeader.textContent = country;
             dropdown.appendChild(countryHeader);
 
-            airportsData[country].forEach(airport => {
-                const airportItem = document.createElement('div');
-                airportItem.classList.add('dropdown-item');
-                airportItem.textContent = airport; // Tutaj jest tekst lotniska
-                airportItem.addEventListener('click', (event) => {
+            airports[country].forEach(airport => {
+                const item = document.createElement('div');
+                item.classList.add('dropdown-item');
+                item.textContent = airport;
+                item.addEventListener('click', () => {
                     inputElement.value = airport;
+                    if (type === 'departure') {
+                        selectedDepartureAirport = airport;
+                    } else {
+                        selectedArrivalAirport = airport;
+                    }
+                    validateAirportSelection(); // Dodana walidacja
                     dropdown.classList.remove('show');
-                    dropdown.setAttribute('aria-expanded', 'false');
-                    event.stopPropagation(); 
                 });
-                dropdown.appendChild(airportItem);
+                dropdown.appendChild(item);
             });
         }
-        // Sprawdź, czy inputElement ma rodzica '.input-container'
-        const inputContainer = inputElement.closest('.input-container');
-        if (inputContainer) {
-            inputContainer.appendChild(dropdown);
-        } else {
-            console.error("Błąd: Element input nie znajduje się w .input-container. Nie można dodać dropdownu lotnisk.");
-            return; // Ważne, aby wyjść z funkcji, jeśli kontenera nie ma
-        }
+    };
 
-
-        inputElement.addEventListener('click', (event) => {
-            closeAllInteractiveElements(); // Zamknij wszystko inne
-            // Najpierw usuń klasę, a potem dodaj, żeby upewnić się, że stan jest "czysty"
-            dropdown.classList.remove('show'); 
-            dropdown.classList.add('show'); 
-            dropdown.setAttribute('aria-expanded', 'true');
-            event.stopPropagation(); 
-        });
-        
-        // Zamykanie dropdownu po kliknięciu poza nim
-        document.addEventListener('click', function(event) {
-            if (!inputContainer.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.remove('show');
-                dropdown.setAttribute('aria-expanded', 'false');
-            }
-        });
-    }
-
-    // Inicjalizacja dropdownów lotnisk
-    createAirportDropdown(departureAirportInput);
-    createAirportDropdown(arrivalAirportInput);
-
-    // --- Logika dla Klasy Podróży i Pasażerów (Modal) ---
-
-    // Funkcja aktualizująca tekst w input-field
-    function updatePassengerClassInput() {
-        let totalPassengers = currentAdults + currentTeens + currentChildren + currentInfantsWithSeat + currentInfantsLap;
-        if (totalPassengers === 0) {
-            passengerClassInput.value = "Dodaj pasażerów";
-        } else if (totalPassengers === 1) {
-            passengerClassInput.value = `${totalPassengers} Pasażer, ${selectedClass}`;
-        }
-        else {
-            passengerClassInput.value = `${totalPassengers} Pasażerów, ${selectedClass}`;
-        }
-    }
-
-    // Obsługa otwierania modala
-    if (passengerClassInput && passengerModal) { // Upewnij się, że oba elementy istnieją
-        passengerClassInput.addEventListener('click', function(event) {
-            closeAllInteractiveElements(); 
-            passengerModal.classList.add('show-modal'); // Używamy klasy CSS do pokazania
-            event.stopPropagation(); 
-        });
-    }
-
-    // Obsługa zamykania modala przyciskiem X
-    if (closeModalButton && passengerModal) {
-        closeModalButton.addEventListener('click', function(event) {
-            passengerModal.classList.remove('show-modal');
-            event.stopPropagation();
-        });
-    }
-
-    // Obsługa zamykania modala przyciskiem "Potwierdź"
-    if (confirmModalButton && passengerModal) {
-        confirmModalButton.addEventListener('click', function(event) {
-            passengerModal.classList.remove('show-modal');
-            updatePassengerClassInput(); 
-            event.stopPropagation();
-        });
-    }
-
-    // Zamykanie modala po kliknięciu poza nim (na overlay)
-    if (passengerModal) {
-        passengerModal.addEventListener('click', function(event) {
-            // Sprawdź, czy kliknięto bezpośrednio na overlay (nie na zawartość modala)
-            if (event.target === passengerModal) { 
-                passengerModal.classList.remove('show-modal');
-            }
-        });
-    }
-
-    // Obsługa wyboru klasy podróży
-    if (classOptions.length > 0) {
-        classOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                classOptions.forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedClass = this.dataset.class;
-                updatePassengerClassInput(); 
-            });
-        });
-    }
-
-
-    // Obsługa liczników pasażerów
-    document.querySelectorAll('.quantity-control').forEach(control => {
-        const decrementBtn = control.querySelector('.decrement');
-        const incrementBtn = control.querySelector('.increment');
-        const quantitySpan = control.querySelector('.quantity');
-        const quantityId = quantitySpan ? quantitySpan.id : null; 
-
-        if (decrementBtn) {
-            decrementBtn.addEventListener('click', function(event) {
-                if (!quantityId) return;
-                let currentValue = parseInt(quantitySpan.textContent);
-                if (quantityId === 'adultsQuantity' && currentValue === 1) {
-                    return; 
+    // === NOWA FUNKCJA WALIDACJI LOTNISK ===
+    const validateAirportSelection = () => {
+        if (selectedDepartureAirport && selectedArrivalAirport) {
+            if (selectedDepartureAirport === selectedArrivalAirport) {
+                alert('Lotnisko wylotu i przylotu nie może być takie samo. Proszę wybrać różne lotniska.');
+                // Możesz zdecydować, które pole wyczyścić, np. pole przylotu
+                if (arrivalAirportInput) {
+                    arrivalAirportInput.value = '';
+                    selectedArrivalAirport = null;
                 }
-                if (currentValue > 0) { 
-                    currentValue--;
-                    quantitySpan.textContent = currentValue;
-                    updatePassengerCounts(quantityId, currentValue);
-                    updatePassengerClassInput();
-                }
-                event.stopPropagation(); // Ważne, aby nie zamykać modala kliknięciem na przycisk
-            });
+            }
         }
+    };
 
-        if (incrementBtn) {
-            incrementBtn.addEventListener('click', function(event) {
-                if (!quantityId) return;
-                let currentValue = parseInt(quantitySpan.textContent);
-                currentValue++;
-                quantitySpan.textContent = currentValue;
-                updatePassengerCounts(quantityId, currentValue);
-                updatePassengerClassInput();
-                event.stopPropagation(); // Ważne, aby nie zamykać modala kliknięciem na przycisk
+    // === Listenery zdarzeń ===
+
+    // Zamykanie wszystkich elementów po kliknięciu poza nimi
+    document.addEventListener('click', (event) => {
+        if (!currencyIcon.contains(event.target) && !countryIcon.contains(event.target) && !accountIcon.contains(event.target) && !menuToggle.contains(event.target) && (!mobileNav || !mobileNav.contains(event.target)) && (!departureAirportInput || !departureAirportInput.contains(event.target)) && (!arrivalAirportInput || !arrivalAirportInput.contains(event.target)) && (!departureDateInput || !departureDateInput.contains(event.target)) && (!passengerClassInput || !passengerClassInput.contains(event.target)) && (!passengerModal || !passengerModal.contains(event.target))) {
+            closeAllInteractiveElements();
+        }
+    });
+
+    // Dropdowny waluty, kraju, konta
+    [currencyIcon, countryIcon, accountIcon].forEach(icon => {
+        if (icon) {
+            icon.addEventListener('click', (event) => {
+                closeAllInteractiveElements();
+                icon.querySelector('.dropdown-content').classList.toggle('show');
+                event.stopPropagation(); // Zapobiega natychmiastowemu zamknięciu przez document click
+            });
+
+            icon.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', (event) => {
+                    if (icon.id === 'currencyIcon') {
+                        icon.querySelector('span').textContent = item.dataset.value;
+                    } else if (icon.id === 'countryIcon') {
+                        icon.querySelector('span').textContent = item.dataset.value;
+                    }
+                    closeAllInteractiveElements();
+                    event.stopPropagation();
+                });
             });
         }
     });
 
-    // Funkcja aktualizująca zmienne pasażerów
-    function updatePassengerCounts(id, value) {
-        switch(id) {
-            case 'adultsQuantity':
-                currentAdults = value;
-                break;
-            case 'teensQuantity':
-                currentTeens = value;
-                break;
-            case 'childrenQuantity':
-                currentChildren = value;
-                break;
-            case 'infantsWithSeatQuantity':
-                currentInfantsWithSeat = value;
-                break;
-            case 'infantsLapQuantity':
-                currentInfantsLap = value;
-                break;
-        }
+    // Menu mobilne
+    if (menuToggle) {
+        menuToggle.addEventListener('click', (event) => {
+            closeAllInteractiveElements();
+            if (mobileNav) mobileNav.classList.toggle('open');
+            event.stopPropagation();
+        });
     }
 
-    // Początkowa aktualizacja pola input po załadowaniu strony
-    // Upewnij się, że input istnieje zanim spróbujesz go zaktualizować
-    if (passengerClassInput) {
-        updatePassengerClassInput();
+    // Flatpickr (kalendarz)
+    let flatpickrInstance = null;
+    if (departureDateInput) {
+        flatpickrInstance = flatpickr(departureDateInput, {
+            mode: "range",
+            dateFormat: "d.m.Y",
+            locale: "pl",
+            minDate: "today",
+            onOpen: function(selectedDates, dateStr, instance) {
+                closeAllInteractiveElements(); // Zamknij inne elementy
+                // Upewnij się, że flatpickr jest na wierzchu
+                instance.calendarContainer.style.zIndex = '99999';
+                instance.calendarContainer.classList.add('open'); // Dodaj klasę do animacji
+            },
+            onClose: function(selectedDates, dateStr, instance) {
+                instance.calendarContainer.classList.remove('open'); // Usuń klasę po zamknięciu
+            }
+        });
     }
+
+    // Lotniska
+    if (departureAirportInput) {
+        departureAirportInput.addEventListener('focus', () => {
+            closeAllInteractiveElements();
+            generateAirportDropdown(departureAirportInput, 'departure');
+            departureAirportInput.nextElementSibling.classList.add('show');
+        });
+        departureAirportInput.addEventListener('click', (event) => {
+            closeAllInteractiveElements();
+            generateAirportDropdown(departureAirportInput, 'departure');
+            departureAirportInput.nextElementSibling.classList.add('show');
+            event.stopPropagation();
+        });
+    }
+
+    if (arrivalAirportInput) {
+        arrivalAirportInput.addEventListener('focus', () => {
+            closeAllInteractiveElements();
+            generateAirportDropdown(arrivalAirportInput, 'arrival');
+            arrivalAirportInput.nextElementSibling.classList.add('show');
+        });
+        arrivalAirportInput.addEventListener('click', (event) => {
+            closeAllInteractiveElements();
+            generateAirportDropdown(arrivalAirportInput, 'arrival');
+            arrivalAirportInput.nextElementSibling.classList.add('show');
+            event.stopPropagation();
+        });
+    }
+
+    // Modal Pasażerowie i Klasa
+    if (passengerClassInput) {
+        passengerClassInput.addEventListener('click', (event) => {
+            closeAllInteractiveElements();
+            if (passengerModal) passengerModal.classList.add('show-modal');
+            event.stopPropagation(); // Zapobiega zamknięciu modala przez kliknięcie na dokument
+        });
+    }
+
+    if (closeModalButton) {
+        closeModalButton.addEventListener('click', () => {
+            if (passengerModal) passengerModal.classList.remove('show-modal');
+        });
+    }
+
+    if (confirmModalButton) {
+        confirmModalButton.addEventListener('click', () => {
+            if (passengerModal) passengerModal.classList.remove('show-modal');
+            updatePassengerClassInput();
+        });
+    }
+
+    // Wybór klasy podróży
+    document.querySelectorAll('.travel-class-options .class-option').forEach(option => {
+        option.addEventListener('click', () => {
+            document.querySelectorAll('.travel-class-options .class-option').forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            selectedTravelClass = option.dataset.class;
+        });
+    });
+
+    // Kontrola ilości pasażerów
+    document.querySelectorAll('.quantity-control button').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const quantitySpan = event.target.closest('.quantity-control').querySelector('.quantity');
+            let currentQuantity = parseInt(quantitySpan.textContent);
+            const type = quantitySpan.id;
+
+            if (event.target.classList.contains('increment')) {
+                currentQuantity++;
+            } else if (event.target.classList.contains('decrement') && currentQuantity > 0) {
+                currentQuantity--;
+            }
+
+            // Specjalna logika dla dorosłych (min. 1)
+            if (type === 'adultsQuantity' && currentQuantity === 0) {
+                currentQuantity = 1; // Zawsze musi być co najmniej 1 dorosły
+            }
+
+            quantitySpan.textContent = currentQuantity;
+
+            // Aktualizacja zmiennych globalnych
+            switch (type) {
+                case 'adultsQuantity': adults = currentQuantity; break;
+                case 'teensQuantity': teens = currentQuantity; break;
+                case 'childrenQuantity': children = currentQuantity; break;
+                case 'infantsWithSeatQuantity': infantsWithSeat = currentQuantity; break;
+                case 'infantsLapQuantity': infantsLap = currentQuantity; break;
+            }
+        });
+    });
+
+    // Inicjalizacja wartości po załadowaniu strony
+    updatePassengerClassInput();
 });
