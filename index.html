@@ -32,6 +32,7 @@
                             <div class="dropdown-item" data-value="PLN">PLN</div>
                             <div class="dropdown-item" data-value="EUR">EUR</div>
                             <div class="dropdown-item" data-value="USD">USD</div>
+                            <div class="dropdown-item" data-value="GBP">GBP</div>
                         </div>
                     </div>
                     <div class="icon-item" id="countryIcon">
@@ -65,9 +66,18 @@
             <li><a href="#">Moja rezerwacja</a></li>
             <li><a href="#">Informacje</a></li>
             <li><a href="#">Kontakt</a></li>
-            <li><a href="#">PLN</a></li>
-            <li><a href="#">PL</a></li>
-            <li><a href="#">Moje konto</a></li>
+            <li class="mobile-dropdown-header">Waluta</li>
+            <li><a href="#" data-value="PLN">PLN</a></li>
+            <li><a href="#" data-value="EUR">EUR</a></li>
+            <li><a href="#" data-value="USD">USD</a></li>
+            <li><a href="#" data-value="GBP">GBP</a></li>
+            <li class="mobile-dropdown-header">Kraj</li>
+            <li><a href="#" data-value="PL">PL</a></li>
+            <li><a href="#" data-value="EN">EN</a></li>
+            <li><a href="#" data-value="DE">DE</a></li>
+            <li class="mobile-dropdown-header">Konto</li>
+            <li><a href="#">Zaloguj się</a></li>
+            <li><a href="#">Zarejestruj się</a></li>
         </ul>
     </nav>
 
@@ -78,11 +88,11 @@
             <div class="search-form">
                 <div class="input-container">
                     <label for="departureAirport">Wylot z</label>
-                    <input type="text" id="departureAirport" placeholder="Wybierz lotnisko wylotu">
+                    <input type="text" id="departureAirport" placeholder="Wybierz lotnisko wylotu" autocomplete="off">
                 </div>
                 <div class="input-container">
                     <label for="arrivalAirport">Przylot do</label>
-                    <input type="text" id="arrivalAirport" placeholder="Wybierz lotnisko przylotu">
+                    <input type="text" id="arrivalAirport" placeholder="Wybierz lotnisko przylotu" autocomplete="off">
                 </div>
                 <div class="input-container">
                     <label for="departureDate">Data wylotu / powrotu</label>
@@ -138,7 +148,7 @@
                     </div>
                 </div>
                 <div class="passenger-type">
-                    <label>Niemowlęta (miejsce) <span class="info-icon" data-info="Poniżej 2 lat, wymagają miejsca">i</span></label>
+                    <label>Niemowlęta (z miejscem) <span class="info-icon" data-info="Poniżej 2 lat, wymagają miejsca">i</span></label>
                     <div class="quantity-control">
                         <button class="decrement">-</button>
                         <span class="quantity" id="infantsWithSeatQuantity">0</span>
@@ -242,6 +252,38 @@
                         </svg>
                     </div>
                     <h3>Pakiet podróży</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="recommended-destinations">
+        <div class="container">
+            <h2>Polecane Kierunki</h2>
+            <div class="destinations-grid">
+                <div class="destination-card">
+                    <img src="https://images.unsplash.com/photo-1549749176-7956a6a0e67b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwyfHxidWNoYXJlc3N0fGVufDB8fHx8MTcyMDA3NjQ2MXww&ixlib=rb-4.0.3&q=80&w=1080" alt="Loty do Bukaresztu">
+                    <h3>Loty do Bukaresztu</h3>
+                </div>
+                <div class="destination-card">
+                    <img src="https://images.unsplash.com/photo-1600885292404-b90ce8832a76?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwxNHx8ZGVsaGl8ZW58MHx8fHwxNzIwMDc2NDYxfDA&ixlib=rb-4.0.3&q=80&w=1080" alt="Loty do Delhi">
+                    <h3>Loty do Delhi</h3>
+                </div>
+                <div class="destination-card">
+                    <img src="https://images.unsplash.com/photo-1621251910609-b42795e6f663?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwzfHxwb2xhbmR8ZW58MHx8fHwxNzIwMDc2NDYxfDA&ixlib=rb-4.0.3&q=80&w=1080" alt="Loty do Polski">
+                    <h3>Loty do Polski</h3>
+                </div>
+                <div class="destination-card">
+                    <img src="https://images.unsplash.com/photo-1599307730303-c23f2b2e8c56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwzfHxiZWlqaW5nfGVufDB8fHx8MTcyMDA3NjQ2MXww&ixlib=rb-4.0.3&q=80&w=1080" alt="Loty do Pekinu">
+                    <h3>Loty do Pekinu</h3>
+                </div>
+                <div class="destination-card">
+                    <img src="https://images.unsplash.com/photo-1563857500174-8b6f3c1d1a8e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwxOXx8c291dGglMjBhZnJpY2F8ZW58MHx8fHwxNzIwMDc2NDYxfDA&ixlib=rb-4.0.3&q=80&w=1080" alt="Loty do RPA">
+                    <h3>Loty do RPA</h3>
+                </div>
+                <div class="destination-card">
+                    <img src="https://images.unsplash.com/photo-1577770838150-13f56d953d6d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwxNHx8c2luZ2Fwb3JlfGVufDB8fHx8MTcyMDA3NjQ2MXww&ixlib=rb-4.0.3&q=80&w=1080" alt="Loty do Singapuru">
+                    <h3>Loty do Singapuru</h3>
                 </div>
             </div>
         </div>
