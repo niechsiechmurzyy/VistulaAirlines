@@ -33,10 +33,12 @@ header .container {
     flex-wrap: wrap; /* Pozwoli na zawijanie elementów na mniejszych ekranach */
 }
 
+/* Lewa strona nagłówka (hamburger menu na mobile) */
 .header-left {
     display: flex;
     align-items: center;
     gap: 15px;
+    /* Domyślnie na desktopie, hamburger ukryty, VIS jest po lewej */
 }
 
 .header-left h1 {
@@ -46,67 +48,47 @@ header .container {
     letter-spacing: 1px;
 }
 
+/* Środek nagłówka (faktycznie jest to h1 z margin: auto) */
+/* Na desktopie h1 będzie 'rozpychać' elementy, na mobile'u będzie obok hamburgera */
+
+/* Prawa strona nagłówka (ikony waluty, języka, konta) */
 .header-right {
     display: flex;
     align-items: center;
-    gap: 20px; /* Odstęp między grupą ikon a menu-toggle */
+    gap: 20px;
 }
 
 .menu-toggle {
     font-size: 1.8em;
     cursor: pointer;
-    display: none; /* Domyślnie ukryty na desktopie */
+    display: none; /* Domyślnie ukryty na desktopie, pokazywany na mobile */
+    margin-right: 15px; /* Odstęp od VIS na mobile */
 }
 
 /* Ikony po prawej stronie (Desktop) */
 .icon-group {
-    display: flex;
+    display: flex; /* Domyślnie widoczne na desktopie */
     gap: 20px;
 }
 
 .icon-item {
     display: flex;
-    flex-direction: row; /* Ikony i tekst obok siebie na desktopie */
+    flex-direction: row;
     align-items: center;
     cursor: pointer;
     position: relative;
-    font-size: 0.9em; /* Nieco mniejsza czcionka */
+    font-size: 0.9em;
     font-weight: bold;
 }
 
 .icon-item i {
-    font-size: 1.2em; /* Mniejsze ikony */
-    margin-right: 5px; /* Odstęp między ikoną a tekstem */
-    margin-bottom: 0; /* Resetowanie margin-bottom */
+    font-size: 1.2em;
+    margin-right: 5px;
+    margin-bottom: 0;
 }
 
 .icon-item span {
     font-weight: bold;
-}
-
-/* Domyślna nawigacja (Desktop) */
-header nav {
-    display: block; /* Widoczna na desktopie */
-}
-
-header nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    gap: 25px; /* Odstępy między elementami nawigacji */
-}
-
-header nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.1em;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-header nav ul li a:hover {
-    color: #b0e0e6; /* Jaśniejszy niebieski po najechaniu */
 }
 
 /* Stylizacja mobilnego menu (szufladki) - domyślnie ukryte na desktopie */
@@ -807,20 +789,21 @@ footer p {
         display: none; /* Ukryj hamburger na desktopie */
     }
 
-    header nav {
-        display: block; /* Pokaż główną nawigację na desktopie */
+    /* Na desktopie, ustawiamy VIS na środku poprzez użycie auto marginów */
+    .header-left {
+        flex: 1; /* Pozwoli VIS zająć dostępną przestrzeń */
+        justify-content: flex-start; /* VIS będzie po lewej w kontenerze header-left */
     }
-
-    .mobile-nav {
-        display: none; /* Ukryj mobilne menu na desktopie */
-    }
-
     .header-left h1 {
-        font-size: 2.5em;
+        margin: 0 auto; /* Ustawia h1 na środku w ramach header-left */
+    }
+    .header-right {
+        flex: 1; /* Pozwoli ikonom zająć dostępną przestrzeń */
+        justify-content: flex-end; /* Ikony będą po prawej w kontenerze header-right */
     }
 
-    .icon-item {
-        font-size: 1em;
+    .icon-group {
+        display: flex; /* Ikony waluty/kraju/konta są widoczne na desktopie */
     }
 
     .hero h2 {
@@ -887,36 +870,33 @@ footer p {
 
 @media (max-width: 767px) {
     header .container {
-        flex-direction: row; /* Zapewnij, że elementy są w rzędzie */
-        justify-content: space-between; /* Rozrzuć elementy po bokach */
+        flex-direction: row;
+        justify-content: space-between;
         align-items: center;
     }
 
     .header-left {
-        order: 1; /* Ustawienie kolejności */
+        order: 1;
+        flex: unset; /* Resetujemy flex, żeby h1 nie zajmowało całej szerokości */
+        gap: 10px; /* Mniejsze odstępy */
     }
 
-    .header-right {
-        order: 2; /* Ustawienie kolejności */
-        display: flex;
-        align-items: center;
-        gap: 10px; /* Mniejsze odstępy na mobilce */
-    }
-
-    .icon-group {
-        display: none; /* Ukryj ikony waluty/kraju/konta na mobilce w nagłówku, będą w menu mobilnym */
+    .header-left h1 {
+        margin: 0; /* Usuwamy auto margin na mobile, żeby było obok hamburgera */
     }
 
     .menu-toggle {
-        display: block; /* Pokaż hamburger na mobilce */
+        display: block; /* Pokaż hamburger na mobile */
+        order: 0; /* Ustaw hamburgera na początku */
     }
 
-    header nav {
-        display: none; /* Ukryj główną nawigację na mobilce */
+    .header-right {
+        order: 2;
+        display: none; /* Ukryj ikony waluty/kraju/konta na mobilce w nagłówku, przeniosłem je do menu mobilnego */
     }
 
     .search-form label {
-        text-align: left; /* Wyrównanie etykiet do lewej */
+        text-align: left;
     }
 
     .destinations-grid {
@@ -924,6 +904,6 @@ footer p {
     }
 
     .destination-card img {
-        height: 150px; /* Nieco mniejsza wysokość obrazków na telefonach */
+        height: 150px;
     }
 }
