@@ -3,191 +3,323 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strona główna - Linia Lotnicza</title>
+    <title>VIS | Rezerwacja Lotów</title>
     <link rel="stylesheet" href="CSS/Style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
     <header>
-        <div class="header-container">
-            <div class="logo">
-                <img src="https://via.placeholder.com/150x50?text=TwojeLogo" alt="Logo Linii Lotniczej">
+        <div class="container">
+            <div class="header-left">
+                <i class="fas fa-bars menu-toggle" id="menu-toggle"></i>
+                <h1>VIS</h1>
             </div>
-            <nav class="desktop-nav">
-                <ul>
-                    <li><a href="#">Strona Główna</a></li>
-                    <li><a href="#">Rezerwacja Lotów</a></li>
-                    <li><a href="#">Status Lotu</a></li>
-                    <li><a href="#">O Nas</a></li>
-                    <li><a href="#">Kontakt</a></li>
-                </ul>
-            </nav>
-            <div class="header-icons">
-                <a href="#" class="icon-link"><img src="https://img.icons8.com/ios-filled/24/000000/money-bag-euro.png" alt="Waluta"></a>
-                <a href="#" class="icon-link"><img src="https://img.icons8.com/ios-filled/24/000000/globe--v1.png" alt="Język"></a>
-                <a href="#" class="icon-link"><img src="https://img.icons8.com/ios-filled/24/000000/user--v1.png" alt="Konto"></a>
-            </div>
-            <div class="hamburger-menu">
-                <img src="https://img.icons8.com/ios-filled/24/000000/menu--v1.png" alt="Menu">
+            <div class="header-right">
+                <div class="icon-group">
+                    <div class="icon-item" id="currency-dropdown-toggle">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>PLN</span>
+                        <div class="dropdown-content" id="currency-dropdown">
+                            <div class="dropdown-item">PLN</div>
+                            <div class="dropdown-item">USD</div>
+                            <div class="dropdown-item">EUR</div>
+                        </div>
+                    </div>
+                    <div class="icon-item" id="language-dropdown-toggle">
+                        <i class="fas fa-globe"></i>
+                        <span>PL</span>
+                        <div class="dropdown-content" id="language-dropdown">
+                            <div class="dropdown-item">PL <img src="https://flagcdn.com/w20/pl.png" alt="Polska flaga" class="flag-icon"></div>
+                            <div class="dropdown-item">EN <img src="https://flagcdn.com/w20/gb.png" alt="Brytyjska flaga" class="flag-icon"></div>
+                        </div>
+                    </div>
+                    <div class="icon-item" id="account-dropdown-toggle">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Konto</span>
+                        <div class="dropdown-content" id="account-dropdown">
+                            <div class="dropdown-item">Mój profil</div>
+                            <div class="dropdown-item">Moje rezerwacje</div>
+                            <div class="dropdown-item">Wyloguj</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <nav class="mobile-nav hidden">
-            <ul>
-                <li><a href="#">Strona Główna</a></li>
-                <li><a href="#">Rezerwacja Lotów</a></li>
-                <li><a href="#">Status Lotu</a></li>
-                <li><a href="#">O Nas</a></li>
-                <li><a href="#">Kontakt</a></li>
-                <li><a href="#"><img src="https://img.icons8.com/ios-filled/20/000000/money-bag-euro.png" alt="Waluta"> Waluta</a></li>
-                <li><a href="#"><img src="https://img.icons8.com/ios-filled/20/000000/globe--v1.png" alt="Język"> Język</a></li>
-                <li><a href="#"><img src="https://img.icons8.com/ios-filled/20/000000/user--v1.png" alt="Konto"> Moje Konto</a></li>
-            </ul>
-        </nav>
     </header>
 
+    <nav class="mobile-nav" id="mobile-nav">
+        <ul>
+            <li><a href="#" data-section-id="search-form-section">Rezerwuj Lot</a></li>
+            <li><a href="#" data-section-id="check-in-section">Odprawa Online</a></li>
+            <li><a href="#">Moje Rezerwacje</a></li>
+            <li><a href="#">Kontakt</a></li>
+            <li><a href="#">Pomoc</a></li>
+            <li class="mobile-dropdown-header">Waluta</li>
+            <li><a href="#" class="mobile-dropdown-item">PLN</a></li>
+            <li><a href="#" class="mobile-dropdown-item">USD</a></li>
+            <li><a href="#" class="mobile-dropdown-item">EUR</a></li>
+            <li class="mobile-dropdown-header">Język</li>
+            <li><a href="#" class="mobile-dropdown-item">PL</a></li>
+            <li><a href="#" class="mobile-dropdown-item">EN</a></li>
+            <li class="mobile-dropdown-header">Konto</li>
+            <li><a href="#" class="mobile-dropdown-item">Mój profil</a></li>
+            <li><a href="#" class="mobile-dropdown-item">Moje rezerwacje</a></li>
+            <li><a href="#" class="mobile-dropdown-item">Wyloguj</a></li>
+        </ul>
+    </nav>
+
     <main>
-        <section class="hero-section">
-            <div class="hero-content">
-                <h1>Zarezerwuj swój wymarzony lot</h1>
+        <section id="search-form-section" class="hero">
+            <div class="hero-content container">
+                <h2>Zarezerwuj swój wymarzony lot</h2>
                 <p>Odkryj świat z nami. Bezpiecznie, komfortowo, na czas.</p>
+
+                <h3>Wyszukaj lot</h3>
+                <div class="search-form">
+                    <div class="input-container">
+                        <label for="departure-airport">Skąd:</label>
+                        <input type="text" id="departure-airport" placeholder="Lotnisko odlotu (np. GDN, WAW)">
+                        <div class="airport-dropdown-content" id="departure-airport-dropdown"></div>
+                    </div>
+                    <div class="input-container">
+                        <label for="arrival-airport">Dokąd:</label>
+                        <input type="text" id="arrival-airport" placeholder="Lotnisko przylotu (np. XER, LHR)">
+                        <div class="airport-dropdown-content" id="arrival-airport-dropdown"></div>
+                    </div>
+                    <div class="input-container">
+                        <label for="departure-date">Data odlotu:</label>
+                        <input type="text" id="departure-date" placeholder="Wybierz datę">
+                    </div>
+                    <div class="input-container">
+                        <label for="return-date">Data powrotu (opcjonalnie):</label>
+                        <input type="text" id="return-date" placeholder="Wybierz datę">
+                    </div>
+                    <div class="input-container" id="passengers-class-input">
+                        <label for="passengers-input">Liczba pasażerów:</label>
+                        <input type="text" id="passengers-input" value="1 Pasażer, Ekonomiczna" readonly>
+                    </div>
+                    <button type="submit" id="search-flights-btn" class="button-primary">Wyszukaj loty</button>
+                </div>
             </div>
         </section>
 
-        <section id="search-form-section" class="search-form">
-            <h2>Wyszukaj lot</h2>
-            <form id="flight-search-form">
-                <div class="form-group">
-                    <label for="departure-airport">Skąd:</label>
-                    <input type="text" id="departure-airport" placeholder="Lotnisko odlotu (np. GDN, WAW)" required>
+        <section id="flight-results-section" class="hidden container">
+            <h2>Wyniki wyszukiwania lotów</h2>
+            <div id="flight-results-list" class="flight-results-list">
                 </div>
-                <div class="form-group">
-                    <label for="arrival-airport">Dokąd:</label>
-                    <input type="text" id="arrival-airport" placeholder="Lotnisko przylotu (np. XER, LHR)" required>
-                </div>
-                <div class="form-group">
-                    <label for="departure-date">Data odlotu:</label>
-                    <input type="date" id="departure-date" required>
-                </div>
-                <div class="form-group">
-                    <label for="num-passengers">Liczba pasażerów:</label>
-                    <input type="number" id="num-passengers" min="1" value="1" required>
-                </div>
-                <div class="form-group">
-                    <label for="travel-class">Klasa podróży:</label>
-                    <select id="travel-class" required>
-                        <option value="Economy">Ekonomiczna</option>
-                        <option value="Business">Biznes</option>
-                    </select>
-                </div>
-                <button type="submit" class="button-primary">Wyszukaj loty</button>
-            </form>
+            <button id="back-to-search-btn" class="button-secondary">Wróć do wyszukiwania</button>
         </section>
 
-        <section id="flight-results" class="hidden">
-            <h2>Dostępne loty</h2>
-            <div id="results-list" class="flight-results-list">
-                <p>Wyszukaj lot, aby zobaczyć wyniki.</p>
-            </div>
-            <button id="back-to-search" class="button-primary">Wróć do wyszukiwania</button>
-        </section>
-
-        <section id="booking-details" class="hidden">
+        <section id="booking-section" class="hidden container">
             <h2>Szczegóły rezerwacji</h2>
             <div id="selected-flight-summary" class="flight-summary">
                 </div>
 
-            <h3>Dane pasażera</h3>
+            <h3>Dane pasażerów</h3>
             <form id="passenger-form">
-                <div class="form-group">
-                    <label for="passenger-name">Imię:</label>
-                    <input type="text" id="passenger-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="passenger-surname">Nazwisko:</label>
-                    <input type="text" id="passenger-surname" required>
-                </div>
-                <div class="form-group">
-                    <label for="passenger-dob">Data urodzenia:</label>
-                    <input type="date" id="passenger-dob" required>
-                </div>
-                <div class="form-group">
-                    <label for="passenger-email">Adres E-mail:</label>
-                    <input type="email" id="passenger-email" required>
-                </div>
-                <button type="submit" class="button-primary">Przejdź do płatności</button>
-                <button type="button" id="back-to-results" class="button-secondary">Wróć do wyników</button>
-            </form>
+                </form>
+            <button type="submit" form="passenger-form" id="proceed-to-payment-btn" class="button-primary">Przejdź do płatności</button>
+            <button id="back-to-results-btn" class="button-secondary">Wróć do wyników</button>
         </section>
 
-        <section id="payment-section" class="hidden">
-            <h2>Płatność</h2>
-            <div id="payment-summary" class="flight-summary">
+        <section id="payment-section" class="hidden container">
+            <h2>Podsumowanie i płatność</h2>
+            <div id="final-booking-summary" class="flight-summary">
                 </div>
+
+            <h3>Dane do płatności</h3>
             <form id="payment-form">
                 <div class="form-group">
                     <label for="card-number">Numer karty:</label>
-                    <input type="text" id="card-number" pattern="\d{16}" placeholder="XXXX XXXX XXXX XXXX" required>
+                    <input type="text" id="card-number" placeholder="XXXX XXXX XXXX XXXX" required>
                 </div>
                 <div class="form-group">
-                    <label for="card-expiry">Data ważności (MM/RR):</label>
-                    <input type="text" id="card-expiry" pattern="(0[1-9]|1[0-2])\/\d{2}" placeholder="MM/RR" required>
+                    <label for="card-holder-name">Imię i nazwisko właściciela karty:</label>
+                    <input type="text" id="card-holder-name" required>
                 </div>
                 <div class="form-group">
-                    <label for="card-cvv">CVV:</label>
-                    <input type="text" id="card-cvv" pattern="\d{3,4}" placeholder="XXX" required>
+                    <label for="expiry-date">Data ważności (MM/RR):</label>
+                    <input type="text" id="expiry-date" placeholder="MM/RR" required>
                 </div>
-                <button type="submit" class="button-primary">Zapłać</button>
-                <button type="button" id="back-to-booking" class="button-secondary">Wróć do rezerwacji</button>
+                <div class="form-group">
+                    <label for="cvv">CVV:</label>
+                    <input type="text" id="cvv" placeholder="XXX" required>
+                </div>
+                <button type="submit" id="confirm-payment-btn" class="button-primary">Potwierdź płatność</button>
             </form>
+            <button id="back-to-booking-btn" class="button-secondary">Wróć do rezerwacji</button>
         </section>
 
-        <section id="confirmation-section" class="hidden">
-            <h2>Potwierdzenie rezerwacji</h2>
+        <section id="confirmation-section" class="hidden container">
+            <h2>Rezerwacja potwierdzona!</h2>
             <div id="reservation-confirmation-message">
-                <p>Twoja rezerwacja została pomyślnie zakończona!</p>
-                <p>Numer rezerwacji: <strong id="reservation-number"></strong></p>
+                <p>Twoja rezerwacja została pomyślnie złożona.</p>
+                <p>Numer rezerwacji: <strong id="confirmation-code"></strong></p>
+                <p>Szczegóły rezerwacji zostały wysłane na podany adres e-mail.</p>
             </div>
             <div id="confirmed-booking-summary" class="flight-summary">
                 </div>
-            <button id="check-in-button" class="button-primary">Rozpocznij odprawę online</button>
-            <button id="new-search-button" class="button-secondary">Rozpocznij nowe wyszukiwanie</button>
+            <button id="go-to-main-btn" class="button-primary">Wróć na stronę główną</button>
+            <button id="go-to-checkin-from-confirmation" class="button-secondary">Przejdź do odprawy</button>
         </section>
 
-        <section id="check-in-section" class="hidden">
+        <section id="check-in-section" class="hidden container">
             <h2>Odprawa online</h2>
-            <div id="check-in-summary" class="flight-summary">
-                </div>
-
-            <h3>Dane do odprawy</h3>
+            <p>Tutaj możesz odprawić się na swój lot, jeśli do wylotu pozostało mniej niż 48 godzin.</p>
+            <h3>Wprowadź dane rezerwacji</h3>
             <form id="check-in-form">
                 <div class="form-group">
-                    <label for="check-in-seat">Wybór miejsca:</label>
-                    <select id="check-in-seat" required>
-                        <option value="">Wybierz miejsce</option>
-                    </select>
+                    <label for="checkin-reservation-code">Numer rezerwacji:</label>
+                    <input type="text" id="checkin-reservation-code" placeholder="Wprowadź numer rezerwacji" required>
                 </div>
-                <button type="submit" class="button-primary">Zakończ odprawę</button>
-                <button type="button" id="back-to-confirmation" class="button-secondary">Wróć</button>
+                <div class="form-group">
+                    <label for="checkin-surname">Nazwisko pasażera:</label>
+                    <input type="text" id="checkin-surname" placeholder="Wprowadź nazwisko" required>
+                </div>
+                <button type="submit" id="check-in-submit-btn" class="button-primary">Sprawdź rezerwację</button>
             </form>
 
-            <div id="boarding-pass-preview" class="hidden boarding-pass">
-                <h3>Twoja Karta Pokładowa (Symulacja)</h3>
-                <p>Lot: <strong id="bp-flight-number"></strong></p>
-                <p>Z: <strong id="bp-origin"></strong> Do: <strong id="bp-destination"></strong></p>
-                <p>Data: <strong id="bp-date"></strong> Godzina: <strong id="bp-time"></strong></p>
-                <p>Pasażer: <strong id="bp-passenger-name"></strong> <strong id="bp-passenger-surname"></strong></p>
-                <p>Miejsce: <strong id="bp-seat"></strong></p>
-                <p>Status: <span style="color: green; font-weight: bold;">ODPRAWIONY</span></p>
-                <p><em>To jest symulowana karta pokładowa i nie jest ważna do podróży.</em></p>
-                <button id="print-boarding-pass" class="button-primary">Drukuj (Symulacja)</button>
+            <div id="check-in-flight-details" class="flight-summary hidden">
+                <h4>Szczegóły lotu do odprawy:</h4>
+                <p><strong>Lot:</strong> <span id="checkin-flight-info"></span></p>
+                <p><strong>Pasażer:</strong> <span id="checkin-passenger-name"></span></p>
+                <p><strong>Data lotu:</strong> <span id="checkin-flight-date"></span></p>
+                <p><strong>Pozostało do lotu:</strong> <span id="time-until-flight"></span></p>
+            </div>
+
+            <button id="perform-check-in-btn" class="button-primary hidden">Odpraw się teraz</button>
+            <div id="boarding-pass-preview" class="boarding-pass hidden">
+                <h3>Twoja Karta Pokładowa</h3>
+                <p><strong>Pasażer:</strong> <span id="bp-passenger-name"></span></p>
+                <p><strong>Lot:</strong> <span id="bp-flight-number"></span></p>
+                <p><strong>Trasa:</strong> <span id="bp-route"></span></p>
+                <p><strong>Data:</strong> <span id="bp-date"></span></p>
+                <p><strong>Godzina odlotu:</strong> <span id="bp-departure-time"></span></p>
+                <p><strong>Miejsce:</strong> <span id="bp-seat"></span></p>
+                <p><strong>Bramka:</strong> <span id="bp-gate"></span></p>
+                <p>Życzymy udanej podróży!</p>
+            </div>
+            <button id="back-to-main-from-checkin-btn" class="button-secondary">Wróć na stronę główną</button>
+        </section>
+
+        <section class="complete-your-trip">
+            <div class="container">
+                <h2>Uzupełnij swoją podróż</h2>
+                <p>Skorzystaj z dodatkowych usług, aby Twoja podróż była jeszcze przyjemniejsza.</p>
+                <div class="options-grid">
+                    <div class="option-card">
+                        <div class="icon-placeholder">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <h3>Wynajem samochodu</h3>
+                    </div>
+                    <div class="option-card">
+                        <div class="icon-placeholder">
+                            <i class="fas fa-hotel"></i>
+                        </div>
+                        <h3>Rezerwacja hotelu</h3>
+                    </div>
+                    <div class="option-card">
+                        <div class="icon-placeholder">
+                            <i class="fas fa-suitcase-rolling"></i>
+                        </div>
+                        <h3>Dodatkowy bagaż</h3>
+                    </div>
+                    <div class="option-card">
+                        <div class="icon-placeholder">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Ubezpieczenie podróży</h3>
+                    </div>
+                </div>
             </div>
         </section>
 
+        <section class="recommended-destinations">
+            <div class="container">
+                <h2>Polecane kierunki</h2>
+                <div class="destinations-grid">
+                    <div class="destination-card">
+                        <img src="https://source.unsplash.com/400x250/?paris" alt="Paryż">
+                        <h3>Paryż, Francja</h3>
+                    </div>
+                    <div class="destination-card">
+                        <img src="https://source.unsplash.com/400x250/?new-york-city" alt="Nowy Jork">
+                        <h3>Nowy Jork, USA</h3>
+                    </div>
+                    <div class="destination-card">
+                        <img src="https://source.unsplash.com/400x250/?tokyo" alt="Tokio">
+                        <h3>Tokio, Japonia</h3>
+                    </div>
+                    <div class="destination-card">
+                        <img src="https://source.unsplash.com/400x250/?sydney" alt="Sydney">
+                        <h3>Sydney, Australia</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 Twoja Linia Lotnicza. Wszelkie prawa zastrzeżone.</p>
+        <div class="container">
+            <p>&copy; 2025 VIS. Wszelkie prawa zastrzeżone.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
     </footer>
 
+    <div id="passengers-class-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Wybierz pasażerów i klasę podróży</h3>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h4>Klasa podróży</h4>
+                <div class="travel-class-options">
+                    <div class="class-option selected" data-value="Ekonomiczna">Ekonomiczna</div>
+                    <div class="class-option" data-value="Premium Ekonomiczna">Premium Ekonomiczna</div>
+                    <div class="class-option" data-value="Biznes">Biznes</div>
+                    <div class="class-option" data-value="Pierwsza">Pierwsza</div>
+                </div>
+
+                <h4>Pasażerowie</h4>
+                <div class="passenger-type">
+                    <label>Dorośli (12+ lat)</label>
+                    <div class="quantity-control">
+                        <button type="button" class="decrease-qty" data-type="adults">-</button>
+                        <span class="quantity" id="adults-qty">1</span>
+                        <button type="button" class="increase-qty" data-type="adults">+</button>
+                    </div>
+                </div>
+                <div class="passenger-type">
+                    <label>Dzieci (2-11 lat) <span class="info-icon" data-info="Dzieci muszą podróżować z osobą dorosłą.">i</span></label>
+                    <div class="quantity-control">
+                        <button type="button" class="decrease-qty" data-type="children">-</button>
+                        <span class="quantity" id="children-qty">0</span>
+                        <button type="button" class="increase-qty" data-type="children">+</button>
+                    </div>
+                </div>
+                <div class="passenger-type">
+                    <label>Niemowlęta (poniżej 2 lat) <span class="info-icon" data-info="Niemowlęta podróżują na kolanach osoby dorosłej. Max 1 niemowlę na dorosłego.">i</span></label>
+                    <div class="quantity-control">
+                        <button type="button" class="decrease-qty" data-type="infants">-</button>
+                        <span class="quantity" id="infants-qty">0</span>
+                        <button type="button" class="increase-qty" data-type="infants">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="confirm-button">Zastosuj</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="JS/script.js"></script>
 </body>
 </html>
