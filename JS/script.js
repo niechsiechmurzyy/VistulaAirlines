@@ -1,501 +1,661 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // === Nawigacja mobilna ===
-    const hamburgerMenu = document.querySelector('.hamburger-menu');
-    const mobileNav = document.querySelector('.mobile-nav');
+    // --- Globalne zmienne i stałe ---
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileNav = document.getElementById('mobile-nav');
+    const sections = document.querySelectorAll('main section'); // Wszystkie główne sekcje
+    const dropdownToggles = document.querySelectorAll('.icon-item[id$="-dropdown-toggle"]');
+    const mobileNavLinks = document.querySelectorAll('#mobile-nav a');
 
-    if (hamburgerMenu && mobileNav) {
-        hamburgerMenu.addEventListener('click', () => {
-            mobileNav.classList.toggle('hidden');
+    let selectedFlight = null; // Przechowuje wybrany lot
+    let totalPassengers = { adults: 1, children: 0, infants: 0 };
+    let travelClass = 'Ekonomiczna';
+    let reservationDetails = null; // Przechowuje dane rezerwacji po potwierdzeniu
+
+    const airports = [
+        { code: 'WAW', name: 'Warszawa-Chopin', country: 'Polska' },
+        { code: 'GDN', name: 'Gdańsk im. Lecha Wałęsy', country: 'Polska' },
+        { code: 'KRK', name: 'Kraków-Balice im. Jana Pawła II', country: 'Polska' },
+        { code: 'WRO', name: 'Wrocław-Strachowice im. Mikołaja Kopernika', country: 'Polska' },
+        { code: 'POZ', name: 'Poznań-Ławica im. Henryka Wieniawskiego', country: 'Polska' },
+        { code: 'KTW', name: 'Katowice-Pyrzowice', country: 'Polska' },
+        { code: 'LHR', name: 'Londyn-Heathrow', country: 'Wielka Brytania' },
+        { code: 'CDG', name: 'Paryż-Roissy-Charles de Gaulle', country: 'Francja' },
+        { code: 'FRA', name: 'Frankfurt', country: 'Niemcy' },
+        { code: 'JFK', name: 'Nowy Jork-JFK', country: 'USA' },
+        { code: 'LAX', name: 'Los Angeles', country: 'USA' },
+        { code: 'DXB', name: 'Dubaj', country: 'Zjednoczone Emiraty Arabskie' },
+        { code: 'IST', name: 'Stambuł', country: 'Turcja' },
+        { code: 'AMS', name: 'Amsterdam-Schiphol', country: 'Holandia' },
+        { code: 'FCO', name: 'Rzym-Fiumicino', country: 'Włochy' },
+        { code: 'MAD', name: 'Madryt-Barajas', country: 'Hiszpania' },
+        { code: 'BER', name: 'Berlin Brandenburg', country: 'Niemcy' },
+        { code: 'VIE', name: 'Wiedeń', country: 'Austria' },
+        { code: 'PRG', name: 'Praga-Vaclav Havel', country: 'Czechy' },
+        { code: 'CPH', name: 'Kopenhaga-Kastrup', country: 'Dania' },
+        { code: 'OSL', name: 'Oslo-Gardermoen', country: 'Norwegia' },
+        { code: 'ARN', name: 'Sztokholm-Arlanda', country: 'Szwecja' },
+        { code: 'HEL', name: 'Helsinki-Vantaa', country: 'Finlandia' },
+        { code: 'DUB', name: 'Dublin', country: 'Irlandia' },
+        { code: 'LIS', name: 'Lizbona', country: 'Portugalia' },
+        { code: 'ATH', name: 'Ateny', country: 'Grecja' },
+        { code: 'ZRH', name: 'Zurych', country: 'Szwajcaria' },
+        { code: 'BRU', name: 'Bruksela', country: 'Belgia' },
+        { code: 'BUD', name: 'Budapeszt-Ferenc Liszt', country: 'Węgry' },
+        { code: 'SOF', name: 'Sofia', country: 'Bułgaria' },
+        { code: 'OTP', name: 'Bukareszt-Henri Coandă', country: 'Rumunia' },
+        { code: 'RIX', name: 'Ryga', country: 'Łotwa' },
+        { code: 'VNO', name: 'Wilno', country: 'Litwa' },
+        { code: 'TLL', name: 'Tallinn', country: 'Estonia' },
+        { code: 'KBP', name: 'Kijów-Boryspol', country: 'Ukraina' },
+        { code: 'MOW', name: 'Moskwa-Szeremietiewo', country: 'Rosja' }, // Przykładowo, jeśli nadal używasz
+        { code: 'SPB', name: 'Petersburg-Pułkowo', country: 'Rosja' }, // Przykładowo, jeśli nadal używasz
+        { code: 'BKK', name: 'Bangkok-Suvarnabhumi', country: 'Tajlandia' },
+        { code: 'SIN', name: 'Singapur-Changi', country: 'Singapur' },
+        { code: 'NRT', name: 'Tokio-Narita', country: 'Japonia' },
+        { code: 'PEK', name: 'Pekin-Capital', country: 'Chiny' },
+        { code: 'SYD', name: 'Sydney-Kingsford Smith', country: 'Australia' },
+        { code: 'GRU', name: 'São Paulo-Guarulhos', country: 'Brazylia' },
+        { code: 'MEX', name: 'Meksyk-Benito Juárez', country: 'Meksyk' },
+        { code: 'CPT', name: 'Kapsztad', country: 'Republika Południowej Afryki' },
+        { code: 'TLV', name: 'Tel Awiw-Ben Gurion', country: 'Izrael' },
+        { code: 'AMM', name: 'Amman-Queen Alia', country: 'Jordania' },
+        { code: 'AUH', name: 'Abu Zabi', country: 'Zjednoczone Emiraty Arabskie' },
+        { code: 'DOH', name: 'Doha-Hamad', country: 'Katar' },
+        { code: 'KUL', name: 'Kuala Lumpur', country: 'Malezja' },
+        { code: 'SCL', name: 'Santiago', country: 'Chile' }
+    ];
+
+    // --- Funkcje pomocnicze dla nawigacji między sekcjami ---
+    function showSection(id) {
+        sections.forEach(section => {
+            section.classList.add('hidden');
         });
-    }
+        document.getElementById(id).classList.remove('hidden');
 
-    // === Zmienne globalne do przechowywania stanu ===
-    let allFlightTemplates = []; // Będą przechowywać szablony lotów z flights.json
-    let currentSearchResults = []; // Loty znalezione po wyszukiwaniu
-    let selectedFlight = null; // Wybrany lot do rezerwacji
-    let passengerDetails = {}; // Dane pasażera
-    let bookingReference = ''; // Numer rezerwacji
-
-    const MIN_LAYOVER_MINUTES = 90; // Minimalny czas na przesiadkę w minutach (1.5 godziny)
-
-    // === Elementy DOM (sekcje) ===
-    const searchFormSection = document.getElementById('search-form-section');
-    const flightResultsSection = document.getElementById('flight-results');
-    const bookingDetailsSection = document.getElementById('booking-details');
-    const paymentSection = document.getElementById('payment-section');
-    const confirmationSection = document.getElementById('confirmation-section');
-    const checkInSection = document.getElementById('check-in-section');
-
-    // === Elementy DOM (formularze i przyciski) ===
-    const flightSearchForm = document.getElementById('flight-search-form');
-    const resultsList = document.getElementById('results-list');
-    const backToSearchBtn = document.getElementById('back-to-search');
-    const passengerForm = document.getElementById('passenger-form');
-    const backToResultsBtn = document.getElementById('back-to-results');
-    const paymentForm = document.getElementById('payment-form');
-    const backToBookingBtn = document.getElementById('back-to-booking');
-    const checkInButton = document.getElementById('check-in-button');
-    const newSearchButton = document.getElementById('new-search-button');
-    const checkInForm = document.getElementById('check-in-form');
-    const backToConfirmationBtn = document.getElementById('back-to-confirmation');
-    const checkInSeatSelect = document.getElementById('check-in-seat');
-    const boardingPassPreview = document.getElementById('boarding-pass-preview');
-    const printBoardingPassBtn = document.getElementById('print-boarding-pass');
-
-
-    // === Funkcje pomocnicze ===
-
-    // Funkcja do pokazywania/ukrywania sekcji
-    function showSection(sectionToShow) {
-        const sections = [
-            searchFormSection,
-            flightResultsSection,
-            bookingDetailsSection,
-            paymentSection,
-            confirmationSection,
-            checkInSection
-        ];
-        sections.forEach(section => section.classList.add('hidden'));
-        sectionToShow.classList.remove('hidden');
-    }
-
-    // Funkcja do parsowania czasu (HH:MM) na minuty od północy
-    function parseTime(timeStr) {
-        const [hours, minutes] = timeStr.split(':').map(Number);
-        return hours * 60 + minutes;
-    }
-
-    // Funkcja do generowania unikalnego ID dla lotu na dany dzień
-    function generateFlightId(template, date) {
-        return `${template.flightNumber}-${date}`;
-    }
-
-    // Funkcja do generowania "dostępnych" lotów na podstawie szablonów i daty
-    function generateDailyFlights(selectedDate) {
-        const generatedFlights = [];
-        allFlightTemplates.forEach(template => {
-            if (template.frequency === 'daily') {
-                const newFlight = { ...template }; // Kopiuj szablon
-                newFlight.id = generateFlightId(template, selectedDate);
-                newFlight.date = selectedDate; // Dodaj datę do instancji lotu
-                generatedFlights.push(newFlight);
-            }
-            // Można dodać logikę dla innych częstotliwości (np. weekly, specific_days)
-        });
-        return generatedFlights;
-    }
-
-    // Funkcja do obliczania całkowitej ceny lotu (uwzględniając regułę o lotach międzynarodowych)
-    function calculateFlightPrice(flightOption, selectedClass) {
-        const classPrice = flightOption.classes.find(cls => cls.name === selectedClass)?.price || 0;
-        let totalPrice = classPrice;
-
-        // Jeśli to lot przesiadkowy i końcowy cel jest międzynarodowy, a pierwszy segment jest krajowy
-        // (Na razie nie mamy międzynarodowych, ale zostawiamy logikę na przyszłość)
-        // W obecnej konfiguracji (tylko CPK-GDN) ta logika nie zadziała,
-        // ponieważ wszystkie loty są krajowe.
-        // Jeśli dodasz loty międzynarodowe, będziesz musiał zaimplementować tę logikę.
-        // Przykład: jeśli flightOption.isConnecting i flightOption.segments[1].isInternational
-        // to totalPrice = flightOption.segments[1].classes.find(...).price;
-        // W obecnym przypadku, po prostu bierzemy cenę bezpośredniego lotu.
-        
-        return totalPrice;
-    }
-
-    // === Obsługa zdarzeń ===
-
-    // Wczytaj szablony lotów po załadowaniu strony
-    fetch('data/flights.json')
-        .then(response => response.json())
-        .then(data => {
-            allFlightTemplates = data;
-            console.log('Załadowane szablony lotów:', allFlightTemplates);
-        })
-        .catch(error => {
-            console.error('Błąd ładowania flights.json:', error);
-            resultsList.innerHTML = '<p>Błąd ładowania danych lotów. Spróbuj ponownie później.</p>';
-        });
-
-    // Obsługa formularza wyszukiwania lotów
-    flightSearchForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const departureAirport = document.getElementById('departure-airport').value.toUpperCase();
-        const arrivalAirport = document.getElementById('arrival-airport').value.toUpperCase();
-        const departureDate = document.getElementById('departure-date').value;
-        const numPassengers = parseInt(document.getElementById('num-passengers').value);
-        const travelClass = document.getElementById('travel-class').value;
-
-        if (!departureDate) {
-            alert('Proszę wybrać datę odlotu.');
-            return;
+        // Dodatkowe ukrywanie sekcji "Uzupełnij swoją podróż" i "Polecane kierunki" poza główną stroną
+        const completeTripSection = document.querySelector('.complete-your-trip');
+        const recommendedDestinationsSection = document.querySelector('.recommended-destinations');
+        if (id === 'search-form-section') {
+            completeTripSection.classList.remove('hidden');
+            recommendedDestinationsSection.classList.remove('hidden');
+        } else {
+            completeTripSection.classList.add('hidden');
+            recommendedDestinationsSection.classList.add('hidden');
         }
 
-        // Generuj loty na wybrany dzień
-        const dailyFlights = generateDailyFlights(departureDate);
-        console.log('Wygenerowane loty na dzień ' + departureDate + ':', dailyFlights);
+        // Przewiń do góry strony po zmianie sekcji
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-        // Filtruj loty bezpośrednie
-        const directFlights = dailyFlights.filter(flight =>
-            flight.origin === departureAirport &&
-            flight.destination === arrivalAirport &&
-            flight.availableSeats >= numPassengers
-        );
-
-        // W obecnej konfiguracji (tylko CPK-GDN), nie mamy lotów przesiadkowych,
-        // więc poniższa logika dla lotów przesiadkowych nie zwróci wyników.
-        // Zostawiam ją jako "na przyszłość", gdy dodasz więcej tras.
-
-        // Logika wyszukiwania lotów przesiadkowych (na przyszłość)
-        const connectingFlights = [];
-        // const hubAirports = ['WAW', 'XER']; // Centralne lotniska przesiadkowe
-        // if (departureAirport !== arrivalAirport) { // Jeśli to nie jest ten sam port
-        //     for (const firstLeg of dailyFlights) {
-        //         // Sprawdź, czy pierwszy segment zaczyna się w miejscu odlotu i kończy na lotnisku przesiadkowym
-        //         if (firstLeg.origin === departureAirport && hubAirports.includes(firstLeg.destination) && firstLeg.availableSeats >= numPassengers) {
-        //             for (const secondLeg of dailyFlights) {
-        //                 // Sprawdź, czy drugi segment zaczyna się na lotnisku przesiadkowym i kończy w miejscu docelowym
-        //                 // i czy to jest to samo lotnisko przesiadkowe co z pierwszego segmentu
-        //                 if (secondLeg.origin === firstLeg.destination && secondLeg.destination === arrivalAirport && secondLeg.availableSeats >= numPassengers) {
-        //                     // Sprawdź, czy daty są takie same i czy jest wystarczająco czasu na przesiadkę
-        //                     const arrivalTimeFirstLeg = parseTime(firstLeg.arrivalTime);
-        //                     const departureTimeSecondLeg = parseTime(secondLeg.departureTime);
-
-        //                     if (departureTimeSecondLeg - arrivalTimeFirstLeg >= MIN_LAYOVER_MINUTES) {
-        //                         const combinedPrice = (firstLeg.isInternational || secondLeg.isInternational) ?
-        //                             (secondLeg.isInternational ? secondLeg.classes.find(c => c.name === travelClass)?.price || 0 : firstLeg.classes.find(c => c.name === travelClass)?.price || 0) :
-        //                             (firstLeg.classes.find(c => c.name === travelClass)?.price || 0) + (secondLeg.classes.find(c => c.name === travelClass)?.price || 0);
-
-        //                         connectingFlights.push({
-        //                             id: `${firstLeg.id}-${secondLeg.id}`,
-        //                             type: 'connecting',
-        //                             segments: [firstLeg, secondLeg],
-        //                             origin: departureAirport,
-        //                             destination: arrivalAirport,
-        //                             classes: [{ name: travelClass, price: combinedPrice }],
-        //                             totalPrice: combinedPrice,
-        //                             numPassengers: numPassengers,
-        //                             selectedClass: travelClass
-        //                         });
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
-        currentSearchResults = [...directFlights.map(f => ({ ...f, type: 'direct', numPassengers, selectedClass: travelClass, totalPrice: calculateFlightPrice(f, travelClass) }))];
-        // currentSearchResults = [...currentSearchResults, ...connectingFlights]; // Włącz loty przesiadkowe jeśli masz ich logikę
-
-        displayFlights(currentSearchResults);
-        showSection(flightResultsSection);
+    // --- Inicjalizacja Flatpickr ---
+    flatpickr("#departure-date", {
+        dateFormat: "d.m.Y",
+        minDate: "today",
+        onChange: function(selectedDates, dateStr, instance) {
+            // Ustaw minDate dla daty powrotu na wybraną datę odlotu
+            flatpickr("#return-date", {
+                dateFormat: "d.m.Y",
+                minDate: dateStr
+            });
+        }
     });
 
-    // Funkcja wyświetlająca loty
-    function displayFlights(flights) {
-        resultsList.innerHTML = ''; // Wyczyść poprzednie wyniki
+    flatpickr("#return-date", {
+        dateFormat: "d.m.Y",
+        minDate: "today" // Domyślnie minDate na dziś, zostanie zaktualizowane przez departure-date
+    });
+
+    // --- Obsługa Dropdownów w nagłówku (waluta, język, konto) ---
+    dropdownToggles.forEach(toggle => {
+        toggle.addEventListener('click', function(event) {
+            const dropdownContent = this.querySelector('.dropdown-content');
+            // Zamknij wszystkie inne otwarte dropdowny
+            document.querySelectorAll('.dropdown-content.show').forEach(openDropdown => {
+                if (openDropdown !== dropdownContent) {
+                    openDropdown.classList.remove('show');
+                }
+            });
+            // Przełącz widoczność klikniętego dropdownu
+            dropdownContent.classList.toggle('show');
+            event.stopPropagation(); // Zapobiega propagacji kliknięcia do document
+        });
+    });
+
+    // Zamknij dropdowny po kliknięciu poza nimi
+    document.addEventListener('click', function(event) {
+        document.querySelectorAll('.dropdown-content.show').forEach(dropdown => {
+            if (!dropdown.parentElement.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    });
+
+    // --- Obsługa mobilnego menu ---
+    menuToggle.addEventListener('click', () => {
+        mobileNav.classList.toggle('open');
+    });
+
+    // Zamknij mobilne menu po kliknięciu linku
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            mobileNav.classList.remove('open');
+            const sectionId = link.dataset.sectionId;
+            if (sectionId) {
+                showSection(sectionId);
+            }
+        });
+    });
+
+    // --- Obsługa modalu pasażerów i klasy podróży ---
+    const passengersClassInput = document.getElementById('passengers-class-input');
+    const passengersClassModal = document.getElementById('passengers-class-modal');
+    const closeButton = passengersClassModal.querySelector('.close-button');
+    const confirmButton = passengersClassModal.querySelector('.confirm-button');
+    const travelClassOptions = passengersClassModal.querySelectorAll('.class-option');
+    const quantityControls = passengersClassModal.querySelectorAll('.quantity-control button');
+
+    passengersClassInput.addEventListener('click', () => {
+        passengersClassModal.classList.add('show-modal');
+    });
+
+    closeButton.addEventListener('click', () => {
+        passengersClassModal.classList.remove('show-modal');
+    });
+
+    confirmButton.addEventListener('click', () => {
+        updatePassengersAndClassInput();
+        passengersClassModal.classList.remove('show-modal');
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === passengersClassModal) {
+            passengersClassModal.classList.remove('show-modal');
+        }
+    });
+
+    travelClassOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            travelClassOptions.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            travelClass = this.dataset.value;
+        });
+    });
+
+    quantityControls.forEach(button => {
+        button.addEventListener('click', function() {
+            const type = this.dataset.type;
+            const quantitySpan = document.getElementById(`${type}-qty`);
+            let currentQty = parseInt(quantitySpan.textContent);
+
+            if (this.classList.contains('increase-qty')) {
+                // Logika dla dorosłych: min 1 dorosły, max 9
+                if (type === 'adults') {
+                    if (currentQty < 9) {
+                        currentQty++;
+                    }
+                }
+                // Logika dla dzieci i niemowląt: max 9
+                else if (currentQty < 9) {
+                    currentQty++;
+                }
+            } else if (this.classList.contains('decrease-qty')) {
+                if (currentQty > 0) {
+                    // Logika dla dorosłych: min 1 dorosły
+                    if (type === 'adults') {
+                        if (currentQty > 1) {
+                            currentQty--;
+                        }
+                    } else { // Dzieci i niemowlęta mogą być 0
+                        currentQty--;
+                    }
+                }
+            }
+            quantitySpan.textContent = currentQty;
+            totalPassengers[type] = currentQty;
+            updatePassengersAndClassInput(); // Aktualizuj podsumowanie na bieżąco
+        });
+    });
+
+    function updatePassengersAndClassInput() {
+        const total = totalPassengers.adults + totalPassengers.children + totalPassengers.infants;
+        const passengersText = `${total} Pasażer${total > 1 ? 'owie' : ''}`;
+        document.getElementById('passengers-input').value = `${passengersText}, ${travelClass}`;
+    }
+    updatePassengersAndClassInput(); // Ustaw początkową wartość
+
+    // --- Obsługa pola lotniska (autocomplete) ---
+    function setupAirportAutocomplete(inputId, dropdownId) {
+        const input = document.getElementById(inputId);
+        const dropdown = document.getElementById(dropdownId);
+
+        input.addEventListener('input', () => {
+            const query = input.value.toLowerCase();
+            dropdown.innerHTML = '';
+            if (query.length < 2) {
+                dropdown.classList.remove('show');
+                return;
+            }
+
+            const filteredAirports = airports.filter(airport =>
+                airport.name.toLowerCase().includes(query) ||
+                airport.code.toLowerCase().includes(query)
+            );
+
+            // Grupuj lotniska według kraju
+            const groupedAirports = filteredAirports.reduce((acc, airport) => {
+                (acc[airport.country] = acc[airport.country] || []).push(airport);
+                return acc;
+            }, {});
+
+            for (const country in groupedAirports) {
+                const header = document.createElement('div');
+                header.classList.add('dropdown-country-header');
+                header.textContent = country;
+                dropdown.appendChild(header);
+
+                groupedAirports[country].forEach(airport => {
+                    const item = document.createElement('div');
+                    item.classList.add('dropdown-item');
+                    item.textContent = `${airport.name} (${airport.code})`;
+                    item.dataset.value = airport.code;
+                    item.addEventListener('click', () => {
+                        input.value = `${airport.name} (${airport.code})`;
+                        dropdown.classList.remove('show');
+                    });
+                    dropdown.appendChild(item);
+                });
+            }
+
+            if (filteredAirports.length > 0) {
+                dropdown.classList.add('show');
+            } else {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Ukryj dropdown po kliknięciu poza nim
+        document.addEventListener('click', (event) => {
+            if (!input.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    }
+
+    setupAirportAutocomplete('departure-airport', 'departure-airport-dropdown');
+    setupAirportAutocomplete('arrival-airport', 'arrival-airport-dropdown');
+
+    // --- Symulowane dane lotów ---
+    const mockFlights = [
+        { id: 'FL001', departure: 'Warszawa (WAW)', arrival: 'Londyn-Heathrow (LHR)', date: '19.07.2025', time: '10:00', duration: '2h 30m', price: 350, availableSeats: 50 },
+        { id: 'FL002', departure: 'Warszawa (WAW)', arrival: 'Paryż-Roissy-Charles de Gaulle (CDG)', date: '19.07.2025', time: '12:00', duration: '2h 15m', price: 420, availableSeats: 30 },
+        { id: 'FL003', departure: 'Gdańsk (GDN)', arrival: 'Kraków (KRK)', date: '19.07.2025', time: '08:30', duration: '1h 00m', price: 150, availableSeats: 80 },
+        { id: 'FL004', departure: 'Warszawa (WAW)', arrival: 'Nowy Jork-JFK (JFK)', date: '20.07.2025', time: '14:00', duration: '8h 30m', price: 1200, availableSeats: 20 },
+        // Dodaj więcej lotów dla różnych dat/miejsc
+        { id: 'FL005', departure: 'Warszawa (WAW)', arrival: 'Berlin Brandenburg (BER)', date: '21.07.2025', time: '07:00', duration: '1h 20m', price: 200, availableSeats: 60 },
+        { id: 'FL006', departure: 'Warszawa (WAW)', arrival: 'Rzym-Fiumicino (FCO)', date: '22.07.2025', time: '09:00', duration: '2h 30m', price: 380, availableSeats: 45 },
+    ];
+
+    // --- Obsługa wyszukiwania lotów ---
+    const searchFlightsBtn = document.getElementById('search-flights-btn');
+    const flightResultsList = document.getElementById('flight-results-list');
+
+    searchFlightsBtn.addEventListener('click', () => {
+        const departureAirportInput = document.getElementById('departure-airport').value;
+        const arrivalAirportInput = document.getElementById('arrival-airport').value;
+        const departureDateInput = document.getElementById('departure-date').value;
+        // const returnDateInput = document.getElementById('return-date').value; // Obecnie nieużywane w mocku, ale dostępne
+
+        // Proste parsowanie kodów lotnisk z inputu (np. "Warszawa (WAW)" -> "WAW")
+        const getAirportCode = (inputVal) => {
+            const match = inputVal.match(/\((.*?)\)/);
+            return match ? match[1] : '';
+        };
+
+        const depCode = getAirportCode(departureAirportInput);
+        const arrCode = getAirportCode(arrivalAirportInput);
+
+        const foundFlights = mockFlights.filter(flight =>
+            flight.departure.includes(depCode) &&
+            flight.arrival.includes(arrCode) &&
+            flight.date === departureDateInput
+        );
+
+        displayFlightResults(foundFlights);
+        showSection('flight-results-section');
+    });
+
+    function displayFlightResults(flights) {
+        flightResultsList.innerHTML = ''; // Wyczyść poprzednie wyniki
         if (flights.length === 0) {
-            resultsList.innerHTML = '<p>Brak dostępnych lotów dla wybranej trasy i daty. Spróbuj innej daty lub trasy.</p>';
+            flightResultsList.innerHTML = '<p>Brak lotów spełniających kryteria wyszukiwania.</p>';
             return;
         }
 
         flights.forEach(flight => {
             const flightCard = document.createElement('div');
             flightCard.classList.add('flight-card');
-            
-            const classPrice = flight.classes.find(cls => cls.name === flight.selectedClass)?.price || 'N/A';
-
-            let flightDetailsHtml = '';
-            if (flight.type === 'direct') {
-                flightDetailsHtml = `
-                    <p>Lot: <strong>${flight.flightNumber}</strong></p>
-                    <p>Trasa: <strong>${flight.origin} → ${flight.destination}</strong></p>
-                    <p>Data: <strong>${flight.date}</strong></p>
-                    <p>Godziny: <strong>${flight.departureTime} → ${flight.arrivalTime}</strong></p>
-                    <p>Samolot: ${flight.aircraftModel}</p>
-                `;
-            } else if (flight.type === 'connecting') {
-                // Ta część będzie używana, gdy dodamy loty przesiadkowe
-                flightDetailsHtml = `
-                    <p>Lot przesiadkowy</p>
-                    <p>Trasa: <strong>${flight.segments[0].origin} → ${flight.segments[0].destination} → ${flight.segments[1].destination}</strong></p>
-                    <p>Data: <strong>${flight.segments[0].date}</strong></p>
-                    <p>Godziny: <strong>${flight.segments[0].departureTime} → ${flight.segments[1].arrivalTime}</strong> (Przesiadka w: ${flight.segments[0].destination})</p>
-                    <p>Samoloty: ${flight.segments[0].aircraftModel}, ${flight.segments[1].aircraftModel}</p>
-                `;
-            }
-
             flightCard.innerHTML = `
-                ${flightDetailsHtml}
-                <p>Klasa: <strong>${flight.selectedClass}</strong></p>
-                <p>Cena za ${flight.numPassengers} os.: <strong>${(classPrice * flight.numPassengers).toFixed(2)} PLN</strong></p>
-                <button class="button-primary select-flight-btn" data-flight-id="${flight.id}">Wybierz lot</button>
+                <p><strong>Lot:</strong> ${flight.departure} do ${flight.arrival}</p>
+                <p><strong>Data:</strong> ${flight.date}</p>
+                <p><strong>Godzina:</strong> ${flight.time}</p>
+                <p><strong>Czas trwania:</strong> ${flight.duration}</p>
+                <p><strong>Cena:</strong> <strong>${flight.price} PLN</strong></p>
+                <button class="button-primary select-flight-btn" data-flight-id="${flight.id}">Wybierz ten lot</button>
             `;
-            resultsList.appendChild(flightCard);
+            flightResultsList.appendChild(flightCard);
         });
 
-        // Obsługa wyboru lotu
+        // Dodaj słuchacze do nowych przycisków "Wybierz ten lot"
         document.querySelectorAll('.select-flight-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const flightId = e.target.dataset.flightId;
-                selectedFlight = currentSearchResults.find(f => f.id === flightId);
+            button.addEventListener('click', (event) => {
+                const flightId = event.target.dataset.flightId;
+                selectedFlight = mockFlights.find(f => f.id === flightId);
                 if (selectedFlight) {
                     displayBookingDetails();
-                    showSection(bookingDetailsSection);
+                    showSection('booking-section');
+                } else {
+                    alert('Wystąpił błąd przy wyborze lotu. Spróbuj ponownie.');
                 }
             });
         });
     }
 
-    // Funkcja wyświetlająca szczegóły rezerwacji
+    // --- Powrót do wyszukiwania ---
+    document.getElementById('back-to-search-btn').addEventListener('click', () => {
+        showSection('search-form-section');
+    });
+
+    // --- Obsługa sekcji rezerwacji ---
+    const passengerForm = document.getElementById('passenger-form');
+    const selectedFlightSummary = document.getElementById('selected-flight-summary');
+
     function displayBookingDetails() {
-        const summaryDiv = document.getElementById('selected-flight-summary');
-        if (!selectedFlight) {
-            summaryDiv.innerHTML = '<p>Brak wybranego lotu.</p>';
-            return;
-        }
+        if (!selectedFlight) return;
 
-        const classPrice = selectedFlight.classes.find(cls => cls.name === selectedFlight.selectedClass)?.price || 'N/A';
-        
-        let flightDetailsHtml = '';
-        if (selectedFlight.type === 'direct') {
-            flightDetailsHtml = `
-                <p>Lot: <strong>${selectedFlight.flightNumber}</strong></p>
-                <p>Trasa: <strong>${selectedFlight.origin} → ${selectedFlight.destination}</strong></p>
-                <p>Data: <strong>${selectedFlight.date}</strong></p>
-                <p>Godziny: <strong>${selectedFlight.departureTime} → ${selectedFlight.arrivalTime}</strong></p>
-                <p>Samolot: ${selectedFlight.aircraftModel}</p>
-            `;
-        } else if (selectedFlight.type === 'connecting') {
-            flightDetailsHtml = `
-                <p>Lot przesiadkowy</p>
-                <p>Trasa: <strong>${selectedFlight.segments[0].origin} → ${selectedFlight.segments[0].destination} → ${selectedFlight.segments[1].destination}</strong></p>
-                <p>Data: <strong>${selectedFlight.segments[0].date}</strong></p>
-                <p>Godziny: <strong>${selectedFlight.segments[0].departureTime} → ${selectedFlight.segments[1].arrivalTime}</strong> (Przesiadka w: ${selectedFlight.segments[0].destination})</p>
-                <p>Samoloty: ${selectedFlight.segments[0].aircraftModel}, ${selectedFlight.segments[1].aircraftModel}</p>
-            `;
-        }
-
-        summaryDiv.innerHTML = `
-            ${flightDetailsHtml}
-            <p>Klasa: <strong>${selectedFlight.selectedClass}</strong></p>
-            <p>Liczba pasażerów: <strong>${selectedFlight.numPassengers}</strong></p>
-            <p>Całkowita cena: <strong>${(classPrice * selectedFlight.numPassengers).toFixed(2)} PLN</strong></p>
+        selectedFlightSummary.innerHTML = `
+            <p><strong>Wybrany lot:</strong> ${selectedFlight.departure} do ${selectedFlight.arrival}</p>
+            <p><strong>Data:</strong> ${selectedFlight.date}</p>
+            <p><strong>Godzina:</strong> ${selectedFlight.time}</p>
+            <p><strong>Pasażerowie:</strong> ${totalPassengers.adults} dorosłych, ${totalPassengers.children} dzieci, ${totalPassengers.infants} niemowląt</p>
+            <p><strong>Klasa podróży:</strong> ${travelClass}</p>
+            <p><strong>Łączna cena:</strong> <strong>${selectedFlight.price * (totalPassengers.adults + totalPassengers.children)} PLN</strong></p>
         `;
+
+        generatePassengerForms();
     }
 
-    // Obsługa formularza danych pasażera
-    passengerForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        passengerDetails = {
-            name: document.getElementById('passenger-name').value,
-            surname: document.getElementById('passenger-surname').value,
-            dob: document.getElementById('passenger-dob').value,
-            email: document.getElementById('passenger-email').value
-        };
-        displayPaymentDetails();
-        showSection(paymentSection);
+    function generatePassengerForms() {
+        passengerForm.innerHTML = '';
+        const total = totalPassengers.adults + totalPassengers.children + totalPassengers.infants;
+
+        for (let i = 0; i < total; i++) {
+            const passengerType = (i < totalPassengers.adults) ? 'Dorosły' :
+                                  (i < totalPassengers.adults + totalPassengers.children) ? 'Dziecko' : 'Niemowlę';
+            const passengerDiv = document.createElement('div');
+            passengerDiv.classList.add('passenger-details-card'); // Możesz dodać style dla tej klasy
+            passengerDiv.innerHTML = `
+                <h4>Pasażer ${i + 1} (${passengerType})</h4>
+                <div class="form-group">
+                    <label for="p${i}-name">Imię:</label>
+                    <input type="text" id="p${i}-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="p${i}-surname">Nazwisko:</label>
+                    <input type="text" id="p${i}-surname" name="surname" required>
+                </div>
+                <div class="form-group">
+                    <label for="p${i}-email">E-mail:</label>
+                    <input type="email" id="p${i}-email" name="email" ${i === 0 ? 'required' : ''}>
+                </div>
+                 <div class="form-group">
+                    <label for="p${i}-phone">Telefon (opcjonalnie):</label>
+                    <input type="tel" id="p${i}-phone" name="phone">
+                </div>
+            `;
+            passengerForm.appendChild(passengerDiv);
+        }
+    }
+
+    document.getElementById('proceed-to-payment-btn').addEventListener('click', (event) => {
+        event.preventDefault(); // Zapobiegnij domyślnej wysyłce formularza
+        if (passengerForm.checkValidity()) {
+            collectPassengerData(); // Zbierz dane pasażerów
+            displayPaymentDetails();
+            showSection('payment-section');
+        } else {
+            alert('Proszę wypełnić wszystkie wymagane pola pasażerów.');
+        }
     });
 
-    // Funkcja wyświetlająca szczegóły płatności
+    document.getElementById('back-to-results-btn').addEventListener('click', () => {
+        showSection('flight-results-section');
+    });
+
+    // --- Obsługa sekcji płatności ---
+    const finalBookingSummary = document.getElementById('final-booking-summary');
+    const paymentForm = document.getElementById('payment-form');
+
+    function collectPassengerData() {
+        const passengers = [];
+        const total = totalPassengers.adults + totalPassengers.children + totalPassengers.infants;
+        for (let i = 0; i < total; i++) {
+            passengers.push({
+                name: document.getElementById(`p${i}-name`).value,
+                surname: document.getElementById(`p${i}-surname`).value,
+                email: document.getElementById(`p${i}-email`).value,
+                phone: document.getElementById(`p${i}-phone`).value,
+                type: (i < totalPassengers.adults) ? 'adult' :
+                      (i < totalPassengers.adults + totalPassengers.children) ? 'child' : 'infant'
+            });
+        }
+        selectedFlight.passengers = passengers; // Dodaj dane pasażerów do obiektu lotu
+    }
+
     function displayPaymentDetails() {
-        const paymentSummaryDiv = document.getElementById('payment-summary');
-        if (!selectedFlight) {
-            paymentSummaryDiv.innerHTML = '<p>Brak wybranego lotu.</p>';
-            return;
-        }
+        if (!selectedFlight) return;
 
-        const classPrice = selectedFlight.classes.find(cls => cls.name === selectedFlight.selectedClass)?.price || 0;
-        const totalPayment = (classPrice * selectedFlight.numPassengers).toFixed(2);
-
-        paymentSummaryDiv.innerHTML = `
-            <h3>Do zapłaty: <span style="color: #007bff; font-weight: bold;">${totalPayment} PLN</span></h3>
-            <p>Lot: <strong>${selectedFlight.origin} → ${selectedFlight.destination}</strong></p>
-            <p>Data: <strong>${selectedFlight.date}</strong></p>
-            <p>Pasażer: <strong>${passengerDetails.name} ${passengerDetails.surname}</strong></p>
-            <p>Klasa: <strong>${selectedFlight.selectedClass}</strong></p>
+        finalBookingSummary.innerHTML = `
+            <p><strong>Wybrany lot:</strong> ${selectedFlight.departure} do ${selectedFlight.arrival}</p>
+            <p><strong>Data:</strong> ${selectedFlight.date}</p>
+            <p><strong>Godzina:</strong> ${selectedFlight.time}</p>
+            <p><strong>Pasażerowie:</strong> ${selectedFlight.passengers.length} (${totalPassengers.adults} dorosłych, ${totalPassengers.children} dzieci, ${totalPassengers.infants} niemowląt)</p>
+            <p><strong>Klasa podróży:</strong> ${travelClass}</p>
+            <p><strong>Łączna kwota do zapłaty:</strong> <strong style="font-size: 1.2em;">${selectedFlight.price * (totalPassengers.adults + totalPassengers.children)} PLN</strong></p>
         `;
     }
 
-    // Obsługa formularza płatności (symulacja)
-    paymentForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        // W rzeczywistości tutaj byłaby integracja z bramką płatniczą.
-        // My tylko symulujemy sukces.
-        
-        // Generowanie prostego numeru rezerwacji
-        bookingReference = 'VA' + Math.random().toString(36).substr(2, 9).toUpperCase();
-        document.getElementById('reservation-number').textContent = bookingReference;
-
-        displayConfirmationDetails();
-        showSection(confirmationSection);
-
-        // Opcjonalnie: wyczyść formularz płatności
-        paymentForm.reset();
+    paymentForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (paymentForm.checkValidity()) {
+            // Symulacja płatności
+            alert('Płatność w toku...');
+            setTimeout(() => {
+                const confirmationCode = 'VIS' + Math.random().toString(36).substring(2, 10).toUpperCase();
+                reservationDetails = {
+                    flight: selectedFlight,
+                    passengers: selectedFlight.passengers,
+                    totalPrice: selectedFlight.price * (totalPassengers.adults + totalPassengers.children),
+                    confirmationCode: confirmationCode,
+                    bookingDate: new Date().toLocaleDateString('pl-PL')
+                };
+                displayConfirmation();
+                showSection('confirmation-section');
+            }, 2000);
+        } else {
+            alert('Proszę wypełnić wszystkie wymagane pola płatności.');
+        }
     });
 
-    // Funkcja wyświetlająca potwierdzenie
-    function displayConfirmationDetails() {
-        const confirmedBookingSummaryDiv = document.getElementById('confirmed-booking-summary');
-        if (!selectedFlight) {
-            confirmedBookingSummaryDiv.innerHTML = '<p>Brak danych rezerwacji.</p>';
-            return;
-        }
+    document.getElementById('back-to-booking-btn').addEventListener('click', () => {
+        showSection('booking-section');
+    });
 
-        const classPrice = selectedFlight.classes.find(cls => cls.name === selectedFlight.selectedClass)?.price || 0;
-        
-        let flightDetailsHtml = '';
-        if (selectedFlight.type === 'direct') {
-            flightDetailsHtml = `
-                <p>Lot: <strong>${selectedFlight.flightNumber}</strong></p>
-                <p>Trasa: <strong>${selectedFlight.origin} → ${selectedFlight.destination}</strong></p>
-                <p>Data: <strong>${selectedFlight.date}</strong></p>
-                <p>Godziny: <strong>${selectedFlight.departureTime} → ${selectedFlight.arrivalTime}</strong></p>
-                <p>Samolot: ${selectedFlight.aircraftModel}</p>
-            `;
-        } else if (selectedFlight.type === 'connecting') {
-            flightDetailsHtml = `
-                <p>Lot przesiadkowy</p>
-                <p>Trasa: <strong>${selectedFlight.segments[0].origin} → ${selectedFlight.segments[0].destination} → ${selectedFlight.segments[1].destination}</strong></p>
-                <p>Data: <strong>${selectedFlight.segments[0].date}</strong></p>
-                <p>Godziny: <strong>${selectedFlight.segments[0].departureTime} → ${selectedFlight.segments[1].arrivalTime}</strong> (Przesiadka w: ${selectedFlight.segments[0].destination})</p>
-                <p>Samoloty: ${selectedFlight.segments[0].aircraftModel}, ${selectedFlight.segments[1].aircraftModel}</p>
-            `;
-        }
-        
-        confirmedBookingSummaryDiv.innerHTML = `
-            ${flightDetailsHtml}
-            <p>Pasażer: <strong>${passengerDetails.name} ${passengerDetails.surname}</strong></p>
-            <p>Klasa: <strong>${selectedFlight.selectedClass}</strong></p>
-            <p>Całkowita cena: <strong>${(classPrice * selectedFlight.numPassengers).toFixed(2)} PLN</strong></p>
+    // --- Obsługa sekcji potwierdzenia ---
+    const confirmationCodeSpan = document.getElementById('confirmation-code');
+    const confirmedBookingSummary = document.getElementById('confirmed-booking-summary');
+
+    function displayConfirmation() {
+        if (!reservationDetails) return;
+
+        confirmationCodeSpan.textContent = reservationDetails.confirmationCode;
+        confirmedBookingSummary.innerHTML = `
+            <p><strong>Lot:</strong> ${reservationDetails.flight.departure} do ${reservationDetails.flight.arrival}</p>
+            <p><strong>Data lotu:</strong> ${reservationDetails.flight.date}</p>
+            <p><strong>Pasażerowie:</strong> ${reservationDetails.passengers.map(p => `${p.name} ${p.surname}`).join(', ')}</p>
+            <p><strong>Klasa:</strong> ${travelClass}</p>
+            <p><strong>Całkowita kwota:</strong> <strong>${reservationDetails.totalPrice} PLN</strong></p>
+            <p><strong>Data rezerwacji:</strong> ${reservationDetails.bookingDate}</p>
         `;
     }
 
-    // Obsługa odprawy online
-    checkInButton.addEventListener('click', () => {
-        displayCheckInDetails();
-        showSection(checkInSection);
+    document.getElementById('go-to-main-btn').addEventListener('click', () => {
+        resetApplicationState();
+        showSection('search-form-section');
     });
 
-    // Funkcja wyświetlająca szczegóły odprawy
-    function displayCheckInDetails() {
-        const checkInSummaryDiv = document.getElementById('check-in-summary');
-        if (!selectedFlight || !passengerDetails) {
-            checkInSummaryDiv.innerHTML = '<p>Brak danych do odprawy.</p>';
-            return;
+    // --- Obsługa przycisku "Przejdź do odprawy" z potwierdzenia ---
+    document.getElementById('go-to-checkin-from-confirmation').addEventListener('click', () => {
+        // Przed wypełnieniem pól, upewnij się, że reservationDetails istnieje i jest świeże
+        if (reservationDetails) {
+            document.getElementById('checkin-reservation-code').value = reservationDetails.confirmationCode;
+            // Dla uproszczenia, bierzemy nazwisko pierwszego pasażera
+            document.getElementById('checkin-surname').value = reservationDetails.passengers[0].surname;
         }
+        showSection('check-in-section');
+    });
 
-        let flightDetailsHtml = '';
-        if (selectedFlight.type === 'direct') {
-            flightDetailsHtml = `
-                <p>Lot: <strong>${selectedFlight.flightNumber}</strong></p>
-                <p>Trasa: <strong>${selectedFlight.origin} → ${selectedFlight.destination}</strong></p>
-                <p>Data: <strong>${selectedFlight.date}</strong></p>
-                <p>Godziny: <strong>${selectedFlight.departureTime} → ${selectedFlight.arrivalTime}</strong></p>
-                <p>Samolot: ${selectedFlight.aircraftModel}</p>
-            `;
-        } else if (selectedFlight.type === 'connecting') {
-            flightDetailsHtml = `
-                <p>Lot przesiadkowy</p>
-                <p>Trasa: <strong>${selectedFlight.segments[0].origin} → ${selectedFlight.segments[0].destination} → ${selectedFlight.segments[1].destination}</strong></p>
-                <p>Data: <strong>${selectedFlight.segments[0].date}</strong></p>
-                <p>Godziny: <strong>${selectedFlight.segments[0].departureTime} → ${selectedFlight.segments[1].arrivalTime}</strong> (Przesiadka w: ${selectedFlight.segments[0].destination})</p>
-                <p>Samoloty: ${selectedFlight.segments[0].aircraftModel}, ${selectedFlight.segments[1].aircraftModel}</p>
-            `;
+
+    // --- Obsługa sekcji odprawy online ---
+    const checkInForm = document.getElementById('check-in-form');
+    const checkInFlightDetails = document.getElementById('check-in-flight-details');
+    const performCheckInBtn = document.getElementById('perform-check-in-btn');
+    const boardingPassPreview = document.getElementById('boarding-pass-preview');
+    const timeUntilFlightSpan = document.getElementById('time-until-flight');
+
+    checkInForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const reservationCode = document.getElementById('checkin-reservation-code').value.trim();
+        const surname = document.getElementById('checkin-surname').value.trim();
+
+        // Symulacja sprawdzenia rezerwacji (szukamy w `reservationDetails`)
+        if (reservationDetails && reservationDetails.confirmationCode === reservationCode &&
+            reservationDetails.passengers.some(p => p.surname.toLowerCase() === surname.toLowerCase())) {
+
+            const flightDate = reservationDetails.flight.date; // np. "19.07.2025"
+            const flightTime = reservationDetails.flight.time;   // np. "10:00"
+
+            // Parsowanie daty i czasu lotu
+            const [day, month, year] = flightDate.split('.').map(Number);
+            const [hours, minutes] = flightTime.split(':').map(Number);
+            const flightDateTime = new Date(year, month - 1, day, hours, minutes);
+            const now = new Date();
+
+            const timeDiffMs = flightDateTime.getTime() - now.getTime();
+            const hoursUntilFlight = timeDiffMs / (1000 * 60 * 60);
+
+            if (hoursUntilFlight <= 48 && hoursUntilFlight > 0) { // Lot jest w ciągu 48h i jeszcze nie odleciał
+                document.getElementById('checkin-flight-info').textContent = `${reservationDetails.flight.departure} do ${reservationDetails.slice.arrival}`;
+                document.getElementById('checkin-passenger-name').textContent = `${reservationDetails.passengers.find(p => p.surname.toLowerCase() === surname.toLowerCase()).name} ${surname}`;
+                document.getElementById('checkin-flight-date').textContent = `${flightDate} ${flightTime}`;
+
+                const days = Math.floor(hoursUntilFlight / 24);
+                const remainingHours = Math.floor(hoursUntilFlight % 24);
+                timeUntilFlightSpan.textContent = `${days} dni i ${remainingHours} godzin`;
+
+                checkInFlightDetails.classList.remove('hidden');
+                performCheckInBtn.classList.remove('hidden');
+                boardingPassPreview.classList.add('hidden'); // Ukryj kartę, jeśli była wcześniej widoczna
+            } else if (hoursUntilFlight <= 0) {
+                 alert('Lot już odleciał lub jest w trakcie. Odprawa niemożliwa.');
+                 checkInFlightDetails.classList.add('hidden');
+                 performCheckInBtn.classList.add('hidden');
+            }
+            else {
+                alert('Lot jest dostępny do odprawy online na 48 godzin przed odlotem.');
+                checkInFlightDetails.classList.add('hidden');
+                performCheckInBtn.classList.add('hidden');
+            }
+        } else {
+            alert('Nie znaleziono rezerwacji o podanych danych.');
+            checkInFlightDetails.classList.add('hidden');
+            performCheckInBtn.classList.add('hidden');
         }
+    });
 
-        checkInSummaryDiv.innerHTML = `
-            ${flightDetailsHtml}
-            <p>Pasażer: <strong>${passengerDetails.name} ${passengerDetails.surname}</strong></p>
-            <p>Klasa: <strong>${selectedFlight.selectedClass}</strong></p>
-        `;
+    performCheckInBtn.addEventListener('click', () => {
+        // Symulacja odprawy
+        alert('Odprawa zakończona pomyślnie!');
+        generateBoardingPass();
+        performCheckInBtn.classList.add('hidden'); // Ukryj przycisk po odprawie
+        checkInFlightDetails.classList.add('hidden'); // Ukryj szczegóły lotu
+        boardingPassPreview.classList.remove('hidden'); // Pokaż kartę pokładową
+    });
 
-        // Generuj miejsca do wyboru (przykładowo)
-        checkInSeatSelect.innerHTML = '<option value="">Wybierz miejsce</option>';
-        const totalSeats = selectedFlight.availableSeats; // Używamy dostępnych miejsc z wybranego lotu
-        for (let i = 1; i <= totalSeats; i++) {
-            const row = Math.ceil(i / 6); // Przykładowo 6 miejsc w rzędzie
-            const seatChar = String.fromCharCode(65 + (i - 1) % 6);
-            const seatNumber = `${row}${seatChar}`;
-            const option = document.createElement('option');
-            option.value = seatNumber;
-            option.textContent = `Miejsce ${seatNumber}`;
-            checkInSeatSelect.appendChild(option);
-        }
+    function generateBoardingPass() {
+        if (!reservationDetails) return;
+
+        const passengerToBoard = reservationDetails.passengers.find(p => p.surname.toLowerCase() === document.getElementById('checkin-surname').value.toLowerCase());
+
+        document.getElementById('bp-passenger-name').textContent = `${passengerToBoard.name} ${passengerToBoard.surname}`;
+        document.getElementById('bp-flight-number').textContent = reservationDetails.flight.id;
+        document.getElementById('bp-route').textContent = `${reservationDetails.flight.departure} - ${reservationDetails.flight.arrival}`;
+        document.getElementById('bp-date').textContent = reservationDetails.flight.date;
+        document.getElementById('bp-departure-time').textContent = reservationDetails.flight.time;
+        // Symulowane miejsce i bramka
+        document.getElementById('bp-seat').textContent = '12A';
+        document.getElementById('bp-gate').textContent = 'B07';
     }
 
-    // Obsługa formularza odprawy (symulacja)
-    checkInForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const selectedSeat = checkInSeatSelect.value;
-        if (!selectedSeat) {
-            alert('Proszę wybrać miejsce.');
-            return;
-        }
-
-        // Symulacja "odprawienia"
-        passengerDetails.seat = selectedSeat;
-        passengerDetails.checkedIn = true;
-
-        displayBoardingPass();
-        boardingPassPreview.classList.remove('hidden');
-        alert('Odprawa zakończona sukcesem! Poniżej Twoja karta pokładowa.');
+    document.getElementById('back-to-main-from-checkin-btn').addEventListener('click', () => {
+        resetApplicationState();
+        showSection('search-form-section');
     });
 
-    // Funkcja wyświetlająca kartę pokładową
-    function displayBoardingPass() {
-        if (!selectedFlight || !passengerDetails || !passengerDetails.checkedIn) {
-            boardingPassPreview.innerHTML = '<p>Brak danych karty pokładowej.</p>';
-            return;
-        }
-        
-        const bpFlightNumber = selectedFlight.type === 'direct' ? selectedFlight.flightNumber : selectedFlight.segments[0].flightNumber + ' & ' + selectedFlight.segments[1].flightNumber;
-        const bpOrigin = selectedFlight.type === 'direct' ? selectedFlight.origin : selectedFlight.segments[0].origin;
-        const bpDestination = selectedFlight.type === 'direct' ? selectedFlight.destination : selectedFlight.segments[1].destination;
-        const bpDate = selectedFlight.type === 'direct' ? selectedFlight.date : selectedFlight.segments[0].date;
-        const bpTime = selectedFlight.type === 'direct' ? selectedFlight.departureTime : selectedFlight.segments[0].departureTime + ' - ' + selectedFlight.segments[1].arrivalTime;
 
-        document.getElementById('bp-flight-number').textContent = bpFlightNumber;
-        document.getElementById('bp-origin').textContent = bpOrigin;
-        document.getElementById('bp-destination').textContent = bpDestination;
-        document.getElementById('bp-date').textContent = bpDate;
-        document.getElementById('bp-time').textContent = bpTime;
-        document.getElementById('bp-passenger-name').textContent = passengerDetails.name;
-        document.getElementById('bp-passenger-surname').textContent = passengerDetails.surname;
-        document.getElementById('bp-seat').textContent = passengerDetails.seat || 'Brak';
-    }
-
-    // Obsługa przycisków "Wróć" i "Nowe wyszukiwanie"
-    backToSearchBtn.addEventListener('click', () => showSection(searchFormSection));
-    backToResultsBtn.addEventListener('click', () => {
-        displayFlights(currentSearchResults); // Ponownie wyświetl wyniki
-        showSection(flightResultsSection);
-    });
-    backToBookingBtn.addEventListener('click', () => showSection(bookingDetailsSection));
-    backToConfirmationBtn.addEventListener('click', () => showSection(confirmationSection));
-    newSearchButton.addEventListener('click', () => {
-        // Resetuj wszystkie stany i wróć do wyszukiwania
+    // --- Funkcja resetująca stan aplikacji po powrocie na stronę główną ---
+    function resetApplicationState() {
         selectedFlight = null;
-        passengerDetails = {};
-        bookingReference = '';
-        flightSearchForm.reset();
-        document.getElementById('passenger-form').reset();
-        document.getElementById('payment-form').reset();
-        document.getElementById('check-in-form').reset();
+        reservationDetails = null;
+        totalPassengers = { adults: 1, children: 0, infants: 0 };
+        travelClass = 'Ekonomiczna';
+
+        // Reset pól formularza wyszukiwania
+        document.getElementById('departure-airport').value = '';
+        document.getElementById('arrival-airport').value = '';
+        document.getElementById('departure-date').value = '';
+        document.getElementById('return-date').value = '';
+        document.getElementById('passengers-input').value = '1 Pasażer, Ekonomiczna';
+
+        // Reset modalu pasażerów/klasy
+        document.getElementById('adults-qty').textContent = '1';
+        document.getElementById('children-qty').textContent = '0';
+        document.getElementById('infants-qty').textContent = '0';
+        travelClassOptions.forEach(option => {
+            if (option.dataset.value === 'Ekonomiczna') {
+                option.classList.add('selected');
+            } else {
+                option.classList.remove('selected');
+            }
+        });
+
+        // Ukryj szczegóły odprawy i kartę pokładową
+        checkInFlightDetails.classList.add('hidden');
+        performCheckInBtn.classList.add('hidden');
         boardingPassPreview.classList.add('hidden');
-        showSection(searchFormSection);
-    });
+        document.getElementById('checkin-reservation-code').value = '';
+        document.getElementById('checkin-surname').value = '';
 
-    // Symulacja drukowania karty pokładowej
-    printBoardingPassBtn.addEventListener('click', () => {
-        alert('Symulacja drukowania karty pokładowej. W prawdziwym systemie otworzyłoby się okno drukowania.');
-        // Tutaj można by dodać window.print() dla wydruku całej strony,
-        // lub stworzyć wydrukową wersję karty pokładowej w nowym oknie/iframe.
-    });
+        // Ukryj wszystkie sekcje poza główną
+        sections.forEach(section => {
+            if (section.id !== 'search-form-section') {
+                section.classList.add('hidden');
+            }
+        });
+         // Upewnij się, że sekcje uzupełnij podróż i polecane kierunki są widoczne
+        document.querySelector('.complete-your-trip').classList.remove('hidden');
+        document.querySelector('.recommended-destinations').classList.remove('hidden');
+    }
 
-    // Ustawienie minimalnej daty w polu 'departure-date' na jutro
-    const departureDateInput = document.getElementById('departure-date');
-    const today = new Date();
-    today.setDate(today.getDate() + 1); // Ustaw na jutro
-    const tomorrow = today.toISOString().split('T')[0];
-    departureDateInput.min = tomorrow;
+    // Pokaż domyślną sekcję przy ładowaniu strony
+    showSection('search-form-section');
 });
